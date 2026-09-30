@@ -35,8 +35,8 @@ export const HeroSection: React.FC = () => {
       {/* Background Campus Image Layer - High Visibility with Active 2s Wave Effect */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
         <img
-          src="./images/hero-building.png"
-          alt="BGIFT Institute of Science & Technology campus building"
+          src="./images/campus-building-wide.webp"
+          alt="BGIFT Institute of Science & Technology campus building, Chandona Chowrasta, Gazipur"
           className="w-full h-full object-cover object-center scale-[1.02] transition-all duration-700 cursor-wave-gentle"
         />
 
