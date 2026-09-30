@@ -35,8 +35,8 @@ export const HeroSection: React.FC = () => {
       {/* Background Campus Image Layer - High Visibility with Active 2s Wave Effect */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
         <img
-          src="./images/campus-hero.jpg"
-          alt="Modern Campus Building"
+          src="./images/hero-building.png"
+          alt="BGIFT Institute of Science & Technology campus building"
           className="w-full h-full object-cover object-center scale-[1.02] transition-all duration-700 cursor-wave-gentle"
         />
 
@@ -52,8 +52,10 @@ export const HeroSection: React.FC = () => {
           }`}
         />
 
-        {/* Ambient Corner Vignettes for Depth */}
-        <div className="absolute inset-0 bg-radial from-transparent via-transparent to-black/25 pointer-events-none" />
+        {/* Ambient Corner Vignettes for Depth (lighter on pale light-mode art) */}
+        <div className={`absolute inset-0 bg-radial from-transparent via-transparent pointer-events-none ${
+          theme === 'dark' ? 'to-black/25' : 'to-black/10'
+        }`} />
 
         {/* Subtle Cybernetic Grid Overlay */}
         <div
