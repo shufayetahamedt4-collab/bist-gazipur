@@ -144,7 +144,7 @@ export const AdmissionHighlight: React.FC = () => {
             <div className="lg:col-span-5 relative group">
               <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-emerald-500/30 aspect-[4/3] sm:aspect-[16/11]">
                 <img
-                  src="/images/gallery/g08.jpeg"
+                  src="./images/gallery/g08.jpeg"
                   alt="BIST Gazipur Campus Students"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   loading="lazy"

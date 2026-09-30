@@ -104,7 +104,7 @@ export const StatsSection: React.FC = () => {
       {/* Subtle Background Campus Photo */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none opacity-[0.06] dark:opacity-[0.04]">
         <img
-          src="/images/campus-2.webp"
+          src="./images/campus-2.webp"
           alt="BIST campus"
           className="w-full h-full object-cover object-center filter blur-xs"
           loading="lazy"

@@ -24,10 +24,10 @@ import {
 } from '../types';
 
 /** Teacher portraits are mirrored here. */
-const T = '/images/teachers';
+const T = './images/teachers';
 
 /** The placeholders bist.edu.bd itself serves when a person has no photo on file. */
-const NO_PHOTO = '/images/person-placeholder.png';
+const NO_PHOTO = './images/person-placeholder.png';
 
 /**
  * The complete BIST roster, in the order published on /all-teachers.
@@ -571,7 +571,7 @@ export const GALLERY_ITEMS: GalleryItem[] = [
       bn: 'বিআইএসটি-এর ১৭তম প্রতিষ্ঠাবার্ষিকী ও পুরস্কার বিতরণী অনুষ্ঠান-২০২৫',
     },
     category: 'events',
-    image: '/images/gallery/g01.jpg',
+    image: './images/gallery/g01.jpg',
     date: '2025',
   },
   {
@@ -581,7 +581,7 @@ export const GALLERY_ITEMS: GalleryItem[] = [
       bn: 'এসইআইপি–বিজিএমইএ প্রকল্প (T3) সনদ প্রদান অনুষ্ঠান',
     },
     category: 'events',
-    image: '/images/gallery/g04.jpeg',
+    image: './images/gallery/g04.jpeg',
     date: '',
   },
   {
@@ -591,7 +591,7 @@ export const GALLERY_ITEMS: GalleryItem[] = [
       bn: 'বৈষম্য বিরোধী ছাত্র আন্দোলনে যারা শহীদ ও আহত হয়েছেন তাদের জন্য দুয়া মাহফিল',
     },
     category: 'events',
-    image: '/images/gallery/g02.jpeg',
+    image: './images/gallery/g02.jpeg',
     date: '',
   },
   {
@@ -601,7 +601,7 @@ export const GALLERY_ITEMS: GalleryItem[] = [
       bn: 'বঙ্গবন্ধুর ১০৩তম জন্মদিন ও জাতীয় শিশু দিবস উদযাপন',
     },
     category: 'events',
-    image: '/images/gallery/g05.jpg',
+    image: './images/gallery/g05.jpg',
     date: '2023',
   },
   {
@@ -611,7 +611,7 @@ export const GALLERY_ITEMS: GalleryItem[] = [
       bn: 'জাতীয় বিশ্ববিদ্যালয় আন্তঃকলেজ ক্রীড়া প্রতিযোগিতা ২০২৩',
     },
     category: 'sports',
-    image: '/images/gallery/g06.jpg',
+    image: './images/gallery/g06.jpg',
     date: '2023',
   },
   {
@@ -621,7 +621,7 @@ export const GALLERY_ITEMS: GalleryItem[] = [
       bn: 'এসএসসি ফ্রি বেসিক কম্পিউটার কোর্স — সার্টিফিকেট প্রদান অনুষ্ঠান ২০২২',
     },
     category: 'labs',
-    image: '/images/gallery/g07.jpg',
+    image: './images/gallery/g07.jpg',
     date: '2022',
   },
   {
@@ -631,7 +631,7 @@ export const GALLERY_ITEMS: GalleryItem[] = [
       bn: 'সার্টিফিকেট অ্যাওয়ার্ডিং, প্রফেশনাল এক্সিলেন্সি অ্যাওয়ার্ড ও জব ফেয়ার-২০২২',
     },
     category: 'events',
-    image: '/images/gallery/g08.jpeg',
+    image: './images/gallery/g08.jpeg',
     date: '2022',
   },
   {
@@ -641,7 +641,7 @@ export const GALLERY_ITEMS: GalleryItem[] = [
       bn: 'বঙ্গবন্ধু কর্নার উদ্বোধন ও স্থায়ী ক্যাম্পাসের ভিত্তিপ্রস্তর স্থাপন অনুষ্ঠান-২০২২',
     },
     category: 'campus',
-    image: '/images/gallery/g09.jpeg',
+    image: './images/gallery/g09.jpeg',
     date: '2022',
   },
   {
@@ -651,7 +651,7 @@ export const GALLERY_ITEMS: GalleryItem[] = [
       bn: 'বিআইএসটি কর্তৃক আয়োজিত ইফতার মাহফিল-২০২২',
     },
     category: 'events',
-    image: '/images/gallery/g10.jpg',
+    image: './images/gallery/g10.jpg',
     date: '2022',
   },
   {
@@ -661,14 +661,14 @@ export const GALLERY_ITEMS: GalleryItem[] = [
       bn: 'আইটি ফ্রিল্যান্সিং সার্টিফিকেট প্রদান অনুষ্ঠান',
     },
     category: 'labs',
-    image: '/images/gallery/g11.jpeg',
+    image: './images/gallery/g11.jpeg',
     date: '',
   },
   {
     id: 'gal-picnic',
     title: { en: 'Annual Picnic Day', bn: 'বার্ষিক পিকনিক দিবস' },
     category: 'sports',
-    image: '/images/gallery/g12.jpg',
+    image: './images/gallery/g12.jpg',
     date: '',
   },
   {
@@ -678,14 +678,14 @@ export const GALLERY_ITEMS: GalleryItem[] = [
       bn: 'মহান স্বাধীনতা দিবস (২৬ মার্চ) উপলক্ষে আলোচনা সভা, কবিতা আবৃত্তি ও রচনা প্রতিযোগিতা',
     },
     category: 'events',
-    image: '/images/gallery/g13.jpg',
+    image: './images/gallery/g13.jpg',
     date: '',
   },
   {
     id: 'gal-library',
     title: { en: 'Our Library', bn: 'আমাদের লাইব্রেরি' },
     category: 'campus',
-    image: '/images/gallery/g14.jpeg',
+    image: './images/gallery/g14.jpeg',
     date: '',
   },
   {
@@ -695,7 +695,7 @@ export const GALLERY_ITEMS: GalleryItem[] = [
       bn: 'ফাইনাল প্রেজেন্টেশন ও শেষ বর্ষের বিদায় উদযাপন-২০২২',
     },
     category: 'events',
-    image: '/images/gallery/g15.JPG',
+    image: './images/gallery/g15.JPG',
     date: '2022',
   },
   {
@@ -705,7 +705,7 @@ export const GALLERY_ITEMS: GalleryItem[] = [
       bn: 'ফ্রি কম্পিউটার প্রশিক্ষণ — সার্টিফিকেট ও পুরস্কার বিতরণ',
     },
     category: 'labs',
-    image: '/images/gallery/g16.jpg',
+    image: './images/gallery/g16.jpg',
     date: '',
   },
   {
@@ -715,7 +715,7 @@ export const GALLERY_ITEMS: GalleryItem[] = [
       bn: 'টেক্সটাইল সায়েন্স অ্যান্ড টেকনোলজি (TST) বিভাগ',
     },
     category: 'textile',
-    image: '/images/dept-tst.webp',
+    image: './images/dept-tst.webp',
     date: '2026',
   },
   {
@@ -725,7 +725,7 @@ export const GALLERY_ITEMS: GalleryItem[] = [
       bn: 'অ্যাপারেল ম্যানুফ্যাকচারিং অ্যান্ড টেকনোলজি (AMT) বিভাগ',
     },
     category: 'textile',
-    image: '/images/dept-amt.webp',
+    image: './images/dept-amt.webp',
     date: '2026',
   },
   {
@@ -735,7 +735,7 @@ export const GALLERY_ITEMS: GalleryItem[] = [
       bn: 'ফ্যাশন ডিজাইন অ্যান্ড টেকনোলজি (FDT) স্টুডিও',
     },
     category: 'textile',
-    image: '/images/dept-fdt.webp',
+    image: './images/dept-fdt.webp',
     date: '2026',
   },
   {
@@ -745,7 +745,7 @@ export const GALLERY_ITEMS: GalleryItem[] = [
       bn: 'কম্পিউটার সায়েন্স অ্যান্ড ইঞ্জিনিয়ারিং (CSE) বিভাগ',
     },
     category: 'labs',
-    image: '/images/dept-cse.jpg',
+    image: './images/dept-cse.jpg',
     date: '2026',
   },
   {
@@ -755,7 +755,7 @@ export const GALLERY_ITEMS: GalleryItem[] = [
       bn: 'ব্যাচেলর অব বিজনেস অ্যাডমিনিস্ট্রেশন (BBA) বিভাগ',
     },
     category: 'campus',
-    image: '/images/dept-bba.webp',
+    image: './images/dept-bba.webp',
     date: '2026',
   },
 ];
@@ -771,7 +771,7 @@ export const ALUMNI_DIRECTORY: AlumniProfile[] = [
     name: 'Md Rifat Hasan',
     position: 'Sr. Executive, Industrial Engineering (IE) & Planning',
     company: 'Northern Tosrifa Group',
-    image: '/images/alumni/alumni-rifat.jpg',
+    image: './images/alumni/alumni-rifat.jpg',
   },
   {
     id: 'alm-nasir-uddin',
@@ -792,7 +792,7 @@ export const ALUMNI_DIRECTORY: AlumniProfile[] = [
     name: 'Mohammad Emon',
     position: 'Freelancer',
     company: 'Eurofins Buying House',
-    image: '/images/alumni/alumni-emon.jpg',
+    image: './images/alumni/alumni-emon.jpg',
   },
   {
     id: 'alm-milon-ahmed',
@@ -806,42 +806,42 @@ export const ALUMNI_DIRECTORY: AlumniProfile[] = [
     name: 'Mahmudul Hasan',
     position: 'Merchandiser',
     company: 'Islam Knit Design Ltd (ISLAM GROUP)',
-    image: '/images/alumni/alumni-mahmudul.jpg',
+    image: './images/alumni/alumni-mahmudul.jpg',
   },
   {
     id: 'alm-abdullah-al-mubin',
     name: 'Abdullah-Al Mubin',
     position: 'Assistant Sample Man',
     company: 'Tusuka',
-    image: '/images/alumni/alumni-mubin.jpg',
+    image: './images/alumni/alumni-mubin.jpg',
   },
   {
     id: 'alm-akash-mia',
     name: 'Md. Akash Mia',
     position: 'Jr. Executive',
     company: 'Style Craft LTD.',
-    image: '/images/alumni/alumni-akash.jpg',
+    image: './images/alumni/alumni-akash.jpg',
   },
   {
     id: 'alm-masum-hossain',
     name: 'Md. Masum Hossain',
     position: 'Teacher',
     company: 'Model Education Touch School',
-    image: '/images/alumni/alumni-masum.jpg',
+    image: './images/alumni/alumni-masum.jpg',
   },
   {
     id: 'alm-sharif-bapari',
     name: 'Md. Sharif Bapari',
     position: 'Trainee Merchandiser',
     company: 'XYZ Group',
-    image: '/images/alumni/alumni-sharif.jpg',
+    image: './images/alumni/alumni-sharif.jpg',
   },
   {
     id: 'alm-zakir-hossain',
     name: 'Zakir Hossain',
     position: 'Asst. Manager',
     company: 'Aman Graphics & Designs Ltd',
-    image: '/images/alumni/alumni-zakir.jpeg',
+    image: './images/alumni/alumni-zakir.jpeg',
   },
   {
     id: 'alm-alamin',

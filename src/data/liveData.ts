@@ -385,7 +385,7 @@ export const EVENTS: EventItem[] = [
       en: 'Career seminar hosted on campus with the BDjobs team for final-year students and recent graduates.',
       bn: 'চূড়ান্ত বর্ষের শিক্ষার্থী ও সদ্য স্নাতকদের জন্য বিডিজবস টিমের ক্যাম্পাসভিত্তিক ক্যারিয়ার সেমিনার।',
     },
-    image: '/images/event-bdjobs.jpeg',
+    image: './images/event-bdjobs.jpeg',
     link: 'https://bist.edu.bd/event-details/20',
   },
   {
@@ -406,7 +406,7 @@ export const EVENTS: EventItem[] = [
       en: 'Founding anniversary celebration with a prize giving ceremony for meritorious students.',
       bn: 'প্রতিষ্ঠাবার্ষিকী উদযাপন এবং কৃতী শিক্ষার্থীদের মাঝে পুরস্কার বিতরণী অনুষ্ঠান।',
     },
-    image: '/images/event-anniversary.jpeg',
+    image: './images/event-anniversary.jpeg',
     link: 'https://bist.edu.bd/event-details/19',
   },
   {
@@ -427,7 +427,7 @@ export const EVENTS: EventItem[] = [
       en: 'Orientation class welcoming the 12th batch of the Apparel Manufacturing & Technology and Fashion Design & Technology programmes.',
       bn: 'অ্যাপারেল ম্যানুফ্যাকচারিং অ্যান্ড টেকনোলজি ও ফ্যাশন ডিজাইন অ্যান্ড টেকনোলজি ১২তম ব্যাচের ওরিয়েন্টেশন ক্লাস।',
     },
-    image: '/images/event-orientation.jpeg',
+    image: './images/event-orientation.jpeg',
     link: 'https://bist.edu.bd/event-details/18',
   },
 ];
@@ -450,7 +450,7 @@ export const NEWS: NewsItem[] = [
       en: 'Strengthening the leadership: the BIST Textile Club welcomed the Deputy Directors who will support wing leadership, coordinate activities and turn ideas into meaningful initiatives. Together the team is ready to learn, lead, innovate and grow — from campus to industry.',
       bn: 'নেতৃত্ব আরও শক্তিশালী করতে বিআইএসটি টেক্সটাইল ক্লাব ডেপুটি ডিরেক্টরদের বরণ করে নেয়, যারা উইঙের নেতৃত্বে সহায়তা করবেন, কার্যক্রম সমন্বয় করবেন এবং আইডিয়াকে বাস্তবে রূপ দেবেন। ক্যাম্পাস থেকে ইন্ডাস্ট্রি — আমরা একসাথে শেখা, নেতৃত্ব, উদ্ভাবন ও বিকাশের জন্য প্রস্তুত।',
     },
-    image: '/images/news-btc.jpg',
+    image: './images/news-btc.jpg',
     link: 'https://bist.edu.bd/news/bist-textile-club-btc',
   },
   {
@@ -470,7 +470,7 @@ export const NEWS: NewsItem[] = [
       en: 'The BIST family congratulates Md. Deluwar Hosain, Principal, on being elected as the President of the PIANU Committee.',
       bn: 'পিআইএএনইউ কমিটির সভাপতি নির্বাচিত হওয়ায় বিআইএসটি পরিবারের পক্ষ থেকে অধ্যক্ষ মোঃ দেলোয়ার হোসেনকে আন্তরিক অভিনন্দন জানানো হচ্ছে।',
     },
-    image: '/images/news-pianu.jpeg',
+    image: './images/news-pianu.jpeg',
     link: 'https://bist.edu.bd/news/heartiest-congratulations-to-our-honorable-principal-sir-on-being-elected-as-the-president-of-the-pianu-committee',
   },
   {
@@ -490,7 +490,7 @@ export const NEWS: NewsItem[] = [
       en: 'The institute felicitated meritorious students at a ceremony on the BIST campus.',
       bn: 'বিআইএসটি ক্যাম্পাসে আয়োজিত অনুষ্ঠানে কৃতী শিক্ষার্থীদের সংবর্ধনা দেওয়া হয়।',
     },
-    image: '/images/news-meritorious.jpg',
+    image: './images/news-meritorious.jpg',
     link: 'https://bist.edu.bd/news/bijiaiefti-kzampase-krriti-siksharthee-sngbrdhna-onushthit',
   },
 ];
@@ -500,7 +500,7 @@ export const TESTIMONIALS: Testimonial[] = [
     id: 'test-1',
     name: { en: 'Azizul Islam', bn: 'আজিজুল ইসলাম' },
     role: { en: 'Software Developer', bn: 'সফটওয়্যার ডেভেলপার' },
-    image: '/images/testimonial-azizul.jpg',
+    image: './images/testimonial-azizul.jpg',
     quote: {
       en: 'It was a great experience studying at BGIFT Institute Science & Technology, a memory to cherish for lifetime. My experience at BGIFT was full of learning and grooming.',
       bn: 'বিজিআইএফটি ইনস্টিটিউট অব সায়েন্স অ্যান্ড টেকনোলজিতে পড়াশোনার অভিজ্ঞতা সারা জীবনের স্মরণীয় হয়ে থাকবে। এখানে শেখা ও পরিশীলিত হওয়ার পূর্ণ সুযোগ পেয়েছি।',
@@ -510,7 +510,7 @@ export const TESTIMONIALS: Testimonial[] = [
     id: 'test-2',
     name: { en: 'Md Shohidul Islam', bn: 'মোঃ শহীদুল ইসলাম' },
     role: { en: 'Front-End Developer', bn: 'ফ্রন্ট-এন্ড ডেভেলপার' },
-    image: '/images/testimonial-shohidul.jpg',
+    image: './images/testimonial-shohidul.jpg',
     quote: {
       en: 'My experience at BGIFT was full of learning and grooming. It was a great experience studying at BGIFT Institute Science & Technology, a memory to cherish for lifetime.',
       bn: 'বিজিআইএফটিতে আমার অভিজ্ঞতা ছিল শেখা ও বিকাশে ভরপুর। এখানে পড়াশোনার অভিজ্ঞতা সারা জীবনের স্মরণীয় হয়ে থাকবে।',
@@ -530,7 +530,7 @@ export const TESTIMONIALS: Testimonial[] = [
     id: 'test-4',
     name: { en: 'Alamgir Hossain', bn: 'আলমগীর হোসেন' },
     role: { en: 'Assistant Teacher, Gazipur United College', bn: 'সহকারী শিক্ষক, গাজীপুর ইউনাইটেড কলেজ' },
-    image: '/images/testimonial-alamgir.jpg',
+    image: './images/testimonial-alamgir.jpg',
     quote: {
       en: 'Dear Principal Sir, for your kind information, BGIFT Institute of Science And Technology is a great and charming institution in the world. It becomes very popular day by day.',
       bn: 'মাননীয় অধ্যক্ষ মহোদয়, আপনার অবগতির জন্য জানাচ্ছি — বিজিআইএফটি ইনস্টিটিউট অব সায়েন্স অ্যান্ড টেকনোলজি একটি অসাধারণ ও আকর্ষণীয় প্রতিষ্ঠান, যা দিন দিন আরও জনপ্রিয় হয়ে উঠছে।',
@@ -540,7 +540,7 @@ export const TESTIMONIALS: Testimonial[] = [
     id: 'test-5',
     name: { en: 'Khairul Islam Minhaj', bn: 'খায়রুল ইসলাম মিনহাজ' },
     role: { en: 'IT Executive', bn: 'আইটি এক্সিকিউটিভ' },
-    image: '/images/testimonial-khairul.jpg',
+    image: './images/testimonial-khairul.jpg',
     quote: {
       en: 'It was my immense luck and fortune to be the part of BGIFT Institute of Science (BIST) & Technology where I can grow. The entire faculty and department leaves no stone unturned to shape one\u2019s future.',
       bn: 'বিজিআইএফটি ইনস্টিটিউট অব সায়েন্স অ্যান্ড টেকনোলজি (বিআইএসটি)-র অংশ হতে পারা আমার বড় সৌভাগ্য, যেখানে আমি বিকশিত হতে পেরেছি। শিক্ষকমণ্ডলী ও বিভাগ কারও ভবিষ্যৎ গড়তে কোনো ত্রুটি রাখেনি।',

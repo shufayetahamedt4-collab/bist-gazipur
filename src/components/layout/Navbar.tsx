@@ -164,7 +164,7 @@ export const Navbar: React.FC = () => {
                 theme === 'dark' ? 'bg-[#0b192c]' : 'bg-white'
               }`}>
                 <img
-                  src="/images/bist-logo.gif"
+                  src="./images/bist-logo.gif"
                   alt="BIST Logo"
                   className="w-full h-full object-contain"
                 />

@@ -20,7 +20,7 @@ export const CtaBand: React.FC = () => {
           {/* Background Campus Photo */}
           <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
             <img
-              src="/images/campus-3.webp"
+              src="./images/campus-3.webp"
               alt="BIST Campus Architecture"
               className="w-full h-full object-cover object-center scale-105"
             />

@@ -41,7 +41,7 @@ export const PrincipalMessage: React.FC = () => {
             <div className="lg:col-span-4 flex flex-col items-center text-center space-y-4">
               <div className="relative w-48 h-48 sm:w-56 sm:h-56 rounded-2xl overflow-hidden p-1.5 bg-gradient-to-tr from-emerald-500 via-teal-400 to-yellow-400 shadow-2xl group">
                 <img
-                  src="/images/principal.jpg"
+                  src="./images/principal.jpg"
                   alt={principal.name.en}
                   className="w-full h-full object-cover rounded-xl group-hover:scale-105 transition-transform duration-500"
                   loading="lazy"

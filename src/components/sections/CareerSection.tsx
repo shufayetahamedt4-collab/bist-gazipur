@@ -137,7 +137,7 @@ export const CareerSection: React.FC = () => {
             {/* Visual Engineering Lab Photo */}
             <div className="relative rounded-2xl overflow-hidden shadow-md aspect-video group">
               <img
-                src="/images/dept-amt.webp"
+                src="./images/dept-amt.webp"
                 alt="Apparel Manufacturing & Technology department at BIST"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 loading="lazy"

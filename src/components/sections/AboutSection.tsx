@@ -23,7 +23,7 @@ export const AboutSection: React.FC = () => {
               <div className="space-y-4">
                 <div className="relative rounded-2xl overflow-hidden shadow-lg aspect-4/3 group border border-emerald-100">
                   <img
-                    src="/images/dept-cse.jpg"
+                    src="./images/dept-cse.jpg"
                     alt="BIST Computer and AI Lab"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     loading="lazy"
@@ -37,7 +37,7 @@ export const AboutSection: React.FC = () => {
 
                 <div className="relative rounded-2xl overflow-hidden shadow-lg aspect-square group border border-emerald-100">
                   <img
-                    src="/images/dept-fdt.webp"
+                    src="./images/dept-fdt.webp"
                     alt="Apparel CAD Design Floor"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     loading="lazy"
@@ -53,7 +53,7 @@ export const AboutSection: React.FC = () => {
               <div className="space-y-4 pt-6">
                 <div className="relative rounded-2xl overflow-hidden shadow-lg aspect-square group border border-emerald-100">
                   <img
-                    src="/images/dept-tst.webp"
+                    src="./images/dept-tst.webp"
                     alt="Textile Machinery Floor"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     loading="lazy"

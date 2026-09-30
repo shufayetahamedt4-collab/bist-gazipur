@@ -80,7 +80,7 @@ export const Footer: React.FC = () => {
               <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 via-teal-400 to-yellow-400 p-[1.5px] shadow-lg shadow-emerald-950/40">
                 <div className="w-full h-full rounded-[10px] bg-white flex items-center justify-center overflow-hidden">
                   <img
-                    src="/images/bist-logo.gif"
+                    src="./images/bist-logo.gif"
                     alt="BIST Logo"
                     className="w-full h-full object-contain"
                   />

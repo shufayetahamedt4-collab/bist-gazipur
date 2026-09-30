@@ -279,7 +279,7 @@ export const PROGRAMS: Program[] = [
         courses: ['Industrial Internship (3 Months)', 'Senior Design Thesis Defense', 'Professional Ethics & IT Law', 'Tech Entrepreneurship'],
       },
     ],
-    featuredImage: '/images/dept-cse.jpg',
+    featuredImage: './images/dept-cse.jpg',
   },
   {
     id: 'tst',
@@ -359,7 +359,7 @@ export const PROGRAMS: Program[] = [
         courses: ['Full-Time Factory Internship (12 Weeks)', 'Industrial Project Report & Viva', 'Professional Engineering Practice'],
       },
     ],
-    featuredImage: '/images/dept-tst.webp',
+    featuredImage: './images/dept-tst.webp',
   },
   {
     id: 'amt',
@@ -439,7 +439,7 @@ export const PROGRAMS: Program[] = [
         courses: ['Factory Industrial Internship (12 Weeks)', 'Merchandising & Production Defense', 'Comprehensive RMG Viva Voce'],
       },
     ],
-    featuredImage: '/images/dept-amt.webp',
+    featuredImage: './images/dept-amt.webp',
   },
   {
     id: 'fdt',
@@ -519,7 +519,7 @@ export const PROGRAMS: Program[] = [
         courses: ['Annual BIST Runway Gala Fashion Show', 'Fashion House / Buying House Internship (12 Weeks)', 'Comprehensive Portfolio Defense'],
       },
     ],
-    featuredImage: '/images/dept-fdt.webp',
+    featuredImage: './images/dept-fdt.webp',
   },
   {
     id: 'bba',
@@ -599,7 +599,7 @@ export const PROGRAMS: Program[] = [
         courses: ['Corporate Organization Internship (12 Weeks)', 'Research Monograph & Defense', 'Comprehensive Viva Voce'],
       },
     ],
-    featuredImage: '/images/dept-bba.webp',
+    featuredImage: './images/dept-bba.webp',
   },
 ];
 
