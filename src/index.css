@@ -1,0 +1,158 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-heading: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+    --font-bangla: 'Hind Siliguri', 'Inter', system-ui, sans-serif;
+    color-scheme: light;
+  }
+
+  html {
+    font-family: var(--font-sans);
+    scroll-behavior: smooth;
+  }
+
+  body {
+    overflow-x: hidden;
+    background-color: #f8fafc;
+    color: #0b192c;
+  }
+
+  /* Custom subtle scrollbar */
+  ::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #f1f5f9;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #10b981;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #059669;
+  }
+}
+
+.font-heading {
+  font-family: var(--font-heading);
+}
+
+.font-bangla {
+  font-family: var(--font-bangla);
+}
+
+/* Futuristic Light Glassmorphism */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(5, 150, 105, 0.16);
+  box-shadow: 0 4px 24px -2px rgba(5, 150, 105, 0.07);
+}
+
+.dark .glass-panel {
+  background: rgba(11, 25, 44, 0.85);
+  border-color: rgba(16, 185, 129, 0.2);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+}
+
+.glass-panel-subtle {
+  background: rgba(240, 253, 244, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(5, 150, 105, 0.12);
+}
+
+.dark .glass-panel-subtle {
+  background: rgba(7, 11, 26, 0.7);
+  border-color: rgba(16, 185, 129, 0.15);
+}
+
+.glass-panel-dark {
+  background: rgba(11, 25, 44, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.glow-green {
+  box-shadow: 0 0 25px -4px rgba(16, 185, 129, 0.28);
+}
+
+.glow-yellow {
+  box-shadow: 0 0 25px -4px rgba(250, 204, 21, 0.32);
+}
+
+.glow-navy {
+  box-shadow: 0 0 25px -4px rgba(11, 25, 44, 0.2);
+}
+
+/* Futuristic cyber grid line styling */
+.cyber-grid-light {
+  background-image: 
+    linear-gradient(to right, rgba(5, 150, 105, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(5, 150, 105, 0.05) 1px, transparent 1px);
+  background-size: 3.5rem 3.5rem;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 30s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+.animate-pulseGlow {
+  animation: pulseGlow 2.5s ease-in-out infinite;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Hide scrollbar for clean tab rails */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
