@@ -18,16 +18,16 @@ export const AboutPage: React.FC = () => {
     <div className="py-12 px-4 sm:px-6 max-w-6xl mx-auto space-y-16">
       {/* Hero / Header */}
       <div className="text-center space-y-3 max-w-3xl mx-auto">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 text-xs font-semibold">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 text-xs font-semibold">
           <Building2 className="w-3.5 h-3.5" />
           <span>{isBn ? 'প্রতিষ্ঠান পরিচিতি ও ইতিহাস' : 'About BIST Gazipur'}</span>
         </div>
-        <h1 className="font-heading text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
+        <h1 className="font-heading text-3xl sm:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
           {isBn
             ? 'কারিগরী ও উচ্চশিক্ষায় দেশের অগ্রগামী প্রতিষ্ঠান'
             : 'Pioneering Higher Technical Education in Bangladesh'}
         </h1>
-        <p className="text-sm text-slate-300 leading-relaxed font-light">
+        <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-light">
           {isBn
             ? 'বিজিআইএফটি ইনস্টিটিউট অব সায়েন্স অ্যান্ড টেকনোলজি (বিআইএসটি) জাতীয় বিশ্ববিদ্যালয়, কারিগরি শিক্ষা বোর্ড এবং এনএসডিএ অনুমোদিত একটি স্বনামধন্য উচ্চশিক্ষা প্রতিষ্ঠান।'
             : 'BGIFT Institute of Science & Technology (BIST) is a premier higher academic institute affiliated with National University, BTEB, and accredited by NSDA.'}
@@ -36,42 +36,42 @@ export const AboutPage: React.FC = () => {
 
       {/* BIST at a Glance Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="p-6 rounded-3xl glass-panel space-y-3 border border-white/10">
-          <div className="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center">
+        <div className="p-6 rounded-3xl glass-panel space-y-3 border border-slate-200 dark:border-white/10">
+          <div className="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 flex items-center justify-center">
             <Compass className="w-5 h-5" />
           </div>
-          <h3 className="font-heading font-bold text-lg text-white">
+          <h3 className="font-heading font-bold text-lg text-slate-900 dark:text-white">
             {isBn ? 'বিআইএসটি একনজরে' : 'BIST at a Glance'}
           </h3>
-          <p className="text-xs text-slate-300 leading-relaxed">
+          <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
             {isBn
               ? 'গাজীপুরের চান্দনা চৌরাস্তায় উনিশে টাওয়ারে অবস্থিত ক্যাম্পাস। ২০০৮ সাল থেকে পরিচালিত এই প্রতিষ্ঠানে ৫,০০০+ শিক্ষার্থী, ৪০+ কোর্স ও ৬০ জন শিক্ষক রয়েছেন। প্রতিষ্ঠানটি একাডেমিক পরিষদের সমন্বয়ে পরিচালিত।'
               : 'Set up in 2008 at Unishe Tower, Chandona Chowrasta, Gazipur-1702. Today the institute has more than 5,000 students, 40+ courses and 60 teachers.'}
           </p>
         </div>
 
-        <div className="p-6 rounded-3xl glass-panel space-y-3 border border-white/10">
-          <div className="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center">
+        <div className="p-6 rounded-3xl glass-panel space-y-3 border border-slate-200 dark:border-white/10">
+          <div className="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 flex items-center justify-center">
             <Target className="w-5 h-5" />
           </div>
-          <h3 className="font-heading font-bold text-lg text-white">
+          <h3 className="font-heading font-bold text-lg text-slate-900 dark:text-white">
             {isBn ? 'আমাদের ভিশন ও মিশন' : 'Mission & Vision'}
           </h3>
-          <p className="text-xs text-slate-300 leading-relaxed">
+          <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
             {isBn
               ? 'চতুর্থ শিল্পবিপ্লবের উপযোগী টেক্সটাইল ইঞ্জিনিয়ারিং, কম্পিউটার সফটওয়্যার ও আধুনিক ম্যানেজমেন্টে দক্ষ, সৃজনশীল ও মানবিক নেতৃত্ব গড়ে তোলা।'
               : 'To be a nationally recognized technological powerhouse driving Industry 4.0 innovations, smart textile manufacturing, and software engineering leadership.'}
           </p>
         </div>
 
-        <div className="p-6 rounded-3xl glass-panel space-y-3 border border-white/10">
-          <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center">
+        <div className="p-6 rounded-3xl glass-panel space-y-3 border border-slate-200 dark:border-white/10">
+          <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-700 dark:text-amber-400 flex items-center justify-center">
             <Award className="w-5 h-5" />
           </div>
-          <h3 className="font-heading font-bold text-lg text-white">
+          <h3 className="font-heading font-bold text-lg text-slate-900 dark:text-white">
             {isBn ? 'জাতীয় স্বীকৃতি ও কোড' : 'Accreditations & Codes'}
           </h3>
-          <p className="text-xs text-slate-300 leading-relaxed">
+          <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
             {isBn
               ? 'জাতীয় বিশ্ববিদ্যালয় কোড ৫৫২৬, বাংলাদেশ কারিগরি শিক্ষাবোর্ড কোড ৫৩০৯৮ এবং জাতীয় দক্ষতা উন্নয়ন কর্তৃপক্ষ (NSDA) আরটিও কোড STP-GAZ-000020।'
               : 'Officially recognized by National University (Code: 5526), BTEB (Code: 53098), and NSDA Registered Center (Code: STP-GAZ-000020).'}
@@ -80,19 +80,19 @@ export const AboutPage: React.FC = () => {
       </div>
 
       {/* History Narrative */}
-      <div className="glass-panel p-8 sm:p-12 rounded-3xl border border-white/10 space-y-6">
-        <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-cyan-400">
+      <div className="glass-panel p-8 sm:p-12 rounded-3xl border border-slate-200 dark:border-white/10 space-y-6">
+        <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-cyan-600 dark:text-cyan-400">
           <Building2 className="w-4 h-4" />
           <span>{isBn ? 'প্রতিষ্ঠা ও গৌরবময় ইতিহাস' : 'Institutional Heritage & Growth'}</span>
         </div>
 
-        <h2 className="font-heading text-2xl sm:text-3xl font-extrabold text-white">
+        <h2 className="font-heading text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
           {isBn
             ? '২০০৮ থেকে ২০২৬: প্রযুক্তি ও শিল্পের সেবায় অবিচল যাত্রা'
             : 'From 2008 to 2026: An Unbroken Legacy of Engineering Excellence'}
         </h2>
 
-        <div className="space-y-4 text-xs sm:text-sm text-slate-300 leading-relaxed font-light">
+        <div className="space-y-4 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-light">
           <p>
             {isBn
               ? 'বাংলাদেশের তৈরি পোশাক ও টেক্সটাইল শিল্পের প্রাণকেন্দ্র গাজীপুর। ২০০৮ সালে এই অঞ্চলের শিল্পকারখানার কারিগরি জনবলের তীব্র চাহিদা অনুধাবন করে একদল প্রাজ্ঞ শিক্ষাবিদ ও প্রকৌশলীর যৌথ উদ্যোগে প্রতিষ্ঠিত হয় বিজিআইএফটি ইনস্টিটিউট অব সায়েন্স অ্যান্ড টেকনোলজি (বিআইএসটি)।'
@@ -109,10 +109,10 @@ export const AboutPage: React.FC = () => {
       {/* Governing Bodies Section */}
       <div className="space-y-8">
         <div className="text-center space-y-2">
-          <h2 className="font-heading text-2xl sm:text-3xl font-extrabold text-white">
+          <h2 className="font-heading text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
             {isBn ? 'গভর্নিং বডি ও প্রশাসনিক পরিষদ' : 'Governing Bodies & Leadership'}
           </h2>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-slate-500 dark:text-slate-400">
             {isBn
               ? 'জাতীয় বিশ্ববিদ্যালয়ের নীতিমালা অনুযায়ী ট্রাস্টি বোর্ড ও একাডেমিক কাউন্সিলের দিকনির্দেশনায় পরিচালিত।'
               : 'Operating under the governance of the Board of Trustees, Chairman, and Academic Advisory Council.'}
@@ -120,26 +120,33 @@ export const AboutPage: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="p-6 rounded-2xl glass-panel space-y-3">
-            <Users className="w-6 h-6 text-cyan-400" />
-            <h3 className="font-heading font-bold text-base text-white">Board of Trustees</h3>
-            <p className="text-xs text-slate-400 leading-relaxed">
+          <button
+            onClick={() => navigateTo('board-of-trustees')}
+            className="text-left p-6 rounded-2xl glass-panel space-y-3 border border-transparent hover:border-cyan-400 transition-colors"
+          >
+            <Users className="w-6 h-6 text-cyan-600 dark:text-cyan-400" />
+            <h3 className="font-heading font-bold text-base text-slate-900 dark:text-white">Board of Trustees</h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
               Provides strategic oversight, fiscal governance, campus infrastructure expansion, and ensures non-profit academic focus.
             </p>
-          </div>
+            <span className="inline-flex items-center gap-1.5 text-xs font-bold text-cyan-700 dark:text-cyan-400">
+              {isBn ? 'সদস্যবৃন্দ দেখুন' : 'View members'}
+              <ArrowRight className="w-3.5 h-3.5" />
+            </span>
+          </button>
 
           <div className="p-6 rounded-2xl glass-panel space-y-3">
-            <Award className="w-6 h-6 text-indigo-400" />
-            <h3 className="font-heading font-bold text-base text-white">Office of the Chairman</h3>
-            <p className="text-xs text-slate-400 leading-relaxed">
+            <Award className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
+            <h3 className="font-heading font-bold text-base text-slate-900 dark:text-white">Office of the Chairman</h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
               Ensures holistic institutional alignment with national higher education benchmarks and international industrial accreditation.
             </p>
           </div>
 
           <div className="p-6 rounded-2xl glass-panel space-y-3">
-            <ShieldCheck className="w-6 h-6 text-amber-400" />
-            <h3 className="font-heading font-bold text-base text-white">Academic Advisory Council</h3>
-            <p className="text-xs text-slate-400 leading-relaxed">
+            <ShieldCheck className="w-6 h-6 text-amber-600 dark:text-amber-400" />
+            <h3 className="font-heading font-bold text-base text-slate-900 dark:text-white">Academic Advisory Council</h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
               Reviews syllabi and examination integrity in line with National University and BTEB regulations.
             </p>
           </div>
@@ -147,42 +154,42 @@ export const AboutPage: React.FC = () => {
       </div>
 
       {/* Overview, quality policy and goals — transcribed from bist.edu.bd */}
-      <div className="glass-panel p-8 sm:p-12 rounded-3xl border border-white/10 space-y-8">
+      <div className="glass-panel p-8 sm:p-12 rounded-3xl border border-slate-200 dark:border-white/10 space-y-8">
         <div className="space-y-4">
-          <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-cyan-400">
+          <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-cyan-600 dark:text-cyan-400">
             <Compass className="w-4 h-4" />
             <span>{isBn ? 'একনজরে বিআইএসটি' : 'BIST at a Glance'}</span>
           </div>
-          <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-light">
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-light">
             {isBn ? INSTITUTION_OVERVIEW.bn : INSTITUTION_OVERVIEW.en}
           </p>
         </div>
 
-        <div className="space-y-3 border-t border-white/10 pt-6">
-          <h3 className="font-heading font-bold text-lg text-white">
+        <div className="space-y-3 border-t border-slate-200 dark:border-white/10 pt-6">
+          <h3 className="font-heading font-bold text-lg text-slate-900 dark:text-white">
             {isBn ? 'মান নীতি' : 'Quality Policy'}
           </h3>
-          <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-light">
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-light">
             {isBn ? QUALITY_POLICY.bn : QUALITY_POLICY.en}
           </p>
         </div>
 
-        <div className="space-y-4 border-t border-white/10 pt-6">
-          <h3 className="font-heading font-bold text-lg text-white">
+        <div className="space-y-4 border-t border-slate-200 dark:border-white/10 pt-6">
+          <h3 className="font-heading font-bold text-lg text-slate-900 dark:text-white">
             {isBn ? 'প্রাতিষ্ঠানিক লক্ষ্যসমূহ' : 'Institutional Goals'}
           </h3>
           <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {INSTITUTION_GOALS.map((goal, i) => (
               <li key={i} className="flex items-start gap-2">
-                <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
-                <span className="text-xs text-slate-300 leading-relaxed">{isBn ? goal.bn : goal.en}</span>
+                <CheckCircle2 className="w-4 h-4 text-cyan-600 dark:text-cyan-400 shrink-0 mt-0.5" />
+                <span className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">{isBn ? goal.bn : goal.en}</span>
               </li>
             ))}
           </ul>
         </div>
 
-        <div className="space-y-4 border-t border-white/10 pt-6">
-          <h3 className="font-heading font-bold text-lg text-white">
+        <div className="space-y-4 border-t border-slate-200 dark:border-white/10 pt-6">
+          <h3 className="font-heading font-bold text-lg text-slate-900 dark:text-white">
             {isBn ? 'সংযোগ ও নেটওয়ার্কিং' : 'Linkages & Networking'}
           </h3>
           <div className="flex flex-wrap gap-2">
@@ -190,21 +197,21 @@ export const AboutPage: React.FC = () => {
               <span
                 key={link.name}
                 title={link.full}
-                className="px-3 py-1.5 rounded-full text-[11px] font-semibold bg-cyan-500/10 text-cyan-300 border border-cyan-500/20"
+                className="px-3 py-1.5 rounded-full text-[11px] font-semibold bg-cyan-500/10 text-cyan-700 dark:text-cyan-300 border border-cyan-500/20"
               >
                 {link.name}
               </span>
             ))}
           </div>
 
-          <h4 className="font-heading font-bold text-sm text-white pt-2">
+          <h4 className="font-heading font-bold text-sm text-slate-900 dark:text-white pt-2">
             {isBn ? 'ডিপ্লোমা ইন ইঞ্জিনিয়ারিং বিষয়সমূহ (বিটিইবি)' : 'Diploma in Engineering subjects (BTEB)'}
           </h4>
           <div className="flex flex-wrap gap-2">
             {DIPLOMA_SUBJECTS.map((subject) => (
               <span
                 key={subject}
-                className="px-3 py-1.5 rounded-full text-[11px] bg-white/5 text-slate-300 border border-white/10"
+                className="px-3 py-1.5 rounded-full text-[11px] bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-white/10"
               >
                 {subject}
               </span>
