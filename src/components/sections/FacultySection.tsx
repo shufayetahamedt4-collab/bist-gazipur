@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { GraduationCap, Mail, Phone, ArrowRight, ExternalLink } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
+import { useDismiss } from '../../hooks/useDismiss';
 import { FACULTY_MEMBERS } from '../../data/mockData';
 import { FacultyMember } from '../../types';
 
@@ -14,8 +15,17 @@ export const FacultySection: React.FC = () => {
   const { language, navigateTo, theme } = useApp();
   const isBn = language === 'bn';
 
+  /**
+   * The home page shows a single tidy row as a preview only. The full, filterable
+   * roster lives on the dedicated Faculty page, so the landing page never turns
+   * into an endless staff directory.
+   */
+  const HOME_PREVIEW_LIMIT = 4;
+
   const [selectedDept, setSelectedDept] = useState<string>('all');
   const [activeModalMember, setActiveModalMember] = useState<FacultyMember | null>(null);
+
+  const { backdropProps } = useDismiss(Boolean(activeModalMember), () => setActiveModalMember(null));
 
   const departmentLabels: Record<string, { en: string; bn: string }> = {
     CSE: { en: 'Computer Science (CSE)', bn: 'কম্পিউটার সায়েন্স (CSE)' },
@@ -47,7 +57,7 @@ export const FacultySection: React.FC = () => {
           <div
             className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold ${
               theme === 'dark'
-                ? 'bg-emerald-950/80 text-emerald-300 border border-emerald-500/40'
+                ? 'bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 border border-emerald-500/40'
                 : 'bg-emerald-50 text-emerald-800 border border-emerald-300 shadow-sm'
             }`}
           >
@@ -94,7 +104,7 @@ export const FacultySection: React.FC = () => {
           onClick={() => navigateTo('faculty')}
           className={`shrink-0 inline-flex items-center gap-2 px-5 py-3 rounded-xl font-heading text-xs sm:text-sm font-bold transition-all cursor-pointer ${
             theme === 'dark'
-              ? 'bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 border border-emerald-500/40'
+              ? 'bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-500/30 border border-emerald-500/40'
               : 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-md shadow-emerald-600/20'
           }`}
         >
@@ -104,7 +114,7 @@ export const FacultySection: React.FC = () => {
       </div>
 
       {/* Department Filter Pills */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+      <div className="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar">
         {departments.map((dept) => {
           const isActive = selectedDept === dept.id;
           return (
@@ -126,11 +136,11 @@ export const FacultySection: React.FC = () => {
       </div>
 
       {/* Faculty Cards Bento Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {filteredMembers.slice(0, 8).map((faculty) => (
+      <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-3 -mx-4 px-4 sm:mx-0 sm:px-0 sm:pb-0 sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-6 no-scrollbar">
+        {filteredMembers.slice(0, HOME_PREVIEW_LIMIT).map((faculty) => (
           <div
             key={faculty.id}
-            className={`group rounded-2xl p-5 transition-all duration-300 flex flex-col justify-between border relative overflow-hidden ${
+            className={`min-w-[76%] snap-start sm:min-w-0 group rounded-2xl p-5 transition-all duration-300 flex flex-col justify-between border relative overflow-hidden ${
               theme === 'dark'
                 ? 'bg-slate-900/90 border-white/10 hover:border-emerald-500/50 hover:shadow-[0_10px_30px_rgba(16,185,129,0.15)]'
                 : 'bg-white border-slate-200/90 hover:border-emerald-400 hover:shadow-[0_12px_32px_rgba(5,150,105,0.12)]'
@@ -163,7 +173,7 @@ export const FacultySection: React.FC = () => {
                 <h3
                   className={`font-heading font-extrabold text-base transition-colors line-clamp-1 ${
                     theme === 'dark'
-                      ? 'text-white group-hover:text-emerald-300'
+                      ? 'text-white group-hover:text-emerald-700 dark:hover:text-emerald-300'
                       : 'text-[#0b192c] group-hover:text-emerald-700'
                   }`}
                 >
@@ -207,7 +217,7 @@ export const FacultySection: React.FC = () => {
                 onClick={() => setActiveModalMember(faculty)}
                 className={`text-xs font-bold px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
                   theme === 'dark'
-                    ? 'bg-slate-800 hover:bg-slate-700 text-emerald-300'
+                    ? 'bg-slate-800 hover:bg-slate-700 text-emerald-700 dark:text-emerald-300'
                     : 'bg-slate-100 hover:bg-emerald-50 text-emerald-800'
                 }`}
               >
@@ -218,9 +228,33 @@ export const FacultySection: React.FC = () => {
         ))}
       </div>
 
+      {/* See-more CTA — home shows a preview; the complete directory has its own page */}
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+        <p
+          className={`text-xs sm:text-sm font-medium ${
+            theme === 'dark' ? 'text-slate-400' : 'text-slate-500'
+          }`}
+        >
+          {isBn
+            ? `মোট ${filteredMembers.length} জনের মধ্যে ${Math.min(HOME_PREVIEW_LIMIT, filteredMembers.length)} জন দেখানো হচ্ছে`
+            : `Previewing ${Math.min(HOME_PREVIEW_LIMIT, filteredMembers.length)} of ${filteredMembers.length} faculty members`}
+        </p>
+        <button
+          onClick={() => navigateTo('faculty')}
+          className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-heading text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+            theme === 'dark'
+              ? 'bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-500/30 border border-emerald-500/40'
+              : 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-md shadow-emerald-600/20'
+          }`}
+        >
+          <span>{isBn ? `সকল ${filteredMembers.length} জন দেখুন` : `See all ${filteredMembers.length} faculty`}</span>
+          <ArrowRight className="w-4 h-4" />
+        </button>
+      </div>
+
       {/* Faculty Modal Preview */}
       {activeModalMember && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in">
+        <div {...backdropProps} className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in">
           <div
             className={`max-w-lg w-full rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl relative border ${
               theme === 'dark' ? 'bg-slate-900 border-white/10' : 'bg-white border-slate-200'

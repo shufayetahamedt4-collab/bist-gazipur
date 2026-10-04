@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   GraduationCap,
   Globe,
@@ -19,6 +19,14 @@ import {
   Building,
   Award,
   HelpCircle,
+  CalendarDays,
+  ClipboardList,
+  ScrollText,
+  Download,
+  BookOpen,
+  Users,
+  ShieldAlert,
+  ShieldCheck,
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { UNIVERSITY_INFO, PROGRAMS } from '../../data/mockData';
@@ -39,6 +47,10 @@ export const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  // The mobile drawer must start exactly below the sticky header, whose height
+  // varies (utility bar / alert banner wrap or collapse). Track it live.
+  const headerRef = useRef<HTMLElement>(null);
+  const [headerHeight, setHeaderHeight] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -48,20 +60,38 @@ export const Navbar: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    const el = headerRef.current;
+    if (!el) return;
+    const update = () => setHeaderHeight(el.getBoundingClientRect().height);
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(el);
+    window.addEventListener('resize', update);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', update);
+    };
+  }, []);
+
   const isBn = language === 'bn';
 
   return (
-    <header className="sticky top-0 z-50 w-full transition-all duration-300">
+    <header ref={headerRef} className="sticky top-0 z-50 w-full transition-all duration-300">
       {/* 1. TOP UTILITY BAR (Minimal Navy Blue Accent Grounding) */}
-      <div className="bg-[#0b192c] text-xs text-slate-200 border-b border-emerald-900/40 py-1.5 px-4 sm:px-6">
-        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+      <div
+        className={`bg-[#0b192c] text-xs text-slate-200 border-b border-emerald-900/40 py-1.5 px-4 sm:px-6 transition-all duration-300 ${
+          isScrolled && !mobileMenuOpen ? 'hidden sm:block' : ''
+        }`}
+      >
+        <div className="max-w-7xl mx-auto flex flex-nowrap items-center justify-between gap-2">
           {/* Left: Quick Portal Links */}
           <div className="flex items-center gap-3 sm:gap-4 overflow-x-auto no-scrollbar py-0.5">
             <a
               href={UNIVERSITY_INFO.contact.erpUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-emerald-400 transition-colors flex items-center gap-1.5 font-medium whitespace-nowrap text-slate-300"
+              className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors flex items-center gap-1.5 font-medium whitespace-nowrap text-slate-300"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
               {isBn ? 'ইআরপি পোর্টাল' : 'ERP Portal'}
@@ -69,28 +99,28 @@ export const Navbar: React.FC = () => {
             <span className="text-slate-600" aria-hidden="true">·</span>
             <button
               onClick={() => navigateTo('facilities')}
-              className="hover:text-emerald-400 transition-colors whitespace-nowrap cursor-pointer text-slate-300"
+              className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors whitespace-nowrap cursor-pointer text-slate-300"
             >
               {isBn ? 'জব পোর্টাল' : 'Job Portal'}
             </button>
             <span className="text-slate-600" aria-hidden="true">·</span>
             <button
               onClick={() => navigateTo('result')}
-              className="hover:text-emerald-400 transition-colors whitespace-nowrap cursor-pointer text-slate-300"
+              className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors whitespace-nowrap cursor-pointer text-slate-300"
             >
               {isBn ? 'ফলাফল অনুসন্ধান' : 'Student Result'}
             </button>
             <span className="text-slate-600" aria-hidden="true">·</span>
             <button
               onClick={() => navigateTo('alumni')}
-              className="hover:text-emerald-400 transition-colors whitespace-nowrap cursor-pointer text-slate-300"
+              className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors whitespace-nowrap cursor-pointer text-slate-300"
             >
               {isBn ? 'অ্যালামনাই' : 'Alumni'}
             </button>
             <span className="text-slate-600" aria-hidden="true">·</span>
             <button
               onClick={() => setIsClientNotesOpen(true)}
-              className="text-yellow-400 hover:text-yellow-300 transition-colors font-medium flex items-center gap-1 whitespace-nowrap"
+              className="hidden sm:flex text-yellow-400 hover:text-yellow-300 transition-colors font-medium items-center gap-1 whitespace-nowrap"
               title="Client audit notes & confirmed data points"
             >
               <Info className="w-3.5 h-3.5" />
@@ -105,7 +135,7 @@ export const Navbar: React.FC = () => {
               href={`tel:${UNIVERSITY_INFO.contact.admissionPhone}`}
               className="hidden md:flex items-center gap-1.5 text-yellow-300 hover:text-yellow-200 font-semibold"
             >
-              <Phone className="w-3.5 h-3.5 text-emerald-400" />
+              <Phone className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
               <span>
                 {isBn ? 'ভর্তি হটলাইন: ' : 'Admission: '}
                 {UNIVERSITY_INFO.contact.admissionPhone}
@@ -117,10 +147,10 @@ export const Navbar: React.FC = () => {
             {/* Language Switch */}
             <button
               onClick={toggleLanguage}
-              className="flex items-center gap-1 px-2 py-0.5 rounded border border-emerald-500/40 text-emerald-300 hover:text-white hover:bg-emerald-800/40 transition-all font-medium cursor-pointer"
+              className="flex items-center gap-1 px-2 py-0.5 rounded border border-emerald-500/40 text-emerald-700 dark:text-emerald-300 hover:text-white hover:bg-emerald-800/40 transition-all font-medium cursor-pointer"
               aria-label="Toggle language"
             >
-              <Globe className="w-3 h-3 text-emerald-400" />
+              <Globe className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
               <span>{isBn ? 'English' : 'বাংলা'}</span>
             </button>
 
@@ -134,7 +164,7 @@ export const Navbar: React.FC = () => {
               {theme === 'dark' ? (
                 <Sun className="w-3.5 h-3.5 text-yellow-400" />
               ) : (
-                <Moon className="w-3.5 h-3.5 text-emerald-400" />
+                <Moon className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
               )}
             </button>
           </div>
@@ -143,7 +173,7 @@ export const Navbar: React.FC = () => {
 
       {/* 2. STICKY MAIN NAVBAR (Light Theme Modern Glass) */}
       <nav
-        className={`w-full transition-all duration-300 ${
+        className={`relative z-40 w-full transition-all duration-300 ${
           theme === 'dark'
             ? isScrolled
               ? 'bg-[#070b1a]/90 backdrop-blur-md border-b border-white/10 shadow-lg shadow-black/20 py-2.5'
@@ -173,7 +203,7 @@ export const Navbar: React.FC = () => {
             <div className="flex flex-col">
               <div className="flex items-center gap-1.5">
                 <span className={`font-heading font-extrabold text-lg sm:text-xl tracking-tight transition-colors ${
-                  theme === 'dark' ? 'text-white group-hover:text-emerald-400' : 'text-slate-900 group-hover:text-emerald-600'
+                  theme === 'dark' ? 'text-white group-hover:text-emerald-600 dark:hover:text-emerald-400' : 'text-slate-900 group-hover:text-emerald-600'
                 }`}>
                   BIST
                 </span>
@@ -200,8 +230,8 @@ export const Navbar: React.FC = () => {
               onClick={() => navigateTo('home')}
               className={`px-3 py-2 rounded-lg transition-colors cursor-pointer ${
                 currentPage === 'home'
-                  ? theme === 'dark' ? 'text-emerald-400 bg-emerald-950/40' : 'text-emerald-700 bg-emerald-50 font-bold'
-                  : theme === 'dark' ? 'hover:text-emerald-300 hover:bg-white/5' : 'hover:text-emerald-700 hover:bg-emerald-50/80'
+                  ? theme === 'dark' ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-950/40' : 'text-emerald-700 bg-emerald-50 font-bold'
+                  : theme === 'dark' ? 'hover:text-emerald-700 dark:hover:text-emerald-300 hover:bg-white/5' : 'hover:text-emerald-700 hover:bg-emerald-50/80'
               }`}
             >
               {isBn ? 'হোম' : 'Home'}
@@ -216,7 +246,7 @@ export const Navbar: React.FC = () => {
               <button
                 onClick={() => navigateTo('about')}
                 className={`flex items-center gap-1 px-3 py-2 rounded-lg transition-colors cursor-pointer ${
-                  theme === 'dark' ? 'hover:text-emerald-300 hover:bg-white/5' : 'hover:text-emerald-700 hover:bg-emerald-50/80'
+                  theme === 'dark' ? 'hover:text-emerald-700 dark:hover:text-emerald-300 hover:bg-white/5' : 'hover:text-emerald-700 hover:bg-emerald-50/80'
                 }`}
               >
                 <span>{isBn ? 'পরিচিতি' : 'About'}</span>
@@ -260,6 +290,16 @@ export const Navbar: React.FC = () => {
                     </button>
                     <button
                       onClick={() => {
+                        navigateTo('board-of-trustees');
+                        setActiveDropdown(null);
+                      }}
+                      className="w-full text-left px-3 py-2 rounded-lg text-sm hover:bg-emerald-50 hover:text-emerald-800 transition-colors flex items-center gap-2"
+                    >
+                      <Users className="w-4 h-4 text-amber-500" />
+                      <span>{isBn ? 'বোর্ড অফ ট্রাস্টিজ' : 'Board of Trustees'}</span>
+                    </button>
+                    <button
+                      onClick={() => {
                         navigateTo('faculty');
                         setActiveDropdown(null);
                       }}
@@ -283,68 +323,6 @@ export const Navbar: React.FC = () => {
               )}
             </div>
 
-            {/* Programs Dropdown */}
-            <div
-              className="relative"
-              onMouseEnter={() => setActiveDropdown('programs')}
-              onMouseLeave={() => setActiveDropdown(null)}
-            >
-              <button
-                onClick={() => navigateTo('programs')}
-                className={`flex items-center gap-1 px-3 py-2 rounded-lg transition-colors cursor-pointer ${
-                  theme === 'dark' ? 'hover:text-emerald-300 hover:bg-white/5' : 'hover:text-emerald-700 hover:bg-emerald-50/80'
-                }`}
-              >
-                <span>{isBn ? 'প্রোগ্রামসমূহ' : 'Programs'}</span>
-                <ChevronDown className="w-3.5 h-3.5 opacity-70" />
-              </button>
-
-              {activeDropdown === 'programs' && (
-                <div className="absolute top-full left-0 w-80 pt-2 animate-fadeIn z-50">
-                  <div className={`p-3 rounded-xl shadow-2xl space-y-2 ${
-                    theme === 'dark' ? 'glass-panel bg-slate-900/90' : 'glass-panel bg-white/95 border-emerald-100 text-slate-700'
-                  }`}>
-                    <div className="text-[11px] font-semibold tracking-wider text-emerald-600 uppercase px-2">
-                      {isBn ? 'স্নাতক (অনার্স) কোর্সসমূহ' : 'Undergraduate (Honours)'}
-                    </div>
-                    {PROGRAMS.map((prog) => (
-                      <button
-                        key={prog.id}
-                        onClick={() => {
-                          navigateTo('department-detail', prog.id);
-                          setActiveDropdown(null);
-                        }}
-                        className="w-full text-left px-2 py-1.5 rounded-lg text-xs hover:bg-emerald-50 hover:text-emerald-800 transition-colors flex items-center justify-between group"
-                      >
-                        <div className="flex items-center gap-2">
-                          <span className="font-mono text-[11px] font-bold text-emerald-600 w-10">
-                            {prog.shortTitle}
-                          </span>
-                          <span className="line-clamp-1">
-                            {isBn ? prog.title.bn : prog.title.en}
-                          </span>
-                        </div>
-                        <ArrowRight className="w-3 h-3 text-emerald-500 opacity-0 group-hover:opacity-100 transition-all" />
-                      </button>
-                    ))}
-
-                    <div className="pt-2 border-t border-emerald-100">
-                      <button
-                        onClick={() => {
-                          navigateTo('programs');
-                          setActiveDropdown(null);
-                        }}
-                        className="w-full text-left px-2 py-1 rounded text-xs text-amber-600 hover:text-amber-700 font-semibold flex items-center justify-between"
-                      >
-                        <span>{isBn ? 'ডিপ্লোমা ও বৃত্তিমূলক প্রোগ্রাম' : 'Diploma, HSC & SSC Programs'}</span>
-                        <ArrowRight className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-
             {/* Admissions Dropdown */}
             <div
               className="relative"
@@ -354,7 +332,7 @@ export const Navbar: React.FC = () => {
               <button
                 onClick={() => navigateTo('admissions')}
                 className={`flex items-center gap-1 px-3 py-2 rounded-lg transition-colors cursor-pointer ${
-                  theme === 'dark' ? 'hover:text-emerald-300 hover:bg-white/5' : 'hover:text-emerald-700 hover:bg-emerald-50/80'
+                  theme === 'dark' ? 'hover:text-emerald-700 dark:hover:text-emerald-300 hover:bg-white/5' : 'hover:text-emerald-700 hover:bg-emerald-50/80'
                 }`}
               >
                 <span>{isBn ? 'ভর্তি তথ্য' : 'Admissions'}</span>
@@ -411,25 +389,176 @@ export const Navbar: React.FC = () => {
               )}
             </div>
 
-            {/* Notices */}
-            <button
-              onClick={() => navigateTo('notices')}
-              className={`px-3 py-2 rounded-lg transition-colors cursor-pointer ${
-                currentPage === 'notices'
-                  ? theme === 'dark' ? 'text-emerald-400 bg-emerald-950/40' : 'text-emerald-700 bg-emerald-50 font-bold'
-                  : theme === 'dark' ? 'hover:text-emerald-300 hover:bg-white/5' : 'hover:text-emerald-700 hover:bg-emerald-50/80'
-              }`}
+            {/* Academics Dropdown — now also holds Programmes and Campus Life, which
+                no longer exist as separate top-level sections. */}
+            <div
+              className="relative"
+              onMouseEnter={() => setActiveDropdown('academics')}
+              onMouseLeave={() => setActiveDropdown(null)}
             >
-              {isBn ? 'নোটিশ বোর্ড' : 'Notices'}
-            </button>
+              <button
+                onClick={() => navigateTo('academic-calendar')}
+                className={`flex items-center gap-1 px-3 py-2 rounded-lg transition-colors cursor-pointer ${
+                  [
+                    'academic-calendar', 'academic-routines', 'academic-regulations', 'downloads',
+                    'programs', 'department-detail', 'library', 'student-life', 'grievance', 'iqac',
+                  ].includes(currentPage)
+                    ? theme === 'dark' ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-950/40' : 'text-emerald-700 bg-emerald-50 font-bold'
+                    : theme === 'dark' ? 'hover:text-emerald-700 dark:hover:text-emerald-300 hover:bg-white/5' : 'hover:text-emerald-700 hover:bg-emerald-50/80'
+                }`}
+              >
+                <span>{isBn ? 'একাডেমিক' : 'Academics'}</span>
+                <ChevronDown className="w-3.5 h-3.5 opacity-70" />
+              </button>
+
+              {activeDropdown === 'academics' && (
+                <div className="absolute top-full left-0 w-[36rem] pt-2 animate-fadeIn z-50">
+                  <div className={`p-3 rounded-xl shadow-2xl grid grid-cols-2 gap-3 ${
+                    theme === 'dark' ? 'glass-panel bg-slate-900/90' : 'glass-panel bg-white/95 border-emerald-100 text-slate-700'
+                  }`}>
+                    {/* Column 1 — Programmes */}
+                    <div className="space-y-0.5">
+                      <div className="text-[11px] font-semibold tracking-wider text-emerald-600 uppercase px-2 pb-1">
+                        {isBn ? 'প্রোগ্রামসমূহ' : 'Programmes'}
+                      </div>
+                      {PROGRAMS.map((prog) => (
+                        <button
+                          key={prog.id}
+                          onClick={() => {
+                            navigateTo('department-detail', prog.id);
+                            setActiveDropdown(null);
+                          }}
+                          className="w-full text-left px-2 py-1.5 rounded-lg text-xs hover:bg-emerald-50 hover:text-emerald-800 transition-colors flex items-center justify-between group"
+                        >
+                          <div className="flex items-center gap-2">
+                            <span className="font-mono text-[11px] font-bold text-emerald-600 w-10">
+                              {prog.shortTitle}
+                            </span>
+                            <span className="line-clamp-1">
+                              {isBn ? prog.title.bn : prog.title.en}
+                            </span>
+                          </div>
+                          <ArrowRight className="w-3 h-3 text-emerald-500 opacity-0 group-hover:opacity-100 transition-all" />
+                        </button>
+                      ))}
+                      <button
+                        onClick={() => {
+                          navigateTo('programs');
+                          setActiveDropdown(null);
+                        }}
+                        className="w-full text-left px-2 py-1.5 mt-1 rounded-lg text-xs text-amber-600 hover:text-amber-700 font-semibold flex items-center justify-between border-t border-emerald-100 pt-2"
+                      >
+                        <span>{isBn ? 'সকল প্রোগ্রাম ও ডিপ্লোমা' : 'All Programmes & Diploma'}</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+
+                    {/* Column 2 — Academic resources + Campus Life */}
+                    <div className="space-y-3 border-l border-emerald-100 pl-3">
+                      <div className="space-y-0.5">
+                        <div className="text-[11px] font-semibold tracking-wider text-emerald-600 uppercase px-2 pb-1">
+                          {isBn ? 'একাডেমিক রিসোর্স' : 'Academic Resources'}
+                        </div>
+                        {[
+                          { label: isBn ? 'একাডেমিক ক্যালেন্ডার' : 'Academic Calendar', page: 'academic-calendar', icon: CalendarDays },
+                          { label: isBn ? 'ক্লাস ও পরীক্ষার রুটিন' : 'Class & Exam Routines', page: 'academic-routines', icon: ClipboardList },
+                          { label: isBn ? 'একাডেমিক রেগুলেশন' : 'Academic Regulations', page: 'academic-regulations', icon: ScrollText },
+                          { label: isBn ? 'ডাউনলোড সেন্টার' : 'Downloads Centre', page: 'downloads', icon: Download },
+                        ].map((item) => (
+                          <button
+                            key={item.page}
+                            onClick={() => {
+                              navigateTo(item.page as any);
+                              setActiveDropdown(null);
+                            }}
+                            className="w-full text-left px-2 py-1.5 rounded-lg text-xs hover:bg-emerald-50 hover:text-emerald-800 transition-colors flex items-center gap-2"
+                          >
+                            <item.icon className="w-3.5 h-3.5 text-emerald-600" />
+                            <span>{item.label}</span>
+                          </button>
+                        ))}
+                      </div>
+
+                      <div className="space-y-0.5 border-t border-emerald-100 pt-2">
+                        <div className="text-[11px] font-semibold tracking-wider text-emerald-600 uppercase px-2 pb-1">
+                          {isBn ? 'ক্যাম্পাস জীবন' : 'Campus Life'}
+                        </div>
+                        {[
+                          { label: isBn ? 'লাইব্রেরি ও ই-লাইব্রেরি' : 'Library & e-Library', page: 'library', icon: BookOpen },
+                          { label: isBn ? 'শিক্ষার্থী জীবন ও ক্লাব' : 'Student Life & Clubs', page: 'student-life', icon: Users },
+                          { label: isBn ? 'অভিযোগ ও অ্যান্টি-হ্যারাসমেন্ট' : 'Grievance & Anti-Harassment', page: 'grievance', icon: ShieldAlert },
+                          { label: isBn ? 'আইকিউএসি ও স্বীকৃতি' : 'IQAC & Accreditation', page: 'iqac', icon: ShieldCheck },
+                        ].map((item) => (
+                          <button
+                            key={item.page}
+                            onClick={() => {
+                              navigateTo(item.page as any);
+                              setActiveDropdown(null);
+                            }}
+                            className="w-full text-left px-2 py-1.5 rounded-lg text-xs hover:bg-emerald-50 hover:text-emerald-800 transition-colors flex items-center gap-2"
+                          >
+                            <item.icon className="w-3.5 h-3.5 text-emerald-600" />
+                            <span>{item.label}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Notices Dropdown */}
+            <div
+              className="relative"
+              onMouseEnter={() => setActiveDropdown('notices')}
+              onMouseLeave={() => setActiveDropdown(null)}
+            >
+              <button
+                onClick={() => navigateTo('notices')}
+                className={`flex items-center gap-1 px-3 py-2 rounded-lg transition-colors cursor-pointer ${
+                  currentPage === 'notices' || currentPage === 'document-enquiry'
+                    ? theme === 'dark' ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-950/40' : 'text-emerald-700 bg-emerald-50 font-bold'
+                    : theme === 'dark' ? 'hover:text-emerald-700 dark:hover:text-emerald-300 hover:bg-white/5' : 'hover:text-emerald-700 hover:bg-emerald-50/80'
+                }`}
+              >
+                <span>{isBn ? 'নোটিশ বোর্ড' : 'Notices'}</span>
+                <ChevronDown className="w-3.5 h-3.5 opacity-70" />
+              </button>
+
+              {activeDropdown === 'notices' && (
+                <div className="absolute top-full left-0 w-64 pt-2 animate-fadeIn z-50">
+                  <div className={`p-2 rounded-xl shadow-2xl space-y-1 ${
+                    theme === 'dark' ? 'glass-panel bg-slate-900/90' : 'glass-panel bg-white/95 border-emerald-100 text-slate-700'
+                  }`}>
+                    {[
+                      { label: isBn ? 'নোটিশ বোর্ড ও সার্কুলার' : 'Notice Board & Circulars', page: 'notices', icon: FileText },
+                      { label: isBn ? 'ডকুমেন্টের জন্য অনুরোধ' : 'Request a Document', page: 'document-enquiry', icon: ClipboardList },
+                    ].map((item) => (
+                      <button
+                        key={item.page}
+                        onClick={() => {
+                          navigateTo(item.page as any);
+                          setActiveDropdown(null);
+                        }}
+                        className="w-full text-left px-3 py-2 rounded-lg text-sm hover:bg-emerald-50 hover:text-emerald-800 transition-colors flex items-center gap-2"
+                      >
+                        <item.icon className="w-4 h-4 text-emerald-600" />
+                        <span>{item.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
 
             {/* Projects & SEIP */}
             <button
               onClick={() => navigateTo('projects')}
               className={`px-3 py-2 rounded-lg transition-colors cursor-pointer ${
                 currentPage === 'projects'
-                  ? theme === 'dark' ? 'text-emerald-400 bg-emerald-950/40' : 'text-emerald-700 bg-emerald-50 font-bold'
-                  : theme === 'dark' ? 'hover:text-emerald-300 hover:bg-white/5' : 'hover:text-emerald-700 hover:bg-emerald-50/80'
+                  ? theme === 'dark' ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-950/40' : 'text-emerald-700 bg-emerald-50 font-bold'
+                  : theme === 'dark' ? 'hover:text-emerald-700 dark:hover:text-emerald-300 hover:bg-white/5' : 'hover:text-emerald-700 hover:bg-emerald-50/80'
               }`}
             >
               {isBn ? 'প্রকল্প (SEIP/NSDA)' : 'Projects'}
@@ -440,8 +569,8 @@ export const Navbar: React.FC = () => {
               onClick={() => navigateTo('contact')}
               className={`px-3 py-2 rounded-lg transition-colors cursor-pointer ${
                 currentPage === 'contact'
-                  ? theme === 'dark' ? 'text-emerald-400 bg-emerald-950/40' : 'text-emerald-700 bg-emerald-50 font-bold'
-                  : theme === 'dark' ? 'hover:text-emerald-300 hover:bg-white/5' : 'hover:text-emerald-700 hover:bg-emerald-50/80'
+                  ? theme === 'dark' ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-950/40' : 'text-emerald-700 bg-emerald-50 font-bold'
+                  : theme === 'dark' ? 'hover:text-emerald-700 dark:hover:text-emerald-300 hover:bg-white/5' : 'hover:text-emerald-700 hover:bg-emerald-50/80'
               }`}
             >
               {isBn ? 'যোগাযোগ' : 'Contact'}
@@ -495,7 +624,9 @@ export const Navbar: React.FC = () => {
       </nav>
 
       {/* 3. ADMISSION ALERT TICKER BANNER (Light Green & Solar Yellow) */}
-      <div className={`border-b py-1.5 px-4 backdrop-blur-md text-xs ${
+      <div className={`relative z-0 py-1.5 px-4 backdrop-blur-md text-xs transition-all duration-300 ${
+        isScrolled && !mobileMenuOpen ? 'hidden sm:block' : 'border-b'
+      } ${
         theme === 'dark'
           ? 'bg-gradient-to-r from-emerald-950/80 via-slate-950/90 to-emerald-950/80 border-emerald-900/50 text-slate-200'
           : 'bg-gradient-to-r from-emerald-50 via-yellow-50/70 to-emerald-50 border-emerald-200/60 text-slate-800'
@@ -524,7 +655,7 @@ export const Navbar: React.FC = () => {
 
       {/* 4. MOBILE FULL-SCREEN / SLIDE-DOWN NAVIGATION DRAWER */}
       {mobileMenuOpen && (
-        <div className={`lg:hidden fixed inset-x-0 top-[108px] bottom-0 backdrop-blur-2xl z-40 p-6 overflow-y-auto border-t ${
+        <div style={{ top: headerHeight || 108 }} className={`lg:hidden fixed inset-x-0 bottom-0 backdrop-blur-2xl z-40 p-6 overflow-y-auto border-t ${
           theme === 'dark' ? 'bg-[#070b1a]/95 border-white/10 text-slate-200' : 'bg-white/95 border-emerald-100 text-slate-800'
         }`}>
           <div className="space-y-4">
@@ -551,33 +682,49 @@ export const Navbar: React.FC = () => {
 
             <div className="space-y-1">
               {[
-                { label: isBn ? 'হোম' : 'Home', page: 'home' },
-                { label: isBn ? 'পরিচিতি ও ইতিহাস' : 'About BIST', page: 'about' },
-                { label: isBn ? 'সকল প্রোগ্রামসমূহ' : 'Academic Programs', page: 'programs' },
-                { label: isBn ? 'ভর্তি নির্দেশিকা' : 'Admission Guidelines', page: 'admissions' },
-                { label: isBn ? 'স্কলারশিপ ও ফি ক্যালকুলেটর' : 'Scholarships & Calculator', page: 'calculator' },
-                { label: isBn ? 'নোটিশ বোর্ড' : 'Notice Board', page: 'notices' },
-                { label: isBn ? 'শিক্ষকমণ্ডলী' : 'Faculty Directory', page: 'faculty' },
-                { label: isBn ? 'কর্মকর্তাবৃন্দ' : 'Administrative Officers', page: 'officers' },
-                { label: isBn ? 'ক্যাম্পাস গ্যালারি' : 'Photo Gallery', page: 'gallery' },
-                { label: isBn ? 'প্রকল্প (SEIP / NSDA)' : 'Government Projects', page: 'projects' },
-                { label: isBn ? 'ক্যাম্পাস সুযোগ-সুবিধা' : 'Campus Facilities', page: 'facilities' },
-                { label: isBn ? 'ইভেন্টস ও সেমিনার' : 'Events & Seminars', page: 'events' },
-                { label: isBn ? 'সংবাদ ও মিডিয়া' : 'Latest News', page: 'news' },
-                { label: isBn ? 'সাধারণ জিজ্ঞাসা (FAQ)' : 'Frequently Asked Questions', page: 'faq' },
-                { label: isBn ? 'যোগাযোগ ও অবস্থান' : 'Contact & Location', page: 'contact' },
-              ].map((item) => (
-                <button
-                  key={item.page}
-                  onClick={() => {
-                    navigateTo(item.page as any);
-                    setMobileMenuOpen(false);
-                  }}
-                  className="w-full text-left py-3 px-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-800 transition-colors font-medium flex items-center justify-between min-h-[44px]"
-                >
-                  <span>{item.label}</span>
-                  <ArrowRight className="w-4 h-4 text-emerald-600" />
-                </button>
+                { label: isBn ? 'হোম' : 'Home', page: 'home', group: '' },
+                { label: isBn ? 'পরিচিতি ও ইতিহাস' : 'About BIST', page: 'about', group: '' },
+                { label: isBn ? 'বোর্ড অফ ট্রাস্টিজ' : 'Board of Trustees', page: 'board-of-trustees', group: '' },
+                { label: isBn ? 'সকল প্রোগ্রামসমূহ' : 'Academic Programs', page: 'programs', group: '' },
+                { label: isBn ? 'ভর্তি নির্দেশিকা' : 'Admission Guidelines', page: 'admissions', group: '' },
+                { label: isBn ? 'স্কলারশিপ ও ফি ক্যালকুলেটর' : 'Scholarships & Calculator', page: 'calculator', group: '' },
+                { label: isBn ? 'নোটিশ বোর্ড' : 'Notice Board', page: 'notices', group: '' },
+                { label: isBn ? 'ডকুমেন্টের জন্য অনুরোধ' : 'Request a Document', page: 'document-enquiry', group: '' },
+                { label: isBn ? 'শিক্ষকমণ্ডলী' : 'Faculty Directory', page: 'faculty', group: '' },
+                { label: isBn ? 'কর্মকর্তাবৃন্দ' : 'Administrative Officers', page: 'officers', group: '' },
+                { label: isBn ? 'একাডেমিক ক্যালেন্ডার' : 'Academic Calendar', page: 'academic-calendar', group: (isBn ? 'একাডেমিক' : 'Academics') },
+                { label: isBn ? 'ক্লাস ও পরীক্ষার রুটিন' : 'Class & Exam Routines', page: 'academic-routines', group: (isBn ? 'একাডেমিক' : 'Academics') },
+                { label: isBn ? 'একাডেমিক রেগুলেশন' : 'Academic Regulations', page: 'academic-regulations', group: (isBn ? 'একাডেমিক' : 'Academics') },
+                { label: isBn ? 'ডাউনলোড সেন্টার' : 'Downloads Centre', page: 'downloads', group: (isBn ? 'একাডেমিক' : 'Academics') },
+                { label: isBn ? 'লাইব্রেরি ও ই-লাইব্রেরি' : 'Library & e-Library', page: 'library', group: (isBn ? 'একাডেমিক' : 'Academics') },
+                { label: isBn ? 'শিক্ষার্থী জীবন ও ক্লাব' : 'Student Life & Clubs', page: 'student-life', group: (isBn ? 'একাডেমিক' : 'Academics') },
+                { label: isBn ? 'অভিযোগ ও অ্যান্টি-হ্যারাসমেন্ট' : 'Grievance & Anti-Harassment', page: 'grievance', group: (isBn ? 'একাডেমিক' : 'Academics') },
+                { label: isBn ? 'আইকিউএসি ও স্বীকৃতি' : 'IQAC & Accreditation', page: 'iqac', group: (isBn ? 'একাডেমিক' : 'Academics') },
+                { label: isBn ? 'ক্যাম্পাস গ্যালারি' : 'Photo Gallery', page: 'gallery', group: '' },
+                { label: isBn ? 'প্রকল্প (SEIP / NSDA)' : 'Government Projects', page: 'projects', group: '' },
+                { label: isBn ? 'ক্যাম্পাস সুযোগ-সুবিধা' : 'Campus Facilities', page: 'facilities', group: '' },
+                { label: isBn ? 'ইভেন্টস ও সেমিনার' : 'Events & Seminars', page: 'events', group: '' },
+                { label: isBn ? 'সংবাদ ও মিডিয়া' : 'Latest News', page: 'news', group: '' },
+                { label: isBn ? 'সাধারণ জিজ্ঞাসা (FAQ)' : 'Frequently Asked Questions', page: 'faq', group: '' },
+                { label: isBn ? 'যোগাযোগ ও অবস্থান' : 'Contact & Location', page: 'contact', group: '' }
+              ].map((item, idx, arr) => (
+                <React.Fragment key={item.page}>
+                  {item.group && arr[idx - 1]?.group !== item.group && (
+                    <div className="pt-3 pb-0.5 px-3 text-[11px] font-bold uppercase tracking-wider text-emerald-600">
+                      {item.group}
+                    </div>
+                  )}
+                  <button
+                    onClick={() => {
+                      navigateTo(item.page as any);
+                      setMobileMenuOpen(false);
+                    }}
+                    className="w-full text-left py-3 px-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-800 transition-colors font-medium flex items-center justify-between min-h-[44px]"
+                  >
+                    <span>{item.label}</span>
+                    <ArrowRight className="w-4 h-4 text-emerald-600" />
+                  </button>
+                </React.Fragment>
               ))}
             </div>
 

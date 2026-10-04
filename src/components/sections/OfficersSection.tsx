@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Briefcase, Phone, Mail, Building, Clock, MapPin, ShieldCheck, CheckCircle2, Headphones } from 'lucide-react';
+import { Briefcase, Phone, Mail, Building, Clock, MapPin, ShieldCheck, CheckCircle2, Headphones, ArrowRight } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
+import { useDismiss } from '../../hooks/useDismiss';
 import { ADMINISTRATIVE_OFFICERS, UNIVERSITY_INFO } from '../../data/mockData';
 import { AdministrativeOfficer } from '../../types';
 
@@ -8,7 +9,13 @@ export const OfficersSection: React.FC = () => {
   const { language, navigateTo, theme } = useApp();
   const isBn = language === 'bn';
 
+  /** Keep only a short preview row on the home page; the full list has its own page. */
+  const HOME_PREVIEW_LIMIT = 4;
+
   const [activeOfficerModal, setActiveOfficerModal] = useState<AdministrativeOfficer | null>(null);
+  const { backdropProps } = useDismiss(Boolean(activeOfficerModal), () =>
+    setActiveOfficerModal(null)
+  );
 
   return (
     <section className="py-16 px-4 sm:px-6 max-w-7xl mx-auto space-y-12">
@@ -84,11 +91,11 @@ export const OfficersSection: React.FC = () => {
       </div>
 
       {/* Officers Bento Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {ADMINISTRATIVE_OFFICERS.map((officer) => (
+      <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-3 -mx-4 px-4 sm:mx-0 sm:px-0 sm:pb-0 sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-6 no-scrollbar">
+        {ADMINISTRATIVE_OFFICERS.slice(0, HOME_PREVIEW_LIMIT).map((officer) => (
           <div
             key={officer.id}
-            className={`group rounded-2xl p-5 transition-all duration-300 flex flex-col justify-between border relative overflow-hidden ${
+            className={`min-w-[76%] snap-start sm:min-w-0 group rounded-2xl p-5 transition-all duration-300 flex flex-col justify-between border relative overflow-hidden ${
               theme === 'dark'
                 ? 'bg-slate-900/90 border-white/10 hover:border-yellow-500/50 hover:shadow-[0_10px_30px_rgba(250,204,21,0.12)]'
                 : 'bg-white border-slate-200/90 hover:border-yellow-400 hover:shadow-[0_12px_32px_rgba(234,179,8,0.12)]'
@@ -200,9 +207,38 @@ export const OfficersSection: React.FC = () => {
         ))}
       </div>
 
+      {/* See-more CTA — home shows a preview; the complete list has its own page */}
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+        <p
+          className={`text-xs sm:text-sm font-medium ${
+            theme === 'dark' ? 'text-slate-400' : 'text-slate-500'
+          }`}
+        >
+          {isBn
+            ? `মোট ${ADMINISTRATIVE_OFFICERS.length} জনের মধ্যে ${Math.min(HOME_PREVIEW_LIMIT, ADMINISTRATIVE_OFFICERS.length)} জন দেখানো হচ্ছে`
+            : `Previewing ${Math.min(HOME_PREVIEW_LIMIT, ADMINISTRATIVE_OFFICERS.length)} of ${ADMINISTRATIVE_OFFICERS.length} officers & staff`}
+        </p>
+        <button
+          onClick={() => navigateTo('officers')}
+          className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-heading text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+            theme === 'dark'
+              ? 'bg-yellow-500/20 text-yellow-300 hover:bg-yellow-500/30 border border-yellow-500/40'
+              : 'bg-amber-500 text-slate-950 hover:bg-amber-600 shadow-md shadow-amber-500/20'
+          }`}
+        >
+          <span>
+            {isBn ? `সকল ${ADMINISTRATIVE_OFFICERS.length} জন দেখুন` : `See all ${ADMINISTRATIVE_OFFICERS.length} officers`}
+          </span>
+          <ArrowRight className="w-4 h-4" />
+        </button>
+      </div>
+
       {/* Officer Detail Modal */}
       {activeOfficerModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in">
+        <div
+          {...backdropProps}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in"
+        >
           <div
             className={`max-w-lg w-full rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl relative border ${
               theme === 'dark' ? 'bg-slate-900 border-white/10' : 'bg-white border-slate-200'
