@@ -1,9 +1,12 @@
 import React from 'react';
 import { CheckCircle2, AlertTriangle, X, ShieldAlert, FileText, Info } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
+import { useDismiss } from '../../hooks/useDismiss';
 
 export const ClientChecklistModal: React.FC = () => {
   const { isClientNotesOpen, setIsClientNotesOpen, theme } = useApp();
+
+  const { backdropProps } = useDismiss(isClientNotesOpen, () => setIsClientNotesOpen(false));
 
   if (!isClientNotesOpen) return null;
 
@@ -59,7 +62,7 @@ export const ClientChecklistModal: React.FC = () => {
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md animate-fadeIn">
+    <div {...backdropProps} className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md animate-fadeIn">
       <div className={`relative w-full max-w-2xl rounded-3xl border p-6 sm:p-8 shadow-2xl space-y-6 max-h-[85vh] overflow-y-auto ${
         theme === 'dark'
           ? 'bg-[#0a0f24] border-emerald-500/40 text-white'

@@ -52,48 +52,48 @@ export const DepartmentPage: React.FC = () => {
       </div>
 
       {/* Department Hero Banner */}
-      <div className="relative rounded-3xl overflow-hidden glass-panel border border-white/10 p-6 sm:p-10">
+      <div className="relative rounded-3xl overflow-hidden glass-panel border border-slate-200 dark:border-white/10 p-6 sm:p-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           <div className="lg:col-span-8 space-y-4">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-300 text-xs font-semibold border border-cyan-500/30">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-700 dark:text-cyan-300 text-xs font-semibold border border-cyan-500/30">
               <span className="font-mono">{currentProgram.code}</span>
               <span className="text-slate-600">·</span>
               <span>{currentProgram.affiliation} Affiliated</span>
             </div>
 
-            <h1 className="font-heading text-2xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
+            <h1 className="font-heading text-2xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
               {isBn ? currentProgram.title.bn : currentProgram.title.en}
             </h1>
 
-            <p className="text-slate-300 text-sm leading-relaxed max-w-2xl">
+            <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed max-w-2xl">
               {isBn ? currentProgram.overview.bn : currentProgram.overview.en}
             </p>
 
-            <div className="flex flex-wrap items-center gap-4 pt-2 text-xs text-slate-300">
+            <div className="flex flex-wrap items-center gap-4 pt-2 text-xs text-slate-600 dark:text-slate-300">
               <div className="flex items-center gap-1.5">
-                <Clock className="w-4 h-4 text-cyan-400" />
+                <Clock className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
                 <span>{isBn ? currentProgram.duration.bn : currentProgram.duration.en}</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <BookOpen className="w-4 h-4 text-indigo-400" />
+                <BookOpen className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
                 <span>{currentProgram.credits} Total Credits</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <Users className="w-4 h-4 text-amber-400" />
+                <Users className="w-4 h-4 text-amber-600 dark:text-amber-400" />
                 <span>{currentProgram.seats} Approved Intake Seats</span>
               </div>
             </div>
           </div>
 
-          <div className="lg:col-span-4 p-5 rounded-2xl bg-white/[0.04] border border-white/10 space-y-4 text-center">
+          <div className="lg:col-span-4 p-5 rounded-2xl bg-white/[0.04] border border-slate-200 dark:border-white/10 space-y-4 text-center">
             <div>
-              <span className="text-xs text-slate-400 block font-medium">
+              <span className="text-xs text-slate-500 dark:text-slate-400 block font-medium">
                 {isBn ? 'সেমিস্টার ফি' : 'Semester Tuition Fee'}
               </span>
-              <span className="font-heading font-extrabold text-2xl sm:text-3xl text-white font-mono">
+              <span className="font-heading font-extrabold text-2xl sm:text-3xl text-slate-900 dark:text-white font-mono">
                 ৳{currentProgram.semesterFee.toLocaleString()}
               </span>
-              <span className="text-[11px] text-cyan-400 block mt-1">
+              <span className="text-[11px] text-cyan-600 dark:text-cyan-400 block mt-1">
                 {isBn ? '১০০% পর্যন্ত স্কলারশিপ প্রযোজ্য' : 'Up to 100% Scholarship Available'}
               </span>
             </div>
@@ -111,9 +111,9 @@ export const DepartmentPage: React.FC = () => {
 
       {/* Eligibility Box */}
       <div className="p-5 rounded-2xl glass-panel border border-cyan-500/30 flex items-start gap-3">
-        <GraduationCap className="w-5 h-5 text-cyan-400 shrink-0 mt-0.5" />
+        <GraduationCap className="w-5 h-5 text-cyan-600 dark:text-cyan-400 shrink-0 mt-0.5" />
         <div className="space-y-1">
-          <span className="text-xs font-bold uppercase tracking-wider text-cyan-300 block">
+          <span className="text-xs font-bold uppercase tracking-wider text-cyan-700 dark:text-cyan-300 block">
             {isBn ? 'ভর্তির ন্যূনতম যোগ্যতা' : 'Minimum Admission Criteria'}
           </span>
           <p className="text-xs sm:text-sm text-slate-200">
@@ -127,10 +127,10 @@ export const DepartmentPage: React.FC = () => {
         {/* Left: Semester-by-Semester Curriculum Accordion */}
         <div className="lg:col-span-7 space-y-4">
           <div className="space-y-1">
-            <h2 className="font-heading font-bold text-xl text-white">
+            <h2 className="font-heading font-bold text-xl text-slate-900 dark:text-white">
               {isBn ? 'সেমিস্টারভিত্তিক পূর্ণাঙ্গ পাঠ্যক্রম' : 'Semester-Wise Curriculum'}
             </h2>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-500 dark:text-slate-400">
               {isBn
                 ? 'জাতীয় বিশ্ববিদ্যালয়ের ক্রেডিট সিস্টেম অনুযায়ী ৮ সেমিস্টারের কোর্স রূপরেখা।'
                 : 'National University 8-semester course breakdown with theoretical & lab credits.'}
@@ -143,32 +143,32 @@ export const DepartmentPage: React.FC = () => {
               return (
                 <div
                   key={sem.semester}
-                  className="rounded-xl glass-panel border border-white/5 overflow-hidden transition-all"
+                  className="rounded-xl glass-panel border border-slate-200 dark:border-white/5 overflow-hidden transition-all"
                 >
                   <button
                     onClick={() =>
                       setExpandedSemester(isExpanded ? null : sem.semester)
                     }
-                    className="w-full p-4 flex items-center justify-between text-left hover:bg-white/5 transition-colors cursor-pointer"
+                    className="w-full p-4 flex items-center justify-between text-left hover:bg-slate-100 dark:bg-white/5 transition-colors cursor-pointer"
                   >
                     <div className="flex items-center gap-3">
-                      <span className="w-7 h-7 rounded-lg bg-cyan-500/10 text-cyan-400 font-mono text-xs font-bold flex items-center justify-center">
+                      <span className="w-7 h-7 rounded-lg bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 font-mono text-xs font-bold flex items-center justify-center">
                         S{sem.semester}
                       </span>
-                      <span className="font-medium text-xs sm:text-sm text-white">
+                      <span className="font-medium text-xs sm:text-sm text-slate-900 dark:text-white">
                         {isBn ? sem.title.bn : sem.title.en}
                       </span>
                     </div>
                     {isExpanded ? (
-                      <ChevronUp className="w-4 h-4 text-cyan-400" />
+                      <ChevronUp className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
                     ) : (
-                      <ChevronDown className="w-4 h-4 text-slate-400" />
+                      <ChevronDown className="w-4 h-4 text-slate-500 dark:text-slate-400" />
                     )}
                   </button>
 
                   {isExpanded && (
-                    <div className="px-4 pb-4 pt-1 border-t border-white/5 space-y-2 bg-black/20">
-                      <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">
+                    <div className="px-4 pb-4 pt-1 border-t border-slate-200 dark:border-white/5 space-y-2 bg-slate-50 dark:bg-black/20">
+                      <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">
                         Included Courses & Labs:
                       </span>
                       <ul className="space-y-1.5">
@@ -177,7 +177,7 @@ export const DepartmentPage: React.FC = () => {
                             key={idx}
                             className="flex items-center gap-2 text-xs text-slate-200"
                           >
-                            <CheckCircle2 className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                            <CheckCircle2 className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400 shrink-0" />
                             <span>{course}</span>
                           </li>
                         ))}
@@ -194,15 +194,15 @@ export const DepartmentPage: React.FC = () => {
         <div className="lg:col-span-5 space-y-6">
           {/* Career Prospects */}
           <div className="p-6 rounded-2xl glass-panel space-y-4">
-            <h3 className="font-heading font-bold text-base text-white flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-amber-400" />
+            <h3 className="font-heading font-bold text-base text-slate-900 dark:text-white flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-amber-600 dark:text-amber-400" />
               <span>{isBn ? 'কর্মসংস্থান ও ভবিষ্যৎ পেশা' : 'Target Career Pathways'}</span>
             </h3>
             <ul className="space-y-2">
               {currentProgram.careerProspects.map((cp, idx) => (
                 <li
                   key={idx}
-                  className="flex items-center gap-2.5 text-xs text-slate-300"
+                  className="flex items-center gap-2.5 text-xs text-slate-600 dark:text-slate-300"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
                   <span>{isBn ? cp.bn : cp.en}</span>
@@ -213,17 +213,17 @@ export const DepartmentPage: React.FC = () => {
 
           {/* Specialized Labs for this Dept */}
           <div className="p-6 rounded-2xl glass-panel space-y-4">
-            <h3 className="font-heading font-bold text-base text-white flex items-center gap-2">
-              <Layers className="w-4 h-4 text-indigo-400" />
+            <h3 className="font-heading font-bold text-base text-slate-900 dark:text-white flex items-center gap-2">
+              <Layers className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
               <span>{isBn ? 'ব্যবহারিক গবেষণাগার' : 'Specialized Laboratories'}</span>
             </h3>
             <ul className="space-y-2">
               {currentProgram.labs.map((lab, idx) => (
                 <li
                   key={idx}
-                  className="flex items-center gap-2 text-xs text-slate-300"
+                  className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300"
                 >
-                  <Building className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+                  <Building className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400 shrink-0" />
                   <span>{lab}</span>
                 </li>
               ))}
@@ -233,8 +233,8 @@ export const DepartmentPage: React.FC = () => {
           {/* Faculty in this Department */}
           {deptFaculty.length > 0 && (
             <div className="p-6 rounded-2xl glass-panel space-y-4">
-              <h3 className="font-heading font-bold text-base text-white flex items-center gap-2">
-                <Users className="w-4 h-4 text-emerald-400" />
+              <h3 className="font-heading font-bold text-base text-slate-900 dark:text-white flex items-center gap-2">
+                <Users className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                 <span>{isBn ? 'বিভাগীয় শিক্ষকমণ্ডলী' : 'Department Faculty'}</span>
               </h3>
               <div className="space-y-3">
@@ -246,10 +246,10 @@ export const DepartmentPage: React.FC = () => {
                       className="w-10 h-10 rounded-xl object-cover shrink-0"
                     />
                     <div className="text-xs">
-                      <div className="font-semibold text-white">
+                      <div className="font-semibold text-slate-900 dark:text-white">
                         {isBn ? fac.name.bn : fac.name.en}
                       </div>
-                      <div className="text-slate-400">
+                      <div className="text-slate-500 dark:text-slate-400">
                         {isBn ? fac.designation.bn : fac.designation.en}
                       </div>
                     </div>

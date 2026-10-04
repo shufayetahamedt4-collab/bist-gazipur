@@ -23,14 +23,14 @@ export const FaqPage: React.FC = () => {
   return (
     <div className="py-12 px-4 sm:px-6 max-w-4xl mx-auto space-y-10">
       <div className="text-center space-y-2 max-w-2xl mx-auto">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 text-xs font-semibold">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 text-xs font-semibold">
           <HelpCircle className="w-3.5 h-3.5" />
           <span>{isBn ? 'সাধারণ জিজ্ঞাসা' : 'Frequently Asked Questions'}</span>
         </div>
-        <h1 className="font-heading text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+        <h1 className="font-heading text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
           {isBn ? 'ভর্তি ও একাডেমিক প্রশ্নোত্তর' : 'Got Questions? We Have Answers'}
         </h1>
-        <p className="text-xs sm:text-sm text-slate-400">
+        <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
           {isBn
             ? 'ভর্তি প্রক্রিয়া, স্কলারশিপ, জাতীয় বিশ্ববিদ্যালয় স্বীকৃতি ও ক্যাম্পাস সম্পর্কিত তথ্য।'
             : 'Clear answers on admission eligibility, fee structures, polytechnic lateral entry, and scholarships.'}
@@ -38,13 +38,13 @@ export const FaqPage: React.FC = () => {
 
         {/* Search Input */}
         <div className="relative pt-4 max-w-md mx-auto">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-[26px]" />
+          <Search className="w-4 h-4 text-slate-500 dark:text-slate-400 absolute left-3 top-[26px]" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder={isBn ? 'প্রশ্ন খুঁজুন...' : 'Search questions or keywords...'}
-            className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-black/40 border border-white/10 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500"
+            className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-white dark:bg-black/40 border border-slate-200 dark:border-white/10 text-xs text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500"
           />
         </div>
       </div>
@@ -56,24 +56,24 @@ export const FaqPage: React.FC = () => {
           return (
             <div
               key={idx}
-              className="rounded-2xl glass-panel border border-white/5 overflow-hidden transition-all"
+              className="rounded-2xl glass-panel border border-slate-200 dark:border-white/5 overflow-hidden transition-all"
             >
               <button
                 onClick={() => setOpenIndex(isOpen ? null : idx)}
                 className="w-full p-5 flex items-center justify-between text-left hover:bg-white/[0.02] transition-colors cursor-pointer"
               >
-                <span className="font-heading font-semibold text-sm sm:text-base text-white pr-4">
+                <span className="font-heading font-semibold text-sm sm:text-base text-slate-900 dark:text-white pr-4">
                   {isBn ? faq.question.bn : faq.question.en}
                 </span>
                 {isOpen ? (
-                  <ChevronUp className="w-4 h-4 text-cyan-400 shrink-0" />
+                  <ChevronUp className="w-4 h-4 text-cyan-600 dark:text-cyan-400 shrink-0" />
                 ) : (
-                  <ChevronDown className="w-4 h-4 text-slate-400 shrink-0" />
+                  <ChevronDown className="w-4 h-4 text-slate-500 dark:text-slate-400 shrink-0" />
                 )}
               </button>
 
               {isOpen && (
-                <div className="px-5 pb-5 pt-1 border-t border-white/5 text-xs sm:text-sm text-slate-300 leading-relaxed bg-black/20">
+                <div className="px-5 pb-5 pt-1 border-t border-slate-200 dark:border-white/5 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed bg-slate-50 dark:bg-black/20">
                   {isBn ? faq.answer.bn : faq.answer.en}
                 </div>
               )}
@@ -84,10 +84,10 @@ export const FaqPage: React.FC = () => {
 
       {/* Still Have Questions Box */}
       <div className="p-6 rounded-3xl glass-panel border border-cyan-500/30 text-center space-y-3">
-        <h3 className="font-heading font-bold text-base text-white">
+        <h3 className="font-heading font-bold text-base text-slate-900 dark:text-white">
           {isBn ? 'আপনার প্রশ্নের উত্তর খুঁজে পাননি?' : 'Still have unanswered questions?'}
         </h3>
-        <p className="text-xs text-slate-400 max-w-md mx-auto">
+        <p className="text-xs text-slate-500 dark:text-slate-400 max-w-md mx-auto">
           {isBn
             ? 'আমাদের ২৪/৭ এআই ভর্তি সহকারীকে সরাসরি প্রশ্ন করুন অথবা আমাদের ভর্তি অফিসারের সাথে কথা বলুন।'
             : 'Chat with our bilingual AI Assistant or reach out to our admission counselors directly.'}

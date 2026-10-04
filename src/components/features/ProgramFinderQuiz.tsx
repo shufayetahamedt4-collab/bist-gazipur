@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Sparkles, X, CheckCircle2, ArrowRight, BookOpen, RotateCcw } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
+import { useDismiss } from '../../hooks/useDismiss';
 import { PROGRAMS } from '../../data/mockData';
 
 export const ProgramFinderQuiz: React.FC = () => {
@@ -79,12 +80,14 @@ export const ProgramFinderQuiz: React.FC = () => {
     setRecommendedProgId(null);
   };
 
+  const { backdropProps } = useDismiss(isQuizOpen, () => setIsQuizOpen(false));
+
   if (!isQuizOpen) return null;
 
   const matchedProgram = PROGRAMS.find((p) => p.id === recommendedProgId) || PROGRAMS[0];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md animate-fadeIn">
+    <div {...backdropProps} className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md animate-fadeIn">
       <div className={`relative w-full max-w-lg rounded-3xl border p-6 sm:p-8 shadow-2xl space-y-6 ${
         theme === 'dark'
           ? 'bg-[#0a0f24] border-emerald-500/40 text-white'

@@ -18,7 +18,7 @@ export const ProgramExplorer: React.FC = () => {
         <div className="text-center space-y-3 max-w-3xl mx-auto">
           <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${
             theme === 'dark'
-              ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-400'
+              ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400'
               : 'bg-emerald-100 text-emerald-800 border border-emerald-300'
           }`}>
             <BookOpen className="w-3.5 h-3.5 text-emerald-600" />
@@ -99,11 +99,11 @@ export const ProgramExplorer: React.FC = () => {
 
         {/* Tab 1: Honours Bento Grid (5 Departments: TST, CSE, BBA, FDT, AMT) */}
         {activeTab === 'honours' && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-3 -mx-4 px-4 sm:mx-0 sm:px-0 sm:pb-0 sm:grid sm:grid-cols-2 lg:grid-cols-3 sm:gap-6 no-scrollbar">
             {PROGRAMS.map((prog) => (
               <div
                 key={prog.id}
-                className={`group relative rounded-2xl overflow-hidden border transition-all duration-300 flex flex-col justify-between hover:-translate-y-1 ${
+                className={`min-w-[78%] snap-start sm:min-w-0 group relative rounded-2xl overflow-hidden border transition-all duration-300 flex flex-col justify-between hover:-translate-y-1 ${
                   theme === 'dark'
                     ? 'glass-panel-dark hover:border-emerald-500/40 shadow-xl'
                     : 'bg-white/95 border-emerald-100 hover:border-emerald-300 shadow-[0_8px_30px_rgb(5,150,105,0.06)]'
@@ -141,7 +141,7 @@ export const ProgramExplorer: React.FC = () => {
                 <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
                   <div className="space-y-2">
                     <h3 className={`font-heading font-bold text-lg transition-colors line-clamp-1 ${
-                      theme === 'dark' ? 'text-white group-hover:text-emerald-400' : 'text-[#0b192c] group-hover:text-emerald-700'
+                      theme === 'dark' ? 'text-white group-hover:text-emerald-600 dark:hover:text-emerald-400' : 'text-[#0b192c] group-hover:text-emerald-700'
                     }`}>
                       {isBn ? prog.title.bn : prog.title.en}
                     </h3>
@@ -160,7 +160,7 @@ export const ProgramExplorer: React.FC = () => {
                         {isBn ? 'সেমিস্টার ফি:' : 'Semester Fee:'}
                       </span>
                       <span className={`font-bold font-mono ${
-                        theme === 'dark' ? 'text-emerald-400' : 'text-emerald-700'
+                        theme === 'dark' ? 'text-emerald-600 dark:text-emerald-400' : 'text-emerald-700'
                       }`}>
                         ৳{prog.semesterFee.toLocaleString()}
                       </span>
@@ -171,7 +171,7 @@ export const ProgramExplorer: React.FC = () => {
                         onClick={() => navigateTo('department-detail', prog.id)}
                         className={`flex-1 py-2 px-3 rounded-xl text-xs font-semibold transition-colors text-center cursor-pointer flex items-center justify-center gap-1.5 ${
                           theme === 'dark'
-                            ? 'text-emerald-300 hover:text-white bg-white/5 hover:bg-emerald-900/40 border border-emerald-500/20'
+                            ? 'text-emerald-700 dark:text-emerald-300 hover:text-white bg-white/5 hover:bg-emerald-900/40 border border-emerald-500/20'
                             : 'text-emerald-800 hover:text-emerald-950 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200'
                         }`}
                       >
@@ -269,7 +269,7 @@ export const ProgramExplorer: React.FC = () => {
                   onClick={() => navigateTo('apply-online')}
                   className={`p-2 rounded-lg transition-all shrink-0 cursor-pointer ${
                     theme === 'dark'
-                      ? 'bg-white/5 group-hover:bg-emerald-500/20 text-slate-400 group-hover:text-emerald-400'
+                      ? 'bg-white/5 group-hover:bg-emerald-500/20 text-slate-400 group-hover:text-emerald-600 dark:hover:text-emerald-400'
                       : 'bg-emerald-50 group-hover:bg-emerald-100 text-emerald-700'
                   }`}
                   title="Apply for this diploma"

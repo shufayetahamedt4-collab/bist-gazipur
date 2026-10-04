@@ -71,7 +71,7 @@ export const WhyChooseSection: React.FC = () => {
         <div className="text-center space-y-3 max-w-2xl mx-auto">
           <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${
             theme === 'dark'
-              ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-400'
+              ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400'
               : 'bg-emerald-100 text-emerald-800 border border-emerald-300'
           }`}>
             <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
@@ -125,7 +125,7 @@ export const WhyChooseSection: React.FC = () => {
 
                 <div className="p-6 space-y-4">
                   <h3 className={`font-heading font-bold text-xl transition-colors ${
-                    theme === 'dark' ? 'text-white group-hover:text-emerald-300' : 'text-[#0b192c] group-hover:text-emerald-700'
+                    theme === 'dark' ? 'text-white group-hover:text-emerald-700 dark:hover:text-emerald-300' : 'text-[#0b192c] group-hover:text-emerald-700'
                   }`}>
                     {card.title}
                   </h3>
@@ -144,7 +144,7 @@ export const WhyChooseSection: React.FC = () => {
                         theme === 'dark' ? 'text-slate-300' : 'text-slate-700'
                       }`}>
                         <CheckCircle2 className={`w-3.5 h-3.5 shrink-0 mt-0.5 ${
-                          theme === 'dark' ? 'text-emerald-400' : 'text-emerald-600'
+                          theme === 'dark' ? 'text-emerald-600 dark:text-emerald-400' : 'text-emerald-600'
                         }`} />
                         <span>{pt}</span>
                       </div>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Briefcase, Phone, Mail, Building, Clock, MapPin, ShieldCheck, Search, Headphones, CheckCircle2 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
+import { useDismiss } from '../../hooks/useDismiss';
 import { ADMINISTRATIVE_OFFICERS, UNIVERSITY_INFO } from '../../data/mockData';
 import { AdministrativeOfficer } from '../../types';
 
@@ -10,6 +11,7 @@ export const OfficersPage: React.FC = () => {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedOfficer, setSelectedOfficer] = useState<AdministrativeOfficer | null>(null);
+  const { backdropProps } = useDismiss(Boolean(selectedOfficer), () => setSelectedOfficer(null));
 
   const sortedOfficers = [...ADMINISTRATIVE_OFFICERS].sort((a, b) => a.order - b.order);
 
@@ -202,7 +204,10 @@ export const OfficersPage: React.FC = () => {
 
       {/* Modal View */}
       {selectedOfficer && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in">
+        <div
+          {...backdropProps}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in"
+        >
           <div
             className={`max-w-lg w-full rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl relative border ${
               theme === 'dark' ? 'bg-slate-900 border-white/10' : 'bg-white border-slate-200'

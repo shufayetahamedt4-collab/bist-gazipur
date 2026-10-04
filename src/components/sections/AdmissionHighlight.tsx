@@ -27,7 +27,7 @@ export const AdmissionHighlight: React.FC = () => {
               <div
                 className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold ${
                   theme === 'dark'
-                    ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30'
+                    ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30'
                     : 'bg-emerald-100 text-emerald-900 border border-emerald-300'
                 }`}
               >
@@ -64,7 +64,7 @@ export const AdmissionHighlight: React.FC = () => {
                 theme === 'dark' ? 'bg-black/30 border-emerald-500/25' : 'bg-white/80 border-emerald-200'
               }`}>
                 <span className={`text-[10px] font-bold uppercase tracking-wider block ${
-                  theme === 'dark' ? 'text-emerald-400' : 'text-emerald-700'
+                  theme === 'dark' ? 'text-emerald-600 dark:text-emerald-400' : 'text-emerald-700'
                 }`}>
                   {isBn ? 'অফিসিয়াল ভর্তি বিজ্ঞপ্তি (bist.edu.bd)' : 'Official admission announcement (bist.edu.bd)'}
                 </span>
@@ -130,7 +130,7 @@ export const AdmissionHighlight: React.FC = () => {
                   onClick={() => navigateTo('calculator')}
                   className={`px-4 py-3 rounded-xl font-heading font-semibold text-xs sm:text-sm transition-all flex items-center gap-1.5 cursor-pointer ${
                     theme === 'dark'
-                      ? 'text-emerald-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10'
+                      ? 'text-emerald-700 dark:text-emerald-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10'
                       : 'text-emerald-800 hover:text-emerald-950 bg-white hover:bg-emerald-50 border border-emerald-300 shadow-sm'
                   }`}
                 >
@@ -162,7 +162,7 @@ export const AdmissionHighlight: React.FC = () => {
                   </div>
 
                   <div className="space-y-1">
-                    <span className="text-[11px] font-mono text-emerald-300 font-bold uppercase tracking-wider block">
+                    <span className="text-[11px] font-mono text-emerald-700 dark:text-emerald-300 font-bold uppercase tracking-wider block">
                       {isBn ? 'সেশন ২০২৫-২৬' : 'Session 2025-26'}
                     </span>
                     <h3 className="font-heading font-extrabold text-lg text-white leading-tight">

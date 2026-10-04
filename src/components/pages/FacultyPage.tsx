@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Mail, Phone, GraduationCap, X, ExternalLink } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
+import { useDismiss } from '../../hooks/useDismiss';
 import { FACULTY_MEMBERS, PROGRAMS } from '../../data/mockData';
 import { FacultyMember } from '../../types';
 
@@ -16,10 +17,12 @@ export const FacultyPage: React.FC = () => {
     return f.department.toLowerCase() === selectedDept.toLowerCase();
   });
 
+  const { backdropProps } = useDismiss(Boolean(modalFaculty), () => setModalFaculty(null));
+
   return (
     <div className="py-12 px-4 sm:px-6 max-w-6xl mx-auto space-y-10">
       <div className="text-center space-y-2 max-w-2xl mx-auto">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 text-xs font-semibold">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 text-xs font-semibold">
           <GraduationCap className="w-3.5 h-3.5" />
           <span>{isBn ? 'দক্ষ শিক্ষকমণ্ডলী' : 'Distinguished Academic Faculty'}</span>
         </div>
@@ -89,13 +92,13 @@ export const FacultyPage: React.FC = () => {
                 <h3
                   className={`font-heading font-bold text-base transition-colors ${
                     theme === 'dark'
-                      ? 'text-white group-hover:text-cyan-300'
+                      ? 'text-white group-hover:text-cyan-700 dark:hover:text-cyan-300'
                       : 'text-[#0b192c] group-hover:text-cyan-700'
                   }`}
                 >
                   {isBn ? member.name.bn : member.name.en}
                 </h3>
-                <span className="text-xs text-cyan-400 font-medium block mt-0.5">
+                <span className="text-xs text-cyan-600 dark:text-cyan-400 font-medium block mt-0.5">
                   {isBn ? member.designation.bn : member.designation.en}
                 </span>
                 <p className="text-[11px] text-slate-400 line-clamp-2 mt-1">
@@ -106,7 +109,7 @@ export const FacultyPage: React.FC = () => {
 
             <div className="pt-3 border-t border-white/5 flex items-center justify-between text-xs text-slate-400">
               <span>{member.employmentType}</span>
-              <span className="text-cyan-400 font-semibold group-hover:translate-x-1 transition-transform">
+              <span className="text-cyan-600 dark:text-cyan-400 font-semibold group-hover:translate-x-1 transition-transform">
                 View Bio →
               </span>
             </div>
@@ -116,7 +119,10 @@ export const FacultyPage: React.FC = () => {
 
       {/* Faculty Profile Modal */}
       {modalFaculty && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
+        <div
+          {...backdropProps}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn"
+        >
           <div className="relative w-full max-w-lg rounded-3xl bg-[#0a0f24] border border-cyan-500/40 p-6 sm:p-8 shadow-2xl space-y-6">
             <button
               onClick={() => setModalFaculty(null)}
@@ -132,13 +138,13 @@ export const FacultyPage: React.FC = () => {
                 className="w-20 h-20 rounded-2xl object-cover border border-white/10 shrink-0"
               />
               <div>
-                <span className="text-[10px] font-mono font-bold text-cyan-400 px-2 py-0.5 rounded bg-cyan-950/80 border border-cyan-500/30">
+                <span className="text-[10px] font-mono font-bold text-cyan-600 dark:text-cyan-400 px-2 py-0.5 rounded bg-cyan-950/80 border border-cyan-500/30">
                   {modalFaculty.department} Department
                 </span>
                 <h3 className="font-heading font-extrabold text-xl text-white mt-1">
                   {isBn ? modalFaculty.name.bn : modalFaculty.name.en}
                 </h3>
-                <p className="text-xs text-cyan-300 font-medium">
+                <p className="text-xs text-cyan-700 dark:text-cyan-300 font-medium">
                   {isBn ? modalFaculty.designation.bn : modalFaculty.designation.en}
                 </p>
               </div>
@@ -162,7 +168,7 @@ export const FacultyPage: React.FC = () => {
                   href={`mailto:${modalFaculty.email}`}
                   className="flex-1 p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center gap-2 text-white"
                 >
-                  <Mail className="w-4 h-4 text-cyan-400" />
+                  <Mail className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
                   <span className="truncate">{modalFaculty.email}</span>
                 </a>
                 {modalFaculty.profileUrl ? (
@@ -172,7 +178,7 @@ export const FacultyPage: React.FC = () => {
                     rel="noopener noreferrer"
                     className="flex-1 p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center gap-2 text-white"
                   >
-                    <ExternalLink className="w-4 h-4 text-indigo-400" />
+                    <ExternalLink className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
                     <span>Official Profile</span>
                   </a>
                 ) : modalFaculty.phone ? (
@@ -180,7 +186,7 @@ export const FacultyPage: React.FC = () => {
                     href={`tel:${modalFaculty.phone}`}
                     className="flex-1 p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center gap-2 text-white"
                   >
-                    <Phone className="w-4 h-4 text-indigo-400" />
+                    <Phone className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
                     <span>{modalFaculty.phone}</span>
                   </a>
                 ) : null}

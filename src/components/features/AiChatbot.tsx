@@ -112,7 +112,7 @@ export const AiChatbot: React.FC = () => {
       {/* Header */}
       <div className="p-4 bg-[#0b192c] border-b border-emerald-900/50 flex items-center justify-between text-white">
         <div className="flex items-center gap-3">
-          <div className="relative w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center border border-emerald-500/30">
+          <div className="relative w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center border border-emerald-500/30">
             <Sparkles className="w-5 h-5 text-yellow-300" />
             <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-[#0b192c]" />
           </div>
@@ -120,7 +120,7 @@ export const AiChatbot: React.FC = () => {
             <h3 className="font-heading font-bold text-sm text-white flex items-center gap-1.5">
               <span>BIST AI Admission Guide</span>
             </h3>
-            <span className="text-[10px] text-emerald-300 font-medium">
+            <span className="text-[10px] text-emerald-700 dark:text-emerald-300 font-medium">
               {isBn ? 'বাংলা ও ইংরেজিতে সার্বক্ষণিক সহায়তা' : 'Bilingual 24/7 Smart Assistant'}
             </span>
           </div>
@@ -197,7 +197,7 @@ export const AiChatbot: React.FC = () => {
             onClick={() => handleSend(btn.query)}
             className={`px-2.5 py-1 rounded-full border text-[10px] whitespace-nowrap transition-colors shrink-0 cursor-pointer ${
               theme === 'dark'
-                ? 'bg-white/5 hover:bg-emerald-500/20 text-slate-300 hover:text-emerald-300 border-white/10'
+                ? 'bg-white/5 hover:bg-emerald-500/20 text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-300 border-white/10'
                 : 'bg-white hover:bg-emerald-100 text-emerald-800 border-emerald-200'
             }`}
           >

@@ -13,6 +13,7 @@ import {
   FileSpreadsheet,
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
+import { useDismiss } from '../../hooks/useDismiss';
 
 export const AdminDashboardPage: React.FC = () => {
   const { language, applications, noticesList, addNotice, deleteNotice } = useApp();
@@ -28,6 +29,8 @@ export const AdminDashboardPage: React.FC = () => {
   const [newNoticeTitle, setNewNoticeTitle] = useState('');
   const [newNoticeCategory, setNewNoticeCategory] = useState<'examinations' | 'admissions' | 'academic' | 'holidays'>('admissions');
   const [newNoticeContent, setNewNoticeContent] = useState('');
+
+  const { backdropProps } = useDismiss(showNoticeModal, () => setShowNoticeModal(false));
 
   // CSV export handler
   const handleExportCSV = () => {
@@ -109,16 +112,16 @@ export const AdminDashboardPage: React.FC = () => {
   return (
     <div className="py-12 px-4 sm:px-6 max-w-6xl mx-auto space-y-8">
       {/* Admin Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-3xl glass-panel border border-white/10">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-3xl glass-panel border border-slate-200 dark:border-white/10">
         <div className="space-y-1">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 text-xs font-semibold">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 text-xs font-semibold">
             <ShieldCheck className="w-3.5 h-3.5" />
             <span>Admin Management Console</span>
           </div>
-          <h1 className="font-heading font-extrabold text-2xl sm:text-3xl text-white">
+          <h1 className="font-heading font-extrabold text-2xl sm:text-3xl text-slate-900 dark:text-white">
             BIST Admissions & Content Control
           </h1>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-slate-500 dark:text-slate-400">
             Monitor real-time admission leads, export student records to CSV, and publish urgent circulars.
           </p>
         </div>
@@ -135,7 +138,7 @@ export const AdminDashboardPage: React.FC = () => {
       </div>
 
       {/* Navigation Tabs */}
-      <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-black/40 border border-white/10 max-w-sm">
+      <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-white dark:bg-black/40 border border-slate-200 dark:border-white/10 max-w-sm">
         <button
           onClick={() => setActiveTab('applications')}
           className={`flex-1 py-2 text-xs font-semibold rounded-xl transition-all cursor-pointer flex items-center justify-center gap-2 ${
@@ -163,26 +166,26 @@ export const AdminDashboardPage: React.FC = () => {
 
       {/* TAB 1: Applications Lead Capture Table */}
       {activeTab === 'applications' && (
-        <div className="glass-panel p-6 rounded-3xl border border-white/10 space-y-4">
+        <div className="glass-panel p-6 rounded-3xl border border-slate-200 dark:border-white/10 space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="relative flex-1 max-w-sm">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-slate-500 dark:text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 value={filterQuery}
                 onChange={(e) => setFilterQuery(e.target.value)}
                 placeholder="Search applicant name, phone, ref..."
-                className="w-full pl-9 pr-3 py-2 rounded-xl bg-black/40 border border-white/10 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500"
+                className="w-full pl-9 pr-3 py-2 rounded-xl bg-white dark:bg-black/40 border border-slate-200 dark:border-white/10 text-xs text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500"
               />
             </div>
-            <span className="text-xs text-slate-400">
+            <span className="text-xs text-slate-500 dark:text-slate-400">
               Showing {filteredApps.length} student leads
             </span>
           </div>
 
           <div className="overflow-x-auto">
             <table className="w-full text-xs text-left">
-              <thead className="bg-black/40 text-slate-400 uppercase font-mono text-[10px] border-b border-white/10">
+              <thead className="bg-white dark:bg-black/40 text-slate-500 dark:text-slate-400 uppercase font-mono text-[10px] border-b border-slate-200 dark:border-white/10">
                 <tr>
                   <th className="py-3 px-4">Tracking Ref</th>
                   <th className="py-3 px-4">Full Name</th>
@@ -193,32 +196,32 @@ export const AdminDashboardPage: React.FC = () => {
                   <th className="py-3 px-4">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5 text-slate-300">
+              <tbody className="divide-y divide-white/5 text-slate-600 dark:text-slate-300">
                 {filteredApps.map((app) => (
                   <tr key={app.id} className="hover:bg-white/[0.02]">
-                    <td className="py-3 px-4 font-mono font-bold text-cyan-400">
+                    <td className="py-3 px-4 font-mono font-bold text-cyan-600 dark:text-cyan-400">
                       {app.referenceNumber}
                     </td>
                     <td className="py-3 px-4">
-                      <div className="font-semibold text-white">{app.fullName}</div>
+                      <div className="font-semibold text-slate-900 dark:text-white">{app.fullName}</div>
                       <div className="text-[11px] text-slate-500">{app.email}</div>
                     </td>
-                    <td className="py-3 px-4 font-mono text-emerald-400">
+                    <td className="py-3 px-4 font-mono text-emerald-600 dark:text-emerald-400">
                       <a href={`tel:${app.phone}`} className="hover:underline">
                         {app.phone}
                       </a>
                     </td>
-                    <td className="py-3 px-4 font-bold uppercase text-amber-300">
+                    <td className="py-3 px-4 font-bold uppercase text-amber-700 dark:text-amber-300">
                       {app.programChoice}
                     </td>
-                    <td className="py-3 px-4 font-mono text-slate-300">
+                    <td className="py-3 px-4 font-mono text-slate-600 dark:text-slate-300">
                       {app.sscGpa} / {app.hscGpa}
                     </td>
-                    <td className="py-3 px-4 text-slate-400 font-mono text-[11px]">
+                    <td className="py-3 px-4 text-slate-500 dark:text-slate-400 font-mono text-[11px]">
                       {app.submissionDate}
                     </td>
                     <td className="py-3 px-4">
-                      <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 capitalize">
+                      <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 capitalize">
                         {app.status}
                       </span>
                     </td>
@@ -232,9 +235,9 @@ export const AdminDashboardPage: React.FC = () => {
 
       {/* TAB 2: Manage Notices */}
       {activeTab === 'notices' && (
-        <div className="glass-panel p-6 rounded-3xl border border-white/10 space-y-4">
+        <div className="glass-panel p-6 rounded-3xl border border-slate-200 dark:border-white/10 space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="font-heading font-bold text-base text-white">
+            <h3 className="font-heading font-bold text-base text-slate-900 dark:text-white">
               Circulars & Official Exam Notices
             </h3>
             <button
@@ -251,20 +254,20 @@ export const AdminDashboardPage: React.FC = () => {
               <div key={notice.id} className="py-3.5 flex items-center justify-between gap-4">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-mono text-cyan-400 uppercase font-bold">
+                    <span className="text-[10px] font-mono text-cyan-600 dark:text-cyan-400 uppercase font-bold">
                       {notice.category}
                     </span>
                     <span className="text-slate-600">·</span>
-                    <span className="text-[11px] text-slate-400">{notice.date}</span>
+                    <span className="text-[11px] text-slate-500 dark:text-slate-400">{notice.date}</span>
                   </div>
-                  <h4 className="text-xs sm:text-sm font-medium text-white line-clamp-1">
+                  <h4 className="text-xs sm:text-sm font-medium text-slate-900 dark:text-white line-clamp-1">
                     {notice.title.en}
                   </h4>
                 </div>
 
                 <button
                   onClick={() => deleteNotice(notice.id)}
-                  className="p-2 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 transition-colors shrink-0"
+                  className="p-2 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 transition-colors shrink-0"
                   title="Delete circular"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -277,31 +280,31 @@ export const AdminDashboardPage: React.FC = () => {
 
       {/* Modal: Publish Notice */}
       {showNoticeModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
-          <div className="relative w-full max-w-lg rounded-3xl bg-[#0a0f24] border border-cyan-500/40 p-6 sm:p-8 shadow-2xl space-y-5">
-            <h3 className="font-heading font-bold text-lg text-white">
+        <div {...backdropProps} className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
+          <div className="dark relative w-full max-w-lg rounded-3xl bg-[#0a0f24] border border-cyan-500/40 p-6 sm:p-8 shadow-2xl space-y-5">
+            <h3 className="font-heading font-bold text-lg text-slate-900 dark:text-white">
               Publish Official Academic Circular
             </h3>
 
             <form onSubmit={handleCreateNotice} className="space-y-4 text-xs">
               <div className="space-y-1">
-                <label className="text-slate-300 font-medium">Notice Title *</label>
+                <label className="text-slate-600 dark:text-slate-300 font-medium">Notice Title *</label>
                 <input
                   type="text"
                   value={newNoticeTitle}
                   onChange={(e) => setNewNoticeTitle(e.target.value)}
                   placeholder="e.g. Schedule for 4th Semester Mid-term Examinations..."
-                  className="w-full p-2.5 rounded-xl bg-black/40 border border-white/10 text-white focus:border-cyan-500 focus:outline-none"
+                  className="w-full p-2.5 rounded-xl bg-white dark:bg-black/40 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white focus:border-cyan-500 focus:outline-none"
                   required
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-slate-300 font-medium">Category</label>
+                <label className="text-slate-600 dark:text-slate-300 font-medium">Category</label>
                 <select
                   value={newNoticeCategory}
                   onChange={(e) => setNewNoticeCategory(e.target.value as any)}
-                  className="w-full p-2.5 rounded-xl bg-black/40 border border-white/10 text-white"
+                  className="w-full p-2.5 rounded-xl bg-white dark:bg-black/40 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white"
                 >
                   <option value="admissions">Admissions</option>
                   <option value="examinations">Examinations</option>
@@ -311,13 +314,13 @@ export const AdminDashboardPage: React.FC = () => {
               </div>
 
               <div className="space-y-1">
-                <label className="text-slate-300 font-medium">Notice Content / Instructions *</label>
+                <label className="text-slate-600 dark:text-slate-300 font-medium">Notice Content / Instructions *</label>
                 <textarea
                   rows={4}
                   value={newNoticeContent}
                   onChange={(e) => setNewNoticeContent(e.target.value)}
                   placeholder="Type the detailed instructions for students and faculty..."
-                  className="w-full p-2.5 rounded-xl bg-black/40 border border-white/10 text-white focus:border-cyan-500 focus:outline-none"
+                  className="w-full p-2.5 rounded-xl bg-white dark:bg-black/40 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white focus:border-cyan-500 focus:outline-none"
                   required
                 ></textarea>
               </div>
@@ -326,7 +329,7 @@ export const AdminDashboardPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setShowNoticeModal(false)}
-                  className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300"
+                  className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:bg-white/10 text-slate-600 dark:text-slate-300"
                 >
                   Cancel
                 </button>

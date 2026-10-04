@@ -38,7 +38,7 @@ export const TestimonialsSection: React.FC = () => {
         <div className="text-center space-y-2 max-w-2xl mx-auto">
           <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${
             theme === 'dark'
-              ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+              ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20'
               : 'bg-emerald-100 text-emerald-800 border border-emerald-300'
           }`}>
             <Quote className="w-3.5 h-3.5 text-emerald-600" />
@@ -77,7 +77,7 @@ export const TestimonialsSection: React.FC = () => {
                   />
                 ) : (
                   <div className="w-full h-full rounded-xl bg-[#0b192c] flex items-center justify-center">
-                    <span className="font-heading font-extrabold text-3xl sm:text-4xl text-emerald-400">
+                    <span className="font-heading font-extrabold text-3xl sm:text-4xl text-emerald-600 dark:text-emerald-400">
                       {initials(isBn ? current.name.bn : current.name.en)}
                     </span>
                   </div>
@@ -111,7 +111,7 @@ export const TestimonialsSection: React.FC = () => {
 
             {/* Testimonial Quote */}
             <div className="md:col-span-8 space-y-4">
-              <div className="flex items-center gap-1 text-amber-400">
+              <div className="flex items-center gap-1 text-amber-600 dark:text-amber-400">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} className="w-4 h-4 fill-amber-400" />
                 ))}

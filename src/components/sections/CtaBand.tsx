@@ -43,7 +43,7 @@ export const CtaBand: React.FC = () => {
               <div
                 className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${
                   theme === 'dark'
-                    ? 'bg-emerald-500/15 border border-emerald-500/30 text-emerald-300'
+                    ? 'bg-emerald-500/15 border border-emerald-500/30 text-emerald-700 dark:text-emerald-300'
                     : 'bg-emerald-100 text-emerald-900 border border-emerald-300'
                 }`}
               >

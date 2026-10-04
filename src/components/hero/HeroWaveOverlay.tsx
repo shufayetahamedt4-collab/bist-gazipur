@@ -21,6 +21,10 @@ export const HeroWaveOverlay: React.FC = () => {
   const [hasMouseMoved, setHasMouseMoved] = useState(false);
   const [ripples, setRipples] = useState<Ripple[]>([]);
   const lastSpawnTime = useRef<number>(0);
+  // Ripples are keyed by this monotonic counter rather than Date.now(), because two
+  // ripples created in the same millisecond would otherwise share a React key.
+  const rippleId = useRef(0);
+  const mouseRef = useRef(mousePos);
 
   // Track mouse coordinates across the hero section
   useEffect(() => {
@@ -30,6 +34,7 @@ export const HeroWaveOverlay: React.FC = () => {
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
 
+      mouseRef.current = { x, y };
       setMousePos({ x, y });
       setHasMouseMoved(true);
 
@@ -39,21 +44,19 @@ export const HeroWaveOverlay: React.FC = () => {
         lastSpawnTime.current = now;
         setRipples((prev) => [
           ...prev.slice(-4),
-          { id: now, x, y, createdAt: now },
+          { id: ++rippleId.current, x, y, createdAt: now },
         ]);
       }
     };
 
     // Periodic gentle wave at cursor position every 2 seconds
     const interval = setInterval(() => {
-      setMousePos((current) => {
-        const now = Date.now();
-        setRipples((prev) => [
-          ...prev.slice(-4),
-          { id: now, x: current.x, y: current.y, createdAt: now },
-        ]);
-        return current;
-      });
+      const now = Date.now();
+      const { x, y } = mouseRef.current;
+      setRipples((prev) => [
+        ...prev.slice(-4),
+        { id: ++rippleId.current, x, y, createdAt: now },
+      ]);
     }, 2000);
 
     // Clean up expired ripples
@@ -79,11 +82,12 @@ export const HeroWaveOverlay: React.FC = () => {
     const y = e.clientY - rect.top;
     const now = Date.now();
 
+    mouseRef.current = { x, y };
     setMousePos({ x, y });
     setHasMouseMoved(true);
     setRipples((prev) => [
       ...prev.slice(-4),
-      { id: now, x, y, createdAt: now },
+      { id: ++rippleId.current, x, y, createdAt: now },
     ]);
   };
 
@@ -98,7 +102,7 @@ export const HeroWaveOverlay: React.FC = () => {
         <defs>
           <filter id="soft-cursor-wave" x="-20%" y="-20%" width="140%" height="140%">
             <feTurbulence
-              type="sine"
+              type="fractalNoise"
               baseFrequency="0.006 0.008"
               numOctaves="2"
               result="softTurb"
@@ -141,7 +145,7 @@ export const HeroWaveOverlay: React.FC = () => {
       {/* Gentle Concentric Wave Rings at Cursor Location */}
       {/* Primary Periodic Ring at Cursor */}
       <div
-        key={`pulse-1-${Math.floor(Date.now() / 2000)}`}
+        key="pulse-ring-1"
         className="absolute rounded-full pointer-events-none border border-emerald-400/40 dark:border-emerald-300/30"
         style={{
           left: `${mousePos.x}px`,
@@ -155,7 +159,7 @@ export const HeroWaveOverlay: React.FC = () => {
 
       {/* Secondary Staggered Ring at Cursor (offset by 1s for seamless gentle flow) */}
       <div
-        key={`pulse-2-${Math.floor(Date.now() / 2000)}`}
+        key="pulse-ring-2"
         className="absolute rounded-full pointer-events-none border border-yellow-400/35 dark:border-yellow-300/25"
         style={{
           left: `${mousePos.x}px`,

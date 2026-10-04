@@ -13,6 +13,7 @@ import {
   CheckCircle,
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
+import { useDismiss } from '../../hooks/useDismiss';
 import { Notice } from '../../types';
 
 export const NoticeBoardSection: React.FC = () => {
@@ -22,6 +23,8 @@ export const NoticeBoardSection: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<'all' | 'examinations' | 'admissions' | 'academic' | 'holidays'>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [previewNotice, setPreviewNotice] = useState<Notice | null>(null);
+
+  const { backdropProps } = useDismiss(Boolean(previewNotice), () => setPreviewNotice(null));
 
   // Filter notices
   const filteredNotices = noticesList.filter((notice) => {
@@ -45,7 +48,7 @@ export const NoticeBoardSection: React.FC = () => {
           <div className="space-y-2">
             <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${
               theme === 'dark'
-                ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-400'
+                ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400'
                 : 'bg-emerald-100 text-emerald-800 border border-emerald-300'
             }`}>
               <Bell className="w-3.5 h-3.5 text-emerald-600" />
@@ -67,7 +70,7 @@ export const NoticeBoardSection: React.FC = () => {
             onClick={() => navigateTo('notices')}
             className={`self-start md:self-auto px-4 py-2 rounded-xl text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer ${
               theme === 'dark'
-                ? 'text-emerald-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10'
+                ? 'text-emerald-700 dark:text-emerald-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10'
                 : 'text-emerald-800 hover:text-emerald-950 bg-white hover:bg-emerald-50 border border-emerald-200 shadow-sm'
             }`}
           >
@@ -148,7 +151,7 @@ export const NoticeBoardSection: React.FC = () => {
                       : 'bg-emerald-50 border-emerald-200'
                   }`}>
                     <span className={`font-heading font-extrabold text-sm leading-tight ${
-                      theme === 'dark' ? 'text-emerald-400' : 'text-emerald-800'
+                      theme === 'dark' ? 'text-emerald-600 dark:text-emerald-400' : 'text-emerald-800'
                     }`}>
                       {notice.date.split(' ')[0]}
                     </span>
@@ -182,7 +185,7 @@ export const NoticeBoardSection: React.FC = () => {
                       onClick={() => setPreviewNotice(notice)}
                       className={`font-medium text-sm transition-colors cursor-pointer line-clamp-1 ${
                         theme === 'dark'
-                          ? 'text-white group-hover:text-emerald-400'
+                          ? 'text-white group-hover:text-emerald-600 dark:hover:text-emerald-400'
                           : 'text-slate-900 group-hover:text-emerald-700'
                       }`}
                     >
@@ -197,7 +200,7 @@ export const NoticeBoardSection: React.FC = () => {
                     onClick={() => setPreviewNotice(notice)}
                     className={`p-2 rounded-lg text-xs transition-colors flex items-center gap-1 cursor-pointer ${
                       theme === 'dark'
-                        ? 'bg-white/5 hover:bg-emerald-500/20 text-slate-300 hover:text-emerald-400 border border-white/10'
+                        ? 'bg-white/5 hover:bg-emerald-500/20 text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 border border-white/10'
                         : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200'
                     }`}
                     title="Quick Preview Notice"
@@ -237,7 +240,7 @@ export const NoticeBoardSection: React.FC = () => {
 
       {/* Notice Preview Modal */}
       {previewNotice && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
+        <div {...backdropProps} className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
           <div className={`relative w-full max-w-2xl rounded-3xl p-6 sm:p-8 border shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto ${
             theme === 'dark'
               ? 'bg-slate-900 border-emerald-500/30 text-white'

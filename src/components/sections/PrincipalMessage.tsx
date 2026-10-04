@@ -62,7 +62,7 @@ export const PrincipalMessage: React.FC = () => {
                 </p>
                 <div className={`inline-flex items-center gap-1.5 mt-2.5 px-3 py-1 rounded-full text-[10px] font-bold ${
                   theme === 'dark'
-                    ? 'bg-emerald-950/80 border border-emerald-500/40 text-emerald-300'
+                    ? 'bg-emerald-950/80 border border-emerald-500/40 text-emerald-700 dark:text-emerald-300'
                     : 'bg-emerald-100 text-emerald-900 border border-emerald-300'
                 }`}>
                   <Award className="w-3.5 h-3.5 text-amber-500" />
@@ -76,14 +76,14 @@ export const PrincipalMessage: React.FC = () => {
               <div className="flex items-center gap-3">
                 <div className={`p-3 rounded-2xl border shrink-0 ${
                   theme === 'dark'
-                    ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'
+                    ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30'
                     : 'bg-emerald-100 text-emerald-800 border border-emerald-300'
                 }`}>
                   <Quote className="w-6 h-6" />
                 </div>
                 <div>
                   <span className={`text-xs font-bold uppercase tracking-wider block ${
-                    theme === 'dark' ? 'text-emerald-400' : 'text-emerald-700'
+                    theme === 'dark' ? 'text-emerald-600 dark:text-emerald-400' : 'text-emerald-700'
                   }`}>
                     {isBn ? 'অধ্যক্ষ ও প্রতিষ্ঠাতার বাণী' : 'Message from Principal & Founder'}
                   </span>
@@ -114,7 +114,7 @@ export const PrincipalMessage: React.FC = () => {
                 <button
                   onClick={() => navigateTo('faculty')}
                   className={`text-xs font-bold transition-colors cursor-pointer ${
-                    theme === 'dark' ? 'text-emerald-400 hover:text-emerald-300' : 'text-emerald-800 hover:text-emerald-950'
+                    theme === 'dark' ? 'text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300' : 'text-emerald-800 hover:text-emerald-950'
                   }`}
                 >
                   {isBn ? 'সকল শিক্ষকমণ্ডলীর তালিকা →' : 'Meet Our Faculty →'}

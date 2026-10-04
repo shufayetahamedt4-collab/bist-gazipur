@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Image, X, ZoomIn, Calendar, Sparkles } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
+import { useDismiss } from '../../hooks/useDismiss';
 import { GALLERY_ITEMS } from '../../data/mockData';
 import { GalleryItem } from '../../types';
 
@@ -16,10 +17,12 @@ export const GalleryPage: React.FC = () => {
     return item.category === activeFilter;
   });
 
+  const { backdropProps } = useDismiss(Boolean(lightboxItem), () => setLightboxItem(null));
+
   return (
     <div className="py-12 px-4 sm:px-6 max-w-6xl mx-auto space-y-10">
       <div className="text-center space-y-2 max-w-2xl mx-auto">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 text-xs font-semibold">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 text-xs font-semibold">
           <Image className="w-3.5 h-3.5" />
           <span>{isBn ? 'ক্যাম্পাস ফটো গ্যালারি' : 'Photo & Campus Gallery'}</span>
         </div>
@@ -86,7 +89,7 @@ export const GalleryPage: React.FC = () => {
               </div>
 
               <div>
-                <span className="text-[10px] font-mono uppercase text-cyan-400 font-semibold block">
+                <span className="text-[10px] font-mono uppercase text-cyan-600 dark:text-cyan-400 font-semibold block">
                   {item.date ? `${item.category} · ${item.date}` : item.category}
                 </span>
                 <h4 className="font-heading font-bold text-sm text-white">
@@ -100,7 +103,7 @@ export const GalleryPage: React.FC = () => {
 
       {/* Lightbox Modal */}
       {lightboxItem && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-fadeIn">
+        <div {...backdropProps} className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-fadeIn">
           <div className="relative max-w-4xl w-full rounded-3xl overflow-hidden bg-[#070b1a] border border-cyan-500/40 p-4 space-y-4">
             <button
               onClick={() => setLightboxItem(null)}
@@ -129,7 +132,7 @@ export const GalleryPage: React.FC = () => {
                 </span>
               </div>
 
-              <span className="font-mono text-cyan-400">BIST Gazipur Campus</span>
+              <span className="font-mono text-cyan-600 dark:text-cyan-400">BIST Gazipur Campus</span>
             </div>
           </div>
         </div>

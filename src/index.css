@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+/* The app toggles theme by adding/removing `.dark` on <html>, so `dark:`
+   utilities must follow that class instead of the OS preference. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer base {
   :root {
     --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
@@ -154,5 +158,33 @@
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* Native (Firefox) scrollbar colours, plus a dark-mode override for the WebKit
+   track and thumb — the light rules above are unconditional. */
+html {
+  scrollbar-color: #10b981 #f1f5f9;
+}
+
+.dark {
+  color-scheme: dark;
+  scrollbar-color: #059669 #0b192c;
+}
+
+/* `.dark` sits on <html> itself, so the document scrollbar needs the compound
+   selector; the descendant form covers any scrolling panels nested inside. */
+.dark::-webkit-scrollbar-track,
+.dark ::-webkit-scrollbar-track {
+  background: #0b192c;
+}
+
+.dark::-webkit-scrollbar-thumb,
+.dark ::-webkit-scrollbar-thumb {
+  background: #059669;
+}
+
+.dark::-webkit-scrollbar-thumb:hover,
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #10b981;
 }
 

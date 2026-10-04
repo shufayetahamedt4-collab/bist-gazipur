@@ -35,7 +35,7 @@ export const CareerSection: React.FC = () => {
           <div className="lg:col-span-7 space-y-5">
             <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${
               theme === 'dark'
-                ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20'
                 : 'bg-emerald-100 text-emerald-800 border border-emerald-300'
             }`}>
               <Briefcase className="w-3.5 h-3.5 text-emerald-600" />
@@ -77,7 +77,7 @@ export const CareerSection: React.FC = () => {
                 theme === 'dark' ? 'glass-panel-dark' : 'bg-emerald-50/70 border-emerald-200/80 shadow-sm'
               }`}>
                 <span className={`font-heading font-extrabold text-2xl ${
-                  theme === 'dark' ? 'text-emerald-400' : 'text-emerald-700'
+                  theme === 'dark' ? 'text-emerald-600 dark:text-emerald-400' : 'text-emerald-700'
                 }`}>
                   {`${UNIVERSITY_INFO.stats.students.toLocaleString('en-US')}+`}
                 </span>

@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Search, X, BookOpen, FileText, ArrowRight, Compass, GraduationCap } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { PROGRAMS, NOTICES } from '../../data/mockData';
+import { useDismiss } from '../../hooks/useDismiss';
 import { PageId } from '../../types';
 
 export const CommandPalette: React.FC = () => {
@@ -34,10 +35,28 @@ export const CommandPalette: React.FC = () => {
     { id: 'faq', label: 'Frequently Asked Questions (FAQ)', group: 'Support' },
     { id: 'contact', label: 'Campus Location & Phone Lines', group: 'Support' },
     { id: 'admin', label: 'Admin Management Dashboard', group: 'System' },
+    { id: 'officers', label: 'Administrative Officers & Staff', group: 'Academics' },
+    { id: 'scholarships', label: 'Scholarships & Waivers', group: 'Admissions' },
+    { id: 'fees', label: 'Tuition Fee Structure', group: 'Admissions' },
+    { id: 'news', label: 'News & Media Coverage', group: 'News' },
+    { id: 'academic-calendar', label: 'Academic Calendar', group: 'Academics' },
+    { id: 'academic-routines', label: 'Class & Exam Routines', group: 'Academics' },
+    { id: 'academic-regulations', label: 'Academic Regulations', group: 'Academics' },
+    { id: 'downloads', label: 'Downloads Centre', group: 'Academics' },
+    { id: 'library', label: 'Library & e-Library', group: 'Campus' },
+    { id: 'student-life', label: 'Student Life & Clubs', group: 'Campus' },
+    { id: 'grievance', label: 'Grievance & Anti-Harassment Cell', group: 'Support' },
+    { id: 'document-enquiry', label: 'Request a Document / Enquiry Desk', group: 'Support' },
+    { id: 'board-of-trustees', label: 'Board of Trustees', group: 'Navigation' },
+    { id: 'iqac', label: 'IQAC & Accreditation', group: 'Support' },
+    { id: 'privacy', label: 'Privacy Policy', group: 'System' },
+    { id: 'terms', label: 'Terms of Use', group: 'System' },
   ];
 
-  const filteredPages = pages.filter((p) =>
-    p.label.toLowerCase().includes(query.toLowerCase())
+  const filteredPages = pages.filter(
+    (p) =>
+      p.label.toLowerCase().includes(query.toLowerCase()) ||
+      p.group.toLowerCase().includes(query.toLowerCase())
   );
 
   const filteredPrograms = PROGRAMS.filter(
@@ -53,11 +72,21 @@ export const CommandPalette: React.FC = () => {
       n.title.bn.toLowerCase().includes(query.toLowerCase())
   );
 
+  // Escape or a click on the backdrop closes the palette. Without this the
+  // full-screen overlay swallows every pointer event on the page beneath it.
+  const { backdropProps } = useDismiss(isCommandPaletteOpen, () =>
+    setIsCommandPaletteOpen(false)
+  );
+
   if (!isCommandPaletteOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center p-4 pt-20 bg-black/60 backdrop-blur-md animate-fadeIn">
-      <div className={`relative w-full max-w-xl rounded-3xl border shadow-2xl overflow-hidden flex flex-col max-h-[75vh] ${
+    <div
+      {...backdropProps}
+      className="fixed inset-0 z-50 flex items-start justify-center p-4 pt-20 bg-black/60 backdrop-blur-md animate-fadeIn"
+    >
+      <div
+        className={`relative w-full max-w-xl rounded-3xl border shadow-2xl overflow-hidden flex flex-col max-h-[75vh] ${
         theme === 'dark'
           ? 'bg-[#0a0f24] border-emerald-500/40 text-white'
           : 'bg-white border-emerald-200 text-slate-900 shadow-[0_20px_60px_rgba(5,150,105,0.15)]'
@@ -126,7 +155,7 @@ export const CommandPalette: React.FC = () => {
             <span className="text-[10px] font-mono uppercase tracking-wider text-amber-600 font-bold px-2 block">
               Direct Navigation
             </span>
-            {filteredPages.slice(0, 7).map((p) => (
+            {filteredPages.slice(0, 12).map((p) => (
               <button
                 key={p.id}
                 onClick={() => {

@@ -16,7 +16,7 @@ export const EventsSection: React.FC = () => {
           <div className="space-y-2">
             <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${
               theme === 'dark'
-                ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-400'
+                ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400'
                 : 'bg-emerald-100 text-emerald-800 border border-emerald-300'
             }`}>
               <Calendar className="w-3.5 h-3.5 text-emerald-600" />
@@ -92,12 +92,12 @@ export const EventsSection: React.FC = () => {
               <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
                 <div className="space-y-2">
                   <span className={`text-[10px] font-bold uppercase tracking-wider block ${
-                    theme === 'dark' ? 'text-emerald-400' : 'text-emerald-700'
+                    theme === 'dark' ? 'text-emerald-600 dark:text-emerald-400' : 'text-emerald-700'
                   }`}>
                     {item.category}
                   </span>
                   <h3 className={`font-heading font-bold text-base transition-colors line-clamp-2 ${
-                    theme === 'dark' ? 'text-white group-hover:text-emerald-300' : 'text-[#0b192c] group-hover:text-emerald-700'
+                    theme === 'dark' ? 'text-white group-hover:text-emerald-700 dark:hover:text-emerald-300' : 'text-[#0b192c] group-hover:text-emerald-700'
                   }`}>
                     {isBn ? item.title.bn : item.title.en}
                   </h3>

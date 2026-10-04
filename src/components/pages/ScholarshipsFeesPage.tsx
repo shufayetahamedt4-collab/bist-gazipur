@@ -93,7 +93,7 @@ export const ScholarshipsFeesPage: React.FC = () => {
       <div className="text-center space-y-2 max-w-2xl mx-auto">
         <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${
           theme === 'dark'
-            ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+            ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20'
             : 'bg-emerald-100 text-emerald-800 border border-emerald-300'
         }`}>
           <Calculator className="w-3.5 h-3.5 text-emerald-600" />

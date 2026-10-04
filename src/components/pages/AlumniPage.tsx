@@ -23,7 +23,7 @@ export const AlumniPage: React.FC = () => {
   return (
     <div className="py-12 px-4 sm:px-6 max-w-6xl mx-auto space-y-10">
       <div className="text-center space-y-2 max-w-2xl mx-auto">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 text-xs font-semibold">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 text-xs font-semibold">
           <Users className="w-3.5 h-3.5" />
           <span>{isBn ? 'গৌরবময় অ্যালামনাই নেটওয়ার্ক' : 'Global Alumni Network'}</span>
         </div>
@@ -76,13 +76,13 @@ export const AlumniPage: React.FC = () => {
                 <h3
                   className={`font-heading font-bold text-base transition-colors truncate ${
                     theme === 'dark'
-                      ? 'text-white group-hover:text-cyan-300'
+                      ? 'text-white group-hover:text-cyan-700 dark:hover:text-cyan-300'
                       : 'text-[#0b192c] group-hover:text-cyan-700'
                   }`}
                 >
                   {alum.name}
                 </h3>
-                <span className="text-xs text-cyan-400 font-medium block truncate">
+                <span className="text-xs text-cyan-600 dark:text-cyan-400 font-medium block truncate">
                   {alum.position}
                 </span>
                 <span className="text-[11px] text-slate-400 flex items-center gap-1 mt-0.5">

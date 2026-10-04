@@ -16,7 +16,7 @@ export const LatestNewsSection: React.FC = () => {
           <div className="space-y-2">
             <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${
               theme === 'dark'
-                ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-400'
+                ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400'
                 : 'bg-emerald-100 text-emerald-800 border border-emerald-300'
             }`}>
               <Newspaper className="w-3.5 h-3.5 text-emerald-600" />
@@ -72,7 +72,7 @@ export const LatestNewsSection: React.FC = () => {
                 <div className="absolute bottom-2 left-3 text-[11px] text-slate-200 flex items-center gap-2">
                   {item.date && (
                     <span className="flex items-center gap-1">
-                      <Calendar className="w-3 h-3 text-emerald-400" />
+                      <Calendar className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
                       {item.date}
                     </span>
                   )}
@@ -82,7 +82,7 @@ export const LatestNewsSection: React.FC = () => {
               <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
                 <div className="space-y-2">
                   <h3 className={`font-heading font-bold text-base transition-colors line-clamp-2 ${
-                    theme === 'dark' ? 'text-white group-hover:text-emerald-300' : 'text-[#0b192c] group-hover:text-emerald-700'
+                    theme === 'dark' ? 'text-white group-hover:text-emerald-700 dark:hover:text-emerald-300' : 'text-[#0b192c] group-hover:text-emerald-700'
                   }`}>
                     {isBn ? item.title.bn : item.title.en}
                   </h3>
@@ -105,7 +105,7 @@ export const LatestNewsSection: React.FC = () => {
                   <button
                     onClick={() => navigateTo('news')}
                     className={`text-xs font-bold flex items-center gap-1 cursor-pointer ${
-                      theme === 'dark' ? 'text-emerald-400 hover:text-emerald-300' : 'text-emerald-700 hover:text-emerald-900'
+                      theme === 'dark' ? 'text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300' : 'text-emerald-700 hover:text-emerald-900'
                     }`}
                   >
                     <span>{isBn ? 'সম্পূর্ণ পড়ুন' : 'Read Story'}</span>

@@ -37,7 +37,7 @@ export const HeroSection: React.FC = () => {
         <img
           src="./images/campus-building-wide.webp"
           alt="BGIFT Institute of Science & Technology campus building, Chandona Chowrasta, Gazipur"
-          className="w-full h-full object-cover object-center scale-[1.02] transition-all duration-700 cursor-wave-gentle"
+          className="w-full h-full object-cover object-[62%_30%] sm:object-center scale-[1.02] transition-all duration-700 cursor-wave-gentle"
         />
 
         {/* Dynamic Gentle Wave Effect Overlay that follows Mouse Cursor */}
@@ -98,7 +98,7 @@ export const HeroSection: React.FC = () => {
                 : 'Affiliated with National University, BTEB & NSDA'}
             </span>
             <span className="text-emerald-500 hidden sm:inline font-bold">|</span>
-            <span className="font-mono text-emerald-700 dark:text-emerald-300 font-bold hidden sm:inline">
+            <span className="font-mono text-emerald-300 font-bold hidden sm:inline">
               NU Code: 5526 · BTEB Code: 53098
             </span>
           </div>
@@ -200,7 +200,7 @@ export const HeroSection: React.FC = () => {
             <div
               className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border ${
                 theme === 'dark'
-                  ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
+                  ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border-emerald-500/30'
                   : 'bg-emerald-100 text-emerald-700 border-emerald-300'
               }`}
             >
