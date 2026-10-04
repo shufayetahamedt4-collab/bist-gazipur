@@ -6,8 +6,9 @@
  *
  *   ./catalogData  – institution profile, programmes, official fee tables and
  *                    diploma tracks.
- *   ./peopleData   – faculty roster, administrative officers, photo gallery and
- *                    alumni directory, all mirrored from bist.edu.bd.
+ *   ./people       – the unified roster (one row per person, with roles), plus
+ *                    lossless FACULTY_MEMBERS / ADMINISTRATIVE_OFFICERS projections.
+ *   ./peopleData   – photo gallery and alumni directory, mirrored from bist.edu.bd.
  *   ./liveData     – notices, events, news and testimonials mirrored from the
  *                    live site at https://bist.edu.bd (snapshot 30 Sep 2026).
  *   ./institutionFacts – overview, quality policy, goals, linkages and
@@ -24,12 +25,11 @@ export {
   FAQS,
 } from './catalogData';
 
-export {
-  FACULTY_MEMBERS,
-  ADMINISTRATIVE_OFFICERS,
-  GALLERY_ITEMS,
-  ALUMNI_DIRECTORY,
-} from './peopleData';
+export { PEOPLE } from './people';
+export { FACULTY_MEMBERS, ADMINISTRATIVE_OFFICERS } from './people';
+
+/** Gallery and alumni content still lives alongside the original mirror. */
+export { GALLERY_ITEMS, ALUMNI_DIRECTORY } from './peopleData';
 
 export { NOTICES, EVENTS, NEWS, TESTIMONIALS } from './liveData';
 
@@ -43,3 +43,42 @@ export {
   ADMISSION_REQUIREMENTS,
   ADMISSION_DOCUMENTS,
 } from './institutionFacts';
+
+export {
+  DOWNLOAD_CATEGORIES,
+  PENDING_DOCUMENT_CATEGORIES,
+  buildDownloads,
+  fileTypeLabel,
+} from './downloadsData';
+
+export {
+  ACADEMIC_REGULATIONS,
+  buildCalendarEntries,
+  buildRoutines,
+  parseNoticeDate,
+  MONTH_ORDER,
+} from './academicData';
+
+export { LIBRARY_QUOTES, LIBRARY_FACILITIES, STUDENT_LIFE_ITEMS } from './campusLifeData';
+
+export {
+  GRIEVANCE_CHANNELS,
+  GRIEVANCE_STEPS,
+  GRIEVANCE_POLICY_NOTE,
+  IQAC_CONTENT,
+} from './complianceData';
+
+export {
+  DOCUMENT_REQUEST_TYPES,
+  DOCUMENT_REQUEST_CHANNELS,
+  DOCUMENT_REQUEST_STEPS,
+  DOCUMENT_REQUEST_NOTE,
+} from './documentRequestData';
+
+export {
+  BOARD_OF_TRUSTEES,
+  BOARD_ALSO_PUBLISHED,
+  BOARD_ROLE_NOTE,
+  BOARD_PENDING_NOTE,
+  BOARD_SOURCE_PAGE,
+} from './governanceData';

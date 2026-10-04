@@ -26,7 +26,21 @@ export type PageId =
   | 'contact'
   | 'privacy'
   | 'terms'
-  | 'admin';
+  | 'admin'
+  | 'downloads'
+  | 'academic-calendar'
+  | 'academic-routines'
+  | 'academic-regulations'
+  | 'library'
+  | 'student-life'
+  | 'iqac'
+  | 'grievance'
+  | 'document-enquiry'
+  | 'board-of-trustees'
+  /** A single trustee's detailed profile, reached via `#/trustees/:slug`. */
+  | 'trustee-detail'
+  /** Unified faculty/officer profile, reached via `#/people/:slug`. */
+  | 'person-detail';
 
 export interface LocalizedString {
   en: string;
@@ -196,6 +210,141 @@ export interface AlumniProfile {
   batch?: string;
   program?: string;
   location?: string;
+}
+
+/**
+ * A document offered in the Downloads Centre.
+ *
+ * Every entry must point at a file that genuinely exists — either an attachment
+ * already mirrored from bist.edu.bd into /public, or a live external document the
+ * institution itself publishes. Nothing is ever listed speculatively.
+ */
+export interface DownloadDoc {
+  id: string;
+  title: LocalizedString;
+  /** Publishing date exactly as printed on the notice/document, when one exists. */
+  date: string;
+  category: DownloadCategoryId;
+  fileType: 'pdf' | 'doc' | 'image';
+  /** May be empty — the live site does not always state a size. */
+  fileSize: string;
+  /** Local path under /public or an absolute https URL. */
+  url: string;
+  /** Where the document came from, so the UI can attribute it honestly. */
+  source: LocalizedString;
+}
+
+export type DownloadCategoryId =
+  | 'examinations'
+  | 'admissions'
+  | 'academic'
+  | 'holidays'
+  | 'other';
+
+/** A dated entry shown on the academic calendar. Never invented. */
+export interface AcademicCalendarEntry {
+  id: string;
+  date: string;
+  title: LocalizedString;
+  category: Notice['category'];
+  /** Source notice this entry was derived from, when one exists. */
+  sourceNoticeId?: string;
+  downloadUrl?: string;
+}
+
+/** One section of the published Academic Regulations text. */
+export interface RegulationSection {
+  id: string;
+  heading: LocalizedString;
+  /** Paragraphs reproduced verbatim from the live Academic Regulation page. */
+  paragraphs: LocalizedString[];
+  /** Optional list items (e.g. the "Why we should study at BIST" points). */
+  points?: LocalizedString[];
+}
+
+/** A campus-life or library facility, only included when the live site states it. */
+export interface CampusFacility {
+  id: string;
+  title: LocalizedString;
+  description: LocalizedString;
+  /** True when the live site publishes no detail yet, so the UI shows an honest state. */
+  pending?: boolean;
+  icon: string;
+}
+
+/** A channel through which a student can raise a grievance. */
+export interface GrievanceChannel {
+  id: string;
+  label: LocalizedString;
+  /** Published email, phone or postal address. */
+  value: string;
+  type: 'email' | 'phone' | 'address' | 'portal';
+}
+
+/**
+ * A member of the Board of Trustees, mirrored from the section published on
+ * https://bist.edu.bd/about-us and https://bist.edu.bd/page/history.
+ *
+ * The live site names each member, their role and, for the Principal, the
+ * designation "Member Secretary". No photographs are published for the board, so
+ * the UI falls back to an initials avatar rather than inventing a portrait.
+ */
+export interface BoardMember {
+  id: string;
+  /** URL segment used by the `#/trustees/:slug` route. */
+  slug: string;
+  /** Name exactly as the live site prints it. */
+  name: string;
+  role: LocalizedString;
+  order: number;
+  /** Local mirrored portrait, when the official page publishes one. */
+  photo?: string;
+  /** Published contact details; omitted rather than blanked when absent. */
+  email?: string;
+  phone?: string;
+  /**
+   * The "Profile" list on the trustee's page, grouped under the role heading the
+   * official site prints (e.g. "Founder & Chairman") with the organisations it
+   * lists beneath that heading.
+   */
+  positions?: BoardPositionGroup[];
+  /** The "Education" table, reproduced in the order the official page prints it. */
+  education?: BoardEducationEntry[];
+  /** True when the official page shows no certifications yet ("Comming soon!"). */
+  certificationPending?: boolean;
+  /** The official page this profile is mirrored from. */
+  sourceUrl?: string;
+}
+
+export interface BoardPositionGroup {
+  /** Heading exactly as printed, e.g. "Founder & Chairman". */
+  role: string;
+  organisations: string[];
+}
+
+export interface BoardEducationEntry {
+  /** e.g. "M.B.A (Apparel Merchandising)". */
+  degree: string;
+  /** e.g. "MBA in AM, Certificate Examination, 2017". */
+  examination: string;
+  /** e.g. "CGPA- 3.61 out of 4.00." — omitted when the page states none. */
+  result?: string;
+  /** Awarding body, e.g. "National University." */
+  institution?: string;
+}
+
+/**
+ * A class of document an outside party (alumni, employer, university, guardian)
+ * can request from the institution.
+ *
+ * `requirement` states what the applicant must supply so the office can trace
+ * the underlying record — it is deliberately generic where the live site does
+ * not publish an exact checklist.
+ */
+export interface DocumentRequestType {
+  id: string;
+  label: LocalizedString;
+  requirement: LocalizedString;
 }
 
 export interface ApplicationFormData {

@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Language, ThemeMode, PageId, Notice, ApplicationFormData } from '../types';
 import { NOTICES } from '../data/mockData';
+import { RouteState, currentHash, parseHash, routeToHash } from '../router/hashRoute';
 
 interface AppContextType {
   language: Language;
@@ -13,6 +14,13 @@ interface AppContextType {
   setSelectedDeptId: (id: string) => void;
   selectedNoticeId: string | null;
   setSelectedNoticeId: (id: string | null) => void;
+  /** Slug of the person being viewed on `#/people/:slug`. */
+  selectedPersonSlug: string | null;
+  setSelectedPersonSlug: (slug: string | null) => void;
+  /** Slug of the trustee being viewed on `#/trustees/:slug`. */
+  selectedTrusteeSlug: string | null;
+  /** Open a trustee's detailed profile at `#/trustees/:slug`. */
+  navigateToTrustee: (slug: string) => void;
   isCommandPaletteOpen: boolean;
   setIsCommandPaletteOpen: (open: boolean) => void;
   isChatbotOpen: boolean;
@@ -104,9 +112,19 @@ const INITIAL_APPLICATIONS: ApplicationFormData[] = [
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [language, setLanguage] = useState<Language>('en');
   const [theme, setTheme] = useState<ThemeMode>('light');
-  const [currentPage, setCurrentPage] = useState<PageId>('home');
-  const [selectedDeptId, setSelectedDeptId] = useState<string>('cse');
-  const [selectedNoticeId, setSelectedNoticeId] = useState<string | null>(null);
+  // Resolve the initial route from the URL so a deep link or a refresh lands on
+  // the right page instead of always falling back to Home.
+  const [bootRoute] = useState<RouteState>(() => parseHash(currentHash()) ?? { page: 'home' });
+
+  const [currentPage, setCurrentPage] = useState<PageId>(bootRoute.page);
+  const [selectedDeptId, setSelectedDeptId] = useState<string>(bootRoute.deptId ?? 'cse');
+  const [selectedNoticeId, setSelectedNoticeId] = useState<string | null>(bootRoute.noticeId ?? null);
+  const [selectedPersonSlug, setSelectedPersonSlug] = useState<string | null>(
+    bootRoute.personSlug ?? null
+  );
+  const [selectedTrusteeSlug, setSelectedTrusteeSlug] = useState<string | null>(
+    bootRoute.trusteeSlug ?? null
+  );
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
   const [isChatbotOpen, setIsChatbotOpen] = useState(false);
   const [isQuizOpen, setIsQuizOpen] = useState(false);
@@ -188,10 +206,64 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
   };
 
+  /** Apply a decoded route to React state. Idempotent, so double-firing is safe. */
+  const applyRoute = (route: RouteState) => {
+    setCurrentPage(route.page);
+    // Only overwrite the department when the route names one, so the explorer
+    // keeps remembering the last programme the visitor looked at.
+    if (route.deptId) setSelectedDeptId(route.deptId);
+    setSelectedNoticeId(route.noticeId ?? null);
+    setSelectedPersonSlug(route.personSlug ?? null);
+    setSelectedTrusteeSlug(route.trusteeSlug ?? null);
+  };
+
+  // Keep the URL hash and the app state in step, in both directions. pushState
+  // does not itself fire popstate, so there is no feedback loop here.
+  useEffect(() => {
+    if (!parseHash(currentHash())) {
+      // Normalise an unrecognised hash rather than leaving a misleading URL.
+      window.history.replaceState(null, '', routeToHash({ page: 'home' }));
+    }
+
+    const syncFromUrl = () => {
+      const route = parseHash(currentHash());
+      if (route) {
+        applyRoute(route);
+      } else {
+        window.history.replaceState(null, '', routeToHash({ page: 'home' }));
+        applyRoute({ page: 'home' });
+      }
+    };
+
+    window.addEventListener('popstate', syncFromUrl);
+    window.addEventListener('hashchange', syncFromUrl);
+    return () => {
+      window.removeEventListener('popstate', syncFromUrl);
+      window.removeEventListener('hashchange', syncFromUrl);
+    };
+  }, []);
+
   const navigateTo = (page: PageId, deptId?: string, noticeId?: string) => {
     setCurrentPage(page);
     if (deptId) setSelectedDeptId(deptId);
     if (noticeId) setSelectedNoticeId(noticeId);
+
+    const nextHash = routeToHash({ page, deptId, noticeId });
+    if (window.location.hash !== nextHash) {
+      window.history.pushState(null, '', nextHash);
+    }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  /** Open a trustee profile — mirrors navigateTo, but carries the trustee slug. */
+  const navigateToTrustee = (slug: string) => {
+    setCurrentPage('trustee-detail');
+    setSelectedTrusteeSlug(slug);
+    const nextHash = `#/trustees/${encodeURIComponent(slug)}`;
+    if (window.location.hash !== nextHash) {
+      window.history.pushState(null, '', nextHash);
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -236,6 +308,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setSelectedDeptId,
         selectedNoticeId,
         setSelectedNoticeId,
+        selectedPersonSlug,
+        setSelectedPersonSlug,
+        selectedTrusteeSlug,
+        navigateToTrustee,
         isCommandPaletteOpen,
         setIsCommandPaletteOpen,
         isChatbotOpen,

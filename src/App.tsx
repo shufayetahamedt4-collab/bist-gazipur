@@ -32,6 +32,18 @@ import { EventsNewsPage } from './components/pages/EventsNewsPage';
 import { FaqPage } from './components/pages/FaqPage';
 import { AdminDashboardPage } from './components/pages/AdminDashboardPage';
 import { LegalPages } from './components/pages/LegalPages';
+import { DownloadsPage } from './components/pages/DownloadsPage';
+import { AcademicCalendarPage } from './components/pages/AcademicCalendarPage';
+import { AcademicRoutinesPage } from './components/pages/AcademicRoutinesPage';
+import { AcademicRegulationsPage } from './components/pages/AcademicRegulationsPage';
+import { LibraryPage } from './components/pages/LibraryPage';
+import { StudentLifePage } from './components/pages/StudentLifePage';
+import { IqacPage } from './components/pages/IqacPage';
+import { GrievancePage } from './components/pages/GrievancePage';
+import { DocumentEnquiryPage } from './components/pages/DocumentEnquiryPage';
+import { BoardOfTrusteesPage } from './components/pages/BoardOfTrusteesPage';
+import { TrusteeProfilePage } from './components/pages/TrusteeProfilePage';
+import { PersonProfilePage } from './components/pages/PersonProfilePage';
 import { ProgramExplorer } from './components/sections/ProgramExplorer';
 import { AdmissionHighlight } from './components/sections/AdmissionHighlight';
 
@@ -91,6 +103,30 @@ const MainContent: React.FC = () => {
         return <FaqPage />;
       case 'admin':
         return <AdminDashboardPage />;
+      case 'downloads':
+        return <DownloadsPage />;
+      case 'academic-calendar':
+        return <AcademicCalendarPage />;
+      case 'academic-routines':
+        return <AcademicRoutinesPage />;
+      case 'academic-regulations':
+        return <AcademicRegulationsPage />;
+      case 'library':
+        return <LibraryPage />;
+      case 'student-life':
+        return <StudentLifePage />;
+      case 'iqac':
+        return <IqacPage />;
+      case 'grievance':
+        return <GrievancePage />;
+      case 'document-enquiry':
+        return <DocumentEnquiryPage />;
+      case 'board-of-trustees':
+        return <BoardOfTrusteesPage />;
+      case 'trustee-detail':
+        return <TrusteeProfilePage />;
+      case 'person-detail':
+        return <PersonProfilePage />;
       case 'privacy':
         return <LegalPages type="privacy" />;
       case 'terms':
