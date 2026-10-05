@@ -151,6 +151,198 @@
   animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+/* "Drone drift": a very slow push-in with a gentle sideways pan, so the hero footage
+   reads as a hovering aerial camera rather than a static loop. The scale never drops
+   below 1.06, which keeps the moving edges from ever exposing the background. */
+@keyframes heroDroneDrift {
+  0% {
+    transform: scale(1.06) translate3d(0, 0, 0);
+  }
+  50% {
+    transform: scale(1.1) translate3d(-1.2%, -0.8%, 0);
+  }
+  100% {
+    transform: scale(1.14) translate3d(-2.2%, -1.4%, 0);
+  }
+}
+
+.hero-drone-drift {
+  animation: heroDroneDrift 26s ease-in-out infinite alternate;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-drone-drift {
+    animation: none;
+    transform: scale(1.04);
+  }
+}
+
+/* ------------------------------------------------------------------
+   Rotating hero taglines ("pop-up" phrases over the video).
+   Each phrase runs one 3s cycle that covers its own entrance, hold and
+   exit, so React only ever advances an index. No animation library is
+   pulled in for this - the project declares `motion`, but nothing
+   imports it, so a few keyframes keep the bundle untouched.
+   ------------------------------------------------------------------ */
+.hero-tagline {
+  animation-duration: 3s;
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform, opacity;
+}
+
+@keyframes heroTaglineUp {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0.55em, 0) scale(0.92);
+    filter: blur(12px);
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  16% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0);
+  }
+  80% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0);
+    animation-timing-function: cubic-bezier(0.4, 0, 1, 1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(0, -0.25em, 0) scale(0.985);
+    filter: blur(8px);
+  }
+}
+
+@keyframes heroTaglineLeft {
+  0% {
+    opacity: 0;
+    transform: translate3d(-0.45em, 0, 0) scale(0.92);
+    filter: blur(12px);
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  16% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0);
+  }
+  80% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0);
+    animation-timing-function: cubic-bezier(0.4, 0, 1, 1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(-0.2em, 0, 0) scale(0.985);
+    filter: blur(8px);
+  }
+}
+
+@keyframes heroTaglineRight {
+  0% {
+    opacity: 0;
+    transform: translate3d(0.45em, 0, 0) scale(0.92);
+    filter: blur(12px);
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  16% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0);
+  }
+  80% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0);
+    animation-timing-function: cubic-bezier(0.4, 0, 1, 1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(0.2em, 0, 0) scale(0.985);
+    filter: blur(8px);
+  }
+}
+
+@keyframes heroTaglineFade {
+  0% {
+    opacity: 0;
+  }
+  16% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.hero-tagline-in-up {
+  animation-name: heroTaglineUp;
+}
+
+.hero-tagline-in-left {
+  animation-name: heroTaglineLeft;
+}
+
+.hero-tagline-in-right {
+  animation-name: heroTaglineRight;
+}
+
+/* A slow light sweep across the gradient accent word: just enough movement to
+   read as alive, slow enough that it never turns into a marquee. */
+@keyframes heroTaglineShimmer {
+  from {
+    background-position: 0% 50%;
+  }
+  to {
+    background-position: 200% 50%;
+  }
+}
+
+/* The accent word: brand green -> gold, painted wider than the box so the
+   sweep above has somewhere to travel. */
+.hero-tagline-accent {
+  background-image: linear-gradient(
+    100deg,
+    #34d399 0%,
+    #99f6e4 22%,
+    #fde68a 44%,
+    #fbbf24 60%,
+    #34d399 82%,
+    #99f6e4 100%
+  );
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: heroTaglineShimmer 7s linear infinite;
+}
+
+/* Soft, diffuse drop shadow so the pop-up text separates from moving footage.
+   Kept on a wrapper so it never fights the blur the entrance animation uses. */
+.hero-tagline-glow {
+  filter: drop-shadow(0 8px 30px rgba(0, 0, 0, 0.6));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-tagline-in-up,
+  .hero-tagline-in-left,
+  .hero-tagline-in-right {
+    animation-name: heroTaglineFade;
+  }
+
+  .hero-tagline-accent {
+    animation: none;
+  }
+}
+
 /* Hide scrollbar for clean tab rails */
 .no-scrollbar::-webkit-scrollbar {
   display: none;

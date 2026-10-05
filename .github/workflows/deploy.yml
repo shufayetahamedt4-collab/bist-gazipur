@@ -24,6 +24,8 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      # Fail the deploy before building if the unit tests regress.
+      - run: npm test
       - run: node node_modules/vite/bin/vite.js build
       - uses: actions/configure-pages@v5
         with:

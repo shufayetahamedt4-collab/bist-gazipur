@@ -1,13 +1,99 @@
-import React, { useState, useEffect } from 'react';
-import { ArrowRight, Compass, Sparkles, Clock, Calendar, CheckCircle2, Waves } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { ArrowRight, Compass, Sparkles, Clock, Calendar, CheckCircle2 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { HeroCanvas } from '../hero/HeroCanvas';
 import { HeroWaveOverlay } from '../hero/HeroWaveOverlay';
 import { UNIVERSITY_INFO } from '../../data/mockData';
+import {
+  REDUCED_MOTION_QUERY,
+  readHeroVideoSignals,
+  shouldPlayHeroVideo,
+} from '../../lib/heroBackground';
+
+type TaglineDirection = 'up' | 'left' | 'right';
+
+interface HeroTagline {
+  id: number;
+  lead: string;
+  accent: string;
+  tail: string;
+  direction: TaglineDirection;
+}
+
+// One phrase per entry. `accent` is the word that gets the green-to-gold gradient.
+// Directions alternate so the sequence reads as a series of pop-ups rather than a list:
+// 1 & 3 rise from the bottom, 2 slides in from the left, 4 from the right.
+const HERO_TAGLINES: HeroTagline[] = [
+  { id: 1, lead: 'Empowering', accent: 'Success', tail: '!', direction: 'up' },
+  { id: 2, lead: '', accent: 'Excellence', tail: ' in Education.', direction: 'left' },
+  { id: 3, lead: 'Unleashing', accent: 'Potential', tail: '.', direction: 'up' },
+  { id: 4, lead: 'Join us for a', accent: 'brighter future', tail: '.', direction: 'right' },
+];
+
+const TAGLINE_INTERVAL_MS = 3000;
+
+/**
+ * Four phrases that take turns popping up over the hero video, one every 3s, forever.
+ * The entrance/hold/exit choreography lives entirely in the CSS keyframes (see index.css),
+ * so this component only has to advance an index - which also means the whole thing
+ * degrades to a plain cross-fade for `prefers-reduced-motion` visitors.
+ */
+const HeroTaglines: React.FC = () => {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = window.setInterval(
+      () => setIndex((current) => (current + 1) % HERO_TAGLINES.length),
+      TAGLINE_INTERVAL_MS,
+    );
+    return () => window.clearInterval(timer);
+  }, []);
+
+  const active = HERO_TAGLINES[index];
+
+  return (
+    <div
+      aria-live="polite"
+      aria-atomic="true"
+      className="pointer-events-none flex w-full flex-col items-center justify-center"
+    >
+      <div className="hero-tagline-glow w-full">
+        <div
+          key={active.id}
+          className={`hero-tagline hero-tagline-in-${active.direction} mx-auto max-w-[92vw] text-balance text-center font-heading font-extrabold leading-[1.04] tracking-[-0.02em] text-[clamp(2rem,5.5vw,4.75rem)] text-white`}
+        >
+          {active.lead && <span className="text-white/95">{active.lead} </span>}
+          <span className="hero-tagline-accent">{active.accent}</span>
+          <span className="text-white/95">{active.tail}</span>
+        </div>
+      </div>
+
+      {/* Progress indicator: four rails, the active one stretches and glows */}
+      <div aria-hidden="true" className="mt-8 flex items-center justify-center gap-1.5">
+        {HERO_TAGLINES.map((tagline, i) => (
+          <span
+            key={tagline.id}
+            className={
+              i === index
+                ? 'h-[2px] w-10 rounded-full bg-gradient-to-r from-emerald-300 via-teal-200 to-amber-300 shadow-[0_0_12px_rgba(16,185,129,0.85)] transition-all duration-500'
+                : 'h-[2px] w-5 rounded-full bg-white/20 transition-all duration-500'
+            }
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
 
 export const HeroSection: React.FC = () => {
   const { language, navigateTo, setIsQuizOpen, theme } = useApp();
   const isBn = language === 'bn';
+
+  const sectionRef = useRef<HTMLElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  // Moving backgrounds are skipped for anyone who asked for reduced motion, for
+  // data-saver connections, and on small screens - those visitors keep the still image.
+  const [playBackgroundVideo, setPlayBackgroundVideo] = useState(false);
 
   // Live countdown state for admission deadline
   const [timeLeft, setTimeLeft] = useState({
@@ -30,39 +116,118 @@ export const HeroSection: React.FC = () => {
     return () => clearInterval(timer);
   }, []);
 
+  useEffect(() => {
+    const motionQuery = window.matchMedia(REDUCED_MOTION_QUERY);
+
+    const decide = () =>
+      setPlayBackgroundVideo(shouldPlayHeroVideo(readHeroVideoSignals(window)));
+
+    decide();
+    motionQuery.addEventListener('change', decide);
+    window.addEventListener('resize', decide);
+    return () => {
+      motionQuery.removeEventListener('change', decide);
+      window.removeEventListener('resize', decide);
+    };
+  }, []);
+
+  // Slow the footage down slightly for a calmer, more cinematic drift, and only run the
+  // loop while the hero is on screen and the tab is visible - an endlessly decoding
+  // background video is otherwise a real battery/CPU cost.
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !playBackgroundVideo) return;
+
+    video.muted = true; // required for autoplay to be allowed at all
+    const applyRate = () => {
+      video.playbackRate = 0.8;
+    };
+    applyRate();
+    video.addEventListener('loadedmetadata', applyRate);
+
+    const play = () => {
+      void video.play().catch(() => {
+        /* autoplay blocked or interrupted - the poster stays visible, which is fine */
+      });
+    };
+    const onVisibility = () => (document.hidden ? video.pause() : play());
+    document.addEventListener('visibilitychange', onVisibility);
+
+    let observer: IntersectionObserver | undefined;
+    if (typeof IntersectionObserver !== 'undefined' && sectionRef.current) {
+      observer = new IntersectionObserver(
+        ([entry]) => (entry.isIntersecting ? play() : video.pause()),
+        { threshold: 0.05 },
+      );
+      observer.observe(sectionRef.current);
+    } else {
+      play();
+    }
+
+    return () => {
+      video.removeEventListener('loadedmetadata', applyRate);
+      document.removeEventListener('visibilitychange', onVisibility);
+      observer?.disconnect();
+    };
+  }, [playBackgroundVideo]);
+
   return (
-    <section className="relative min-h-[94vh] flex flex-col justify-between pt-8 pb-10 px-4 sm:px-6 overflow-hidden">
-      {/* Background Campus Image Layer - High Visibility with Active 2s Wave Effect */}
+    <section
+      ref={sectionRef}
+      className="relative min-h-[94vh] flex flex-col justify-between pt-8 pb-10 px-4 sm:px-6 overflow-hidden"
+    >
+      {/* Background campus layer: a looping admissions film with a still underneath it.
+          The still is the original campus photograph, which is what reduced-motion,
+          data-saver and small-screen visitors get instead of the moving background.
+          Both sit inside the same drifting wrapper so they stay perfectly aligned. */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        <img
-          src="./images/campus-building-wide.webp"
-          alt="BGIFT Institute of Science & Technology campus building, Chandona Chowrasta, Gazipur"
-          className="w-full h-full object-cover object-[62%_30%] sm:object-center scale-[1.02] transition-all duration-700 cursor-wave-gentle"
-        />
+        <div className="absolute inset-0 hero-drone-drift">
+          <img
+            src="./images/campus-building-wide.webp"
+            alt="BGIFT Institute of Science & Technology campus building, Chandona Chowrasta, Gazipur"
+            className="absolute inset-0 w-full h-full object-cover object-[62%_30%] sm:object-center"
+          />
+
+          {/* No opacity fade here on purpose: the video shows its own `poster` (its exact
+              first frame) until playback starts, so there is never a black frame to hide. */}
+          {playBackgroundVideo && (
+            <video
+              ref={videoRef}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="auto"
+              poster="./videos/hero-campus-loop-poster.jpg"
+              aria-hidden="true"
+              tabIndex={-1}
+              className="absolute inset-0 w-full h-full object-cover object-[62%_30%] sm:object-center"
+              style={{ filter: 'saturate(1.05) contrast(1.04)' }}
+            >
+              <source src="./videos/hero-campus-loop.mp4" type="video/mp4" />
+            </video>
+          )}
+        </div>
 
         {/* Dynamic Gentle Wave Effect Overlay that follows Mouse Cursor */}
         <HeroWaveOverlay />
 
-        {/* Balanced Ambient Gradient Overlay - Engineered for high photo visibility while preserving readability */}
+        {/* Subtle dark gradient wash over the footage - the only thing keeping the copy
+            readable now that it sits straight on the video. It is a wash, not a panel:
+            no edge, no fill, nothing that could read as a card behind the hero text. */}
         <div
-          className={`absolute inset-0 transition-colors duration-300 pointer-events-none ${
-            theme === 'dark'
-              ? 'bg-gradient-to-b from-[#070b1a]/45 via-[#070b1a]/15 to-[#070b1a]/85'
-              : 'bg-gradient-to-b from-white/35 via-white/10 to-[#f8fafc]/80'
-          }`}
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              'linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.25) 55%, rgba(0,0,0,0.5) 100%)',
+          }}
         />
 
-        {/* Ambient Corner Vignettes for Depth (lighter on pale light-mode art) */}
-        <div className={`absolute inset-0 bg-radial from-transparent via-transparent pointer-events-none ${
-          theme === 'dark' ? 'to-black/25' : 'to-black/10'
-        }`} />
+        {/* Ambient Corner Vignette for Depth */}
+        <div className="absolute inset-0 bg-radial from-transparent via-transparent to-black/35 pointer-events-none" />
 
         {/* Subtle Cybernetic Grid Overlay */}
-        <div
-          className={`absolute inset-0 cyber-grid-light pointer-events-none ${
-            theme === 'dark' ? 'opacity-15' : 'opacity-20'
-          }`}
-        />
+        <div className="absolute inset-0 cyber-grid-light opacity-10 pointer-events-none" />
 
         {/* Gentle Color Blooms */}
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-emerald-500/10 rounded-full blur-[100px] pointer-events-none" />
@@ -74,79 +239,10 @@ export const HeroSection: React.FC = () => {
         <HeroCanvas />
       </div>
 
-      {/* Main Hero Content - Protected with Frosted Glass Container for High Readability */}
-      <div className="relative z-10 max-w-4xl mx-auto text-center my-auto pt-4 pointer-events-auto">
-        <div
-          className={`rounded-3xl p-6 sm:p-8 backdrop-blur-md shadow-2xl space-y-6 transition-all border ${
-            theme === 'dark'
-              ? 'bg-slate-950/80 border-white/15 shadow-[0_20px_60px_rgba(0,0,0,0.6)]'
-              : 'bg-white/85 border-white/80 shadow-[0_20px_50px_rgba(5,150,105,0.12)]'
-          }`}
-        >
-          {/* Affiliation Sub-line Tag */}
-          <div
-            className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs transition-colors shadow-sm ${
-              theme === 'dark'
-                ? 'bg-slate-900/90 border border-emerald-500/40 text-emerald-300'
-                : 'bg-white border border-emerald-300 text-emerald-950 shadow-[0_2px_12px_rgba(5,150,105,0.12)]'
-            }`}
-          >
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
-            <span className="font-bold">
-              {isBn
-                ? 'জাতীয় বিশ্ববিদ্যালয়, বিটিইবি এবং এনএসডিএ অনুমোদিত'
-                : 'Affiliated with National University, BTEB & NSDA'}
-            </span>
-            <span className="text-emerald-500 hidden sm:inline font-bold">|</span>
-            <span className="font-mono text-emerald-300 font-bold hidden sm:inline">
-              NU Code: 5526 · BTEB Code: 53098
-            </span>
-          </div>
-
-          {/* Dynamic Futuristic Main Headline */}
-          <h1
-            className={`font-heading text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.15] max-w-3xl mx-auto drop-shadow-sm ${
-              theme === 'dark' ? 'text-white' : 'text-[#0b192c]'
-            }`}
-          >
-            {isBn ? (
-              <>
-                টেক্সটাইল, প্রযুক্তি ও ব্যবসায়{' '}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 via-teal-500 to-amber-500">
-                  নিজের ভবিষ্যৎ
-                </span>{' '}
-                গড়ুন
-              </>
-            ) : (
-              <>
-                Engineer Your Future in{' '}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 via-teal-500 to-amber-500">
-                  Textile, Tech & Business
-                </span>
-              </>
-            )}
-          </h1>
-
-          {/* Subtitle with High Contrast */}
-          <p
-            className={`text-sm sm:text-base max-w-2xl mx-auto leading-relaxed font-medium ${
-              theme === 'dark' ? 'text-slate-200' : 'text-slate-700'
-            }`}
-          >
-            {isBn
-              ? 'গাজীপুরের প্রাণকেন্দ্রে আধুনিক ল্যাবরেটরি, শিল্প-অভিজ্ঞ শিক্ষক এবং শতভাগ স্কলারশিপ সুবিধায় গড়ে উঠুন ভবিষ্যতের স্মার্ট প্রফেশনাল হিসেবে।'
-              : 'Gazipur’s leading technological higher education institute providing premier 4-year Honours & Engineering degrees, advanced research labs, and dedicated industrial placement.'}
-          </p>
-
-          {/* Wave ripple indicator badge */}
-          <div className="flex items-center justify-center gap-1.5 text-[11px] font-medium text-emerald-600 dark:text-emerald-400">
-            <Waves className="w-3.5 h-3.5 animate-pulse" />
-            <span>
-              {isBn
-                ? 'স্মার্ট ক্যাম্পাস · মাউস কার্সার ও টাচে মৃদু ওয়েব তরঙ্গের ঢেউ'
-                : 'Smart Campus · Gentle Cursor & Touch Wave Ripple'}
-            </span>
-          </div>
+      {/* Main Hero Content - sits directly on the video: no card, no blur, no border */}
+      <div className="relative z-10 max-w-4xl mx-auto text-center my-auto pt-4 pointer-events-auto space-y-6">
+          {/* Rotating pop-up taglines - the hero centrepiece, straight on the video */}
+          <HeroTaglines />
 
           {/* Hero CTAs */}
           <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 pt-1">
@@ -160,31 +256,22 @@ export const HeroSection: React.FC = () => {
 
             <button
               onClick={() => navigateTo('programs')}
-              className={`px-6 py-3.5 rounded-xl font-heading font-bold text-sm sm:text-base transition-all flex items-center gap-2 cursor-pointer ${
-                theme === 'dark'
-                  ? 'text-white hover:text-emerald-300 bg-slate-900/90 hover:bg-slate-800 border border-white/20'
-                  : 'text-slate-900 hover:text-emerald-950 bg-white hover:bg-emerald-50 border border-emerald-300 shadow-md'
-              }`}
+              className="px-6 py-3.5 rounded-xl font-heading font-bold text-sm sm:text-base transition-all flex items-center gap-2 cursor-pointer text-white bg-white/5 hover:bg-white/15 border border-white/40 hover:border-white/80 backdrop-blur-sm hover:shadow-[0_0_28px_rgba(255,255,255,0.28)]"
             >
-              <Compass className="w-4 h-4 text-emerald-600" />
+              <Compass className="w-4 h-4 text-emerald-300" />
               <span>{isBn ? 'প্রোগ্রামসমূহ দেখুন' : 'Explore Programs'}</span>
             </button>
 
             <button
               onClick={() => setIsQuizOpen(true)}
-              className={`px-4 py-3.5 rounded-xl font-heading text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
-                theme === 'dark'
-                  ? 'text-yellow-300 hover:text-yellow-200 bg-yellow-950/80 border border-yellow-500/40'
-                  : 'text-yellow-950 hover:text-yellow-900 bg-yellow-100/90 hover:bg-yellow-200 border border-yellow-400 shadow-md'
-              }`}
+              className="px-4 py-3.5 rounded-xl font-heading text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 cursor-pointer text-white bg-white/5 hover:bg-white/15 border border-white/40 hover:border-white/80 backdrop-blur-sm hover:shadow-[0_0_28px_rgba(255,255,255,0.28)]"
               title="Interactive Career & Program Finder Quiz"
             >
-              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
               <span>{isBn ? 'ক্যারিয়ার কুইজ' : 'Find Your Major Quiz'}</span>
             </button>
           </div>
         </div>
-      </div>
 
       {/* Glass Strip Below: Admissions Open 2025-26 & Live Countdown Badge */}
       <div className="relative z-10 max-w-4xl mx-auto w-full pt-8 pointer-events-auto">

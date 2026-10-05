@@ -11,3 +11,8 @@ eduneiu-site/node_modules/
 
 # Excluded from published repo (separate project)
 eduneiu-site/
+
+# Raw source clips for the hero video - far too large to ship. The web-optimised
+# output that the site actually loads is committed under public/videos/ instead.
+# Regenerate it with: node scripts/optimize-hero-video.mjs
+src/assets/video/
