@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Language, ThemeMode, PageId, Notice, ApplicationFormData } from '../types';
+import { Language, ThemeMode, PageId, Notice, ActivityPost, ApplicationFormData } from '../types';
 import { NOTICES } from '../data/mockData';
+import { ACTIVITY_POSTS, ACTIVITY_DATA_VERSION } from '../data/activityData';
 import { RouteState, currentHash, parseHash, routeToHash } from '../router/hashRoute';
 
 interface AppContextType {
@@ -34,6 +35,9 @@ interface AppContextType {
   noticesList: Notice[];
   addNotice: (notice: Omit<Notice, 'id'>) => void;
   deleteNotice: (id: string) => void;
+  activityPosts: ActivityPost[];
+  addActivityPost: (post: Omit<ActivityPost, 'id' | 'createdAt'>) => void;
+  deleteActivityPost: (id: string) => void;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
 }
@@ -156,6 +160,21 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   });
 
+  const [activityPosts, setActivityPosts] = useState<ActivityPost[]>(() => {
+    try {
+      const saved = localStorage.getItem('bist_activity_posts');
+      const savedVersion = localStorage.getItem('bist_activity_posts_version');
+      // Same rule as notices: only trust the cache when it came from the current
+      // seed, so a returning visitor is not stuck on replaced sample content.
+      if (saved && savedVersion === ACTIVITY_DATA_VERSION) {
+        return JSON.parse(saved);
+      }
+      return ACTIVITY_POSTS;
+    } catch {
+      return ACTIVITY_POSTS;
+    }
+  });
+
   useEffect(() => {
     try {
       localStorage.setItem('bist_applications', JSON.stringify(applications));
@@ -163,6 +182,18 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       console.error(e);
     }
   }, [applications]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('bist_activity_posts', JSON.stringify(activityPosts));
+      localStorage.setItem('bist_activity_posts_version', ACTIVITY_DATA_VERSION);
+    } catch (e) {
+      // An uploaded photo/video can push the list past the ~5 MB storage quota.
+      // Surface it rather than dying silently, so the author knows the post is
+      // only visible in this tab until they use a smaller file.
+      console.error('Could not persist the activity feed', e);
+    }
+  }, [activityPosts]);
 
   useEffect(() => {
     try {
@@ -295,6 +326,19 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setNoticesList((prev) => prev.filter((n) => n.id !== id));
   };
 
+  const addActivityPost = (postData: Omit<ActivityPost, 'id' | 'createdAt'>) => {
+    const newPost: ActivityPost = {
+      ...postData,
+      id: `activity-${Date.now()}`,
+      createdAt: Date.now(),
+    };
+    setActivityPosts((prev) => [newPost, ...prev]);
+  };
+
+  const deleteActivityPost = (id: string) => {
+    setActivityPosts((prev) => prev.filter((post) => post.id !== id));
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -325,6 +369,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         noticesList,
         addNotice,
         deleteNotice,
+        activityPosts,
+        addActivityPost,
+        deleteActivityPost,
         searchQuery,
         setSearchQuery,
       }}

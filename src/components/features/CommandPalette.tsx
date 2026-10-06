@@ -26,6 +26,7 @@ export const CommandPalette: React.FC = () => {
     { id: 'calculator', label: 'Fee & Scholarship Calculator', group: 'Admissions' },
     { id: 'result', label: 'Student Semester Result Search', group: 'Academics' },
     { id: 'notices', label: 'Circulars & Official Notices', group: 'News' },
+    { id: 'activity', label: 'Activity Feed — Posts, Photos & Videos', group: 'Campus' },
     { id: 'faculty', label: 'Faculty & Researchers Directory', group: 'Academics' },
     { id: 'gallery', label: 'Campus & Lab Photo Gallery', group: 'Campus' },
     { id: 'alumni', label: 'Alumni Directory & Success', group: 'Community' },

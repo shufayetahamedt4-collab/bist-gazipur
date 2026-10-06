@@ -508,6 +508,20 @@ export const Navbar: React.FC = () => {
               )}
             </div>
 
+            {/* Activity — the staff-published feed of posts, photos and videos. Sits
+                between Academics and Notices, matching the order of the institution's
+                own content areas. */}
+            <button
+              onClick={() => navigateTo('activity')}
+              className={`px-3 py-2 rounded-lg transition-colors cursor-pointer ${
+                currentPage === 'activity'
+                  ? theme === 'dark' ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-950/40' : 'text-emerald-700 bg-emerald-50 font-bold'
+                  : theme === 'dark' ? 'hover:text-emerald-700 dark:hover:text-emerald-300 hover:bg-white/5' : 'hover:text-emerald-700 hover:bg-emerald-50/80'
+              }`}
+            >
+              {isBn ? 'অ্যাক্টিভিটি' : 'Activity'}
+            </button>
+
             {/* Notices Dropdown */}
             <div
               className="relative"
@@ -688,6 +702,7 @@ export const Navbar: React.FC = () => {
                 { label: isBn ? 'সকল প্রোগ্রামসমূহ' : 'Academic Programs', page: 'programs', group: '' },
                 { label: isBn ? 'ভর্তি নির্দেশিকা' : 'Admission Guidelines', page: 'admissions', group: '' },
                 { label: isBn ? 'স্কলারশিপ ও ফি ক্যালকুলেটর' : 'Scholarships & Calculator', page: 'calculator', group: '' },
+                { label: isBn ? 'অ্যাক্টিভিটি ফিড' : 'Activity Feed', page: 'activity', group: '' },
                 { label: isBn ? 'নোটিশ বোর্ড' : 'Notice Board', page: 'notices', group: '' },
                 { label: isBn ? 'ডকুমেন্টের জন্য অনুরোধ' : 'Request a Document', page: 'document-enquiry', group: '' },
                 { label: isBn ? 'শিক্ষকমণ্ডলী' : 'Faculty Directory', page: 'faculty', group: '' },

@@ -43,6 +43,7 @@ const FLAT_PAGES: PageId[] = [
   'apply-online',
   'result',
   'notices',
+  'activity',
   'faculty',
   'officers',
   'gallery',

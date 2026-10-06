@@ -11,6 +11,8 @@ export type PageId =
   | 'apply-online'
   | 'result'
   | 'notices'
+  /** Staff-published activity feed: short posts, photos and videos from campus. */
+  | 'activity'
   | 'faculty'
   | 'officers'
   | 'gallery'
@@ -345,6 +347,39 @@ export interface DocumentRequestType {
   id: string;
   label: LocalizedString;
   requirement: LocalizedString;
+}
+
+/** Who published an Activity post. Only staff roles can post. */
+export type ActivityAuthorRole = 'teacher' | 'administration';
+
+/** What an Activity post carries alongside its text. */
+export type ActivityMediaKind = 'text' | 'photo' | 'video';
+
+/**
+ * One entry in the Activity feed.
+ *
+ * Activity is staff-published: a teacher or an administrator writes the body and,
+ * optionally, attaches one photo or video. Media is stored as a URL/path under
+ * /public, or as a data URL when the author uploaded a small file, so a post keeps
+ * working from a static host with no backend.
+ */
+export interface ActivityPost {
+  id: string;
+  /** Display name typed by the author (no account system exists yet). */
+  author: string;
+  authorRole: ActivityAuthorRole;
+  /** Optional headline; the feed falls back to the body when it is empty. */
+  title?: LocalizedString;
+  body: LocalizedString;
+  kind: ActivityMediaKind;
+  /** Image/video source: a `/public` path, an https URL, or a `data:` URL. */
+  mediaUrl?: string;
+  /** Poster frame for a video. */
+  mediaPoster?: string;
+  /** Short description shown under the media, and used as the image alt text. */
+  caption?: LocalizedString;
+  /** Epoch milliseconds — the feed sorts newest first and shows relative time. */
+  createdAt: number;
 }
 
 export interface ApplicationFormData {

@@ -19,6 +19,7 @@ import { DepartmentPage } from './components/pages/DepartmentPage';
 import { ApplyOnlinePage } from './components/pages/ApplyOnlinePage';
 import { ResultPage } from './components/pages/ResultPage';
 import { NoticePage } from './components/pages/NoticePage';
+import { ActivityPage } from './components/pages/ActivityPage';
 import { FacultyPage } from './components/pages/FacultyPage';
 import { OfficersPage } from './components/pages/OfficersPage';
 import { GalleryPage } from './components/pages/GalleryPage';
@@ -63,6 +64,8 @@ const MainContent: React.FC = () => {
         return <ResultPage />;
       case 'notices':
         return <NoticePage />;
+      case 'activity':
+        return <ActivityPage />;
       case 'faculty':
         return <FacultyPage />;
       case 'officers':
