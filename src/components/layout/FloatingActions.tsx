@@ -4,7 +4,7 @@ import { useApp } from '../../context/AppContext';
 import { UNIVERSITY_INFO } from '../../data/mockData';
 
 export const FloatingActions: React.FC = () => {
-  const { language, navigateTo, isChatbotOpen, setIsChatbotOpen, theme } = useApp();
+  const { language, navigateTo, isChatbotOpen, setIsChatbotOpen, theme, isAnnouncementOpen } = useApp();
   const isBn = language === 'bn';
   // On phones the full stack would cover page content, so it stays collapsed
   // behind a single FAB until the visitor taps it.
@@ -20,7 +20,11 @@ export const FloatingActions: React.FC = () => {
   return (
     <aside
       aria-label="Quick Actions"
-      className="fixed bottom-4 sm:bottom-6 right-3 sm:right-6 z-40 flex flex-col items-end gap-2.5"
+      // Sits above the announcement popup's box when the popup is open, so these
+      // buttons stay clickable even if the two ever meet on a narrow screen.
+      className={`fixed bottom-4 sm:bottom-6 right-3 sm:right-6 flex flex-col items-end gap-2.5 ${
+        isAnnouncementOpen ? 'z-[45]' : 'z-40'
+      }`}
     >
       <div className={`flex flex-col items-end gap-2.5 ${mobileOpen ? '' : 'hidden'} sm:flex`}>
         {/* Scroll to Top */}

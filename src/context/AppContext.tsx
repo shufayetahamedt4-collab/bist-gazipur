@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Language, ThemeMode, PageId, Notice, ActivityPost, ApplicationFormData } from '../types';
+import { Language, ThemeMode, PageId, Notice, ActivityPost, ApplicationFormData, AnnouncementPost } from '../types';
 import { NOTICES } from '../data/mockData';
 import { ACTIVITY_POSTS, ACTIVITY_DATA_VERSION } from '../data/activityData';
+import { ANNOUNCEMENT_POSTS, ANNOUNCEMENTS_DATA_VERSION } from '../data/announcementData';
 import { RouteState, currentHash, parseHash, routeToHash } from '../router/hashRoute';
 
 interface AppContextType {
@@ -18,10 +19,14 @@ interface AppContextType {
   /** Slug of the person being viewed on `#/people/:slug`. */
   selectedPersonSlug: string | null;
   setSelectedPersonSlug: (slug: string | null) => void;
-  /** Slug of the trustee being viewed on `#/trustees/:slug`. */
-  selectedTrusteeSlug: string | null;
-  /** Open a trustee's detailed profile at `#/trustees/:slug`. */
-  navigateToTrustee: (slug: string) => void;
+  /** Course being viewed on `#/courses/:courseId`. */
+  selectedCourseId: string | null;
+  /** Open a course page at `#/courses/:courseId`. */
+  navigateToCourse: (courseId: string) => void;
+  /** Affiliation being viewed on `#/affiliated/:bodyId` (nu | bteb | nsda). */
+  selectedAffiliationId: string | null;
+  /** Open an affiliation page at `#/affiliated/:bodyId`. */
+  navigateToAffiliation: (affiliationId: string) => void;
   isCommandPaletteOpen: boolean;
   setIsCommandPaletteOpen: (open: boolean) => void;
   isChatbotOpen: boolean;
@@ -30,6 +35,12 @@ interface AppContextType {
   setIsQuizOpen: (open: boolean) => void;
   isClientNotesOpen: boolean;
   setIsClientNotesOpen: (open: boolean) => void;
+  /**
+   * True while the bottom-right announcement popup is on screen. The floating
+   * action stack reads this so the two never cover each other.
+   */
+  isAnnouncementOpen: boolean;
+  setIsAnnouncementOpen: (open: boolean) => void;
   applications: ApplicationFormData[];
   submitApplication: (data: Omit<ApplicationFormData, 'id' | 'referenceNumber' | 'submissionDate' | 'status'>) => string;
   noticesList: Notice[];
@@ -38,6 +49,12 @@ interface AppContextType {
   activityPosts: ActivityPost[];
   addActivityPost: (post: Omit<ActivityPost, 'id' | 'createdAt'>) => void;
   deleteActivityPost: (id: string) => void;
+  announcements: AnnouncementPost[];
+  /** Create a new announcement, or replace the one with the same id. */
+  upsertAnnouncement: (post: AnnouncementPost) => void;
+  deleteAnnouncement: (id: string) => void;
+  /** Move a post one slot earlier or later in the display order. */
+  moveAnnouncement: (id: string, direction: 'up' | 'down') => void;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
 }
@@ -126,13 +143,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [selectedPersonSlug, setSelectedPersonSlug] = useState<string | null>(
     bootRoute.personSlug ?? null
   );
-  const [selectedTrusteeSlug, setSelectedTrusteeSlug] = useState<string | null>(
-    bootRoute.trusteeSlug ?? null
+  const [selectedCourseId, setSelectedCourseId] = useState<string | null>(
+    bootRoute.courseId ?? null
+  );
+  const [selectedAffiliationId, setSelectedAffiliationId] = useState<string | null>(
+    bootRoute.affiliationId ?? null
   );
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
   const [isChatbotOpen, setIsChatbotOpen] = useState(false);
   const [isQuizOpen, setIsQuizOpen] = useState(false);
   const [isClientNotesOpen, setIsClientNotesOpen] = useState(false);
+  const [isAnnouncementOpen, setIsAnnouncementOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
   // Persisted state
@@ -182,6 +203,31 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       console.error(e);
     }
   }, [applications]);
+
+  const [announcements, setAnnouncements] = useState<AnnouncementPost[]>(() => {
+    try {
+      const saved = localStorage.getItem('bist_announcements');
+      const savedVersion = localStorage.getItem('bist_announcements_version');
+      // Same rule as notices and activity: only trust the cache when it came
+      // from the current seed, so an edited list is not silently reverted and a
+      // replaced seed is not silently kept.
+      if (saved && savedVersion === ANNOUNCEMENTS_DATA_VERSION) {
+        return JSON.parse(saved);
+      }
+      return ANNOUNCEMENT_POSTS;
+    } catch {
+      return ANNOUNCEMENT_POSTS;
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('bist_announcements', JSON.stringify(announcements));
+      localStorage.setItem('bist_announcements_version', ANNOUNCEMENTS_DATA_VERSION);
+    } catch (e) {
+      console.error('Could not persist the announcements', e);
+    }
+  }, [announcements]);
 
   useEffect(() => {
     try {
@@ -245,7 +291,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     if (route.deptId) setSelectedDeptId(route.deptId);
     setSelectedNoticeId(route.noticeId ?? null);
     setSelectedPersonSlug(route.personSlug ?? null);
-    setSelectedTrusteeSlug(route.trusteeSlug ?? null);
+    setSelectedCourseId(route.courseId ?? null);
+    setSelectedAffiliationId(route.affiliationId ?? null);
   };
 
   // Keep the URL hash and the app state in step, in both directions. pushState
@@ -287,11 +334,22 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  /** Open a trustee profile — mirrors navigateTo, but carries the trustee slug. */
-  const navigateToTrustee = (slug: string) => {
-    setCurrentPage('trustee-detail');
-    setSelectedTrusteeSlug(slug);
-    const nextHash = `#/trustees/${encodeURIComponent(slug)}`;
+  /** Open a course page — mirrors navigateTo, but carries the course id. */
+  const navigateToCourse = (courseId: string) => {
+    setCurrentPage('course-detail');
+    setSelectedCourseId(courseId);
+    const nextHash = routeToHash({ page: 'course-detail', courseId });
+    if (window.location.hash !== nextHash) {
+      window.history.pushState(null, '', nextHash);
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  /** Open an affiliation page — mirrors navigateTo, but carries the body id. */
+  const navigateToAffiliation = (affiliationId: string) => {
+    setCurrentPage('affiliation-detail');
+    setSelectedAffiliationId(affiliationId);
+    const nextHash = routeToHash({ page: 'affiliation-detail', affiliationId });
     if (window.location.hash !== nextHash) {
       window.history.pushState(null, '', nextHash);
     }
@@ -339,6 +397,34 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setActivityPosts((prev) => prev.filter((post) => post.id !== id));
   };
 
+  const upsertAnnouncement = (post: AnnouncementPost) => {
+    setAnnouncements((prev) => {
+      const exists = prev.some((item) => item.id === post.id);
+      return exists
+        ? prev.map((item) => (item.id === post.id ? post : item))
+        : [...prev, post];
+    });
+  };
+
+  const deleteAnnouncement = (id: string) => {
+    setAnnouncements((prev) => prev.filter((post) => post.id !== id));
+  };
+
+  /**
+   * Swap a post with its neighbour after sorting by `order`, then rewrite every
+   * `order` value so the sequence stays 1..n and reordering never drifts.
+   */
+  const moveAnnouncement = (id: string, direction: 'up' | 'down') => {
+    setAnnouncements((prev) => {
+      const sorted = [...prev].sort((a, b) => a.order - b.order);
+      const index = sorted.findIndex((post) => post.id === id);
+      const target = direction === 'up' ? index - 1 : index + 1;
+      if (index === -1 || target < 0 || target >= sorted.length) return prev;
+      [sorted[index], sorted[target]] = [sorted[target], sorted[index]];
+      return sorted.map((post, position) => ({ ...post, order: position + 1 }));
+    });
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -354,8 +440,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setSelectedNoticeId,
         selectedPersonSlug,
         setSelectedPersonSlug,
-        selectedTrusteeSlug,
-        navigateToTrustee,
+        selectedCourseId,
+        navigateToCourse,
+        selectedAffiliationId,
+        navigateToAffiliation,
         isCommandPaletteOpen,
         setIsCommandPaletteOpen,
         isChatbotOpen,
@@ -364,6 +452,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setIsQuizOpen,
         isClientNotesOpen,
         setIsClientNotesOpen,
+        isAnnouncementOpen,
+        setIsAnnouncementOpen,
         applications,
         submitApplication,
         noticesList,
@@ -372,6 +462,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         activityPosts,
         addActivityPost,
         deleteActivityPost,
+        announcements,
+        upsertAnnouncement,
+        deleteAnnouncement,
+        moveAnnouncement,
         searchQuery,
         setSearchQuery,
       }}

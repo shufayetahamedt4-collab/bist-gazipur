@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, ArrowRight, Award, GraduationCap, CheckCircle2, HeartHandshake, Shield, Calculator, Check } from 'lucide-react';
+import { Sparkles, ArrowRight, Award, GraduationCap, CheckCircle2, HeartHandshake, Shield, Check } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { UNIVERSITY_INFO } from '../../data/mockData';
 
@@ -126,17 +126,6 @@ export const AdmissionHighlight: React.FC = () => {
                   <ArrowRight className="w-4 h-4" />
                 </button>
 
-                <button
-                  onClick={() => navigateTo('calculator')}
-                  className={`px-4 py-3 rounded-xl font-heading font-semibold text-xs sm:text-sm transition-all flex items-center gap-1.5 cursor-pointer ${
-                    theme === 'dark'
-                      ? 'text-emerald-700 dark:text-emerald-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10'
-                      : 'text-emerald-800 hover:text-emerald-950 bg-white hover:bg-emerald-50 border border-emerald-300 shadow-sm'
-                  }`}
-                >
-                  <Calculator className="w-4 h-4 text-emerald-600" />
-                  <span>{isBn ? 'স্কলারশিপ হিসাব করুন' : 'Calculate Fee Waiver'}</span>
-                </button>
               </div>
             </div>
 

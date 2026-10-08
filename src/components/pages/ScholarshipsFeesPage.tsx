@@ -1,306 +1,116 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
-  Calculator,
   Award,
-  Sparkles,
   ArrowRight,
   CheckCircle2,
-  HelpCircle,
   Percent,
   Layers,
+  HelpCircle,
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
-import { PROGRAMS, OTHER_FEE_TABLES } from '../../data/mockData';
+import { PROGRAMS, OTHER_FEE_TABLES, UNIVERSITY_INFO } from '../../data/mockData';
 
+/**
+ * Scholarships and the official tuition fee tables.
+ *
+ * This page deliberately holds no calculator: every figure below is one the
+ * admission office has already published on bist.edu.bd/page/tuition-fee, printed
+ * as its own table so a visitor reads the official band rather than a computed
+ * estimate. The waiver bands are keyed on the SUM of the SSC and HSC GPA, exactly
+ * as the institution publishes them.
+ */
 export const ScholarshipsFeesPage: React.FC = () => {
   const { language, navigateTo, theme } = useApp();
   const isBn = language === 'bn';
 
-  // Calculator State
-  const [selectedProgram, setSelectedProgram] = useState(PROGRAMS[0].id);
-  const [sscGpa, setSscGpa] = useState<string>('5.00');
-  const [hscGpa, setHscGpa] = useState<string>('5.00');
-  const [quota, setQuota] = useState<string>('merit');
-
-  const currentProg = PROGRAMS.find((p) => p.id === selectedProgram) || PROGRAMS[0];
-
-  /**
-   * Waiver bands are keyed on the SUM of the SSC + HSC GPA, exactly as published in
-   * the official tuition fee table on bist.edu.bd/page/tuition-fee.
-   */
-  const TIER_THRESHOLDS = [0, 6, 7, 8, 9, 10];
-
-  const calculateWaiver = (): {
-    percentage: number;
-    label: string;
-    totalCost: number;
-    monthlyTuition: number;
-    savings: number;
-  } => {
-    const totalGpa = (parseFloat(sscGpa) || 0) + (parseFloat(hscGpa) || 0);
-
-    if (quota === 'full100') {
-      return {
-        percentage: 100,
-        label: isBn
-          ? '১০০ জনের জন্য ১০০% কোর্স ফি স্কলারশিপ (শর্ত প্রযোজ্য)'
-          : '100% course-fee scholarship scheme for 100 students (terms apply)',
-        totalCost: 0,
-        monthlyTuition: 0,
-        savings: currentProg.totalFee,
-      };
-    }
-
-    if (quota === 'inclusion') {
-      // The official announcement promises 50%-100% for students with disabilities and
-      // ethnic-minority students, assessed individually. We quote the lower bound.
-      const percentage = 50;
-      const totalCost = Math.round((currentProg.totalFee * (100 - percentage)) / 100);
-      return {
-        percentage,
-        label: isBn
-          ? 'অন্তর্ভুক্তিমূলক সহায়তা: ৫০%-১০০% (ব্যক্তিভিত্তিক মূল্যায়ন, অনুমান ৫০%)'
-          : 'Inclusion support: 50%-100% assessed case by case (estimate shown at 50%)',
-        totalCost,
-        monthlyTuition: Math.round(currentProg.monthlyTuition / 2),
-        savings: currentProg.totalFee - totalCost,
-      };
-    }
-
-    let index = 0;
-    for (let i = TIER_THRESHOLDS.length - 1; i >= 0; i--) {
-      if (totalGpa >= TIER_THRESHOLDS[i]) {
-        index = i;
-        break;
-      }
-    }
-
-    const tier = currentProg.waiverTiers[index];
-    return {
-      percentage: tier.waiverPercent,
-      label: `${isBn ? 'প্রকাশিত ছাড়' : 'Published waiver'} · ${isBn ? tier.band.bn : tier.band.en}`,
-      totalCost: tier.totalCost,
-      monthlyTuition: tier.monthlyTuition,
-      savings: currentProg.totalFee - tier.totalCost,
-    };
-  };
-
-  const waiverResult = calculateWaiver();
+  /** The support schemes the institution advertises, as published. */
+  const schemes = isBn
+    ? [
+        '১০০ জন শিক্ষার্থীর জন্য ১০০% কোর্স ফি স্কলারশিপ (শর্ত প্রযোজ্য)',
+        'এসএসসি ও এইচএসসি জিপিএর যোগফল অনুযায়ী ৫০% থেকে ৯০% পর্যন্ত মেধা ছাড়',
+        'পলিটেকনিক ডিপ্লোমা পাস শিক্ষার্থীদের জন্য বিশেষ ছাড় ও ক্রেডিট সমন্বয়',
+        'নারী শিক্ষার্থী, ক্ষুদ্র নৃ-গোষ্ঠী ও প্রতিবন্ধী শিক্ষার্থীদের জন্য ৫০%-১০০% অন্তর্ভুক্তিমূলক সহায়তা',
+      ]
+    : [
+        '100% course-fee scholarship for 100 students each session (terms apply)',
+        'Merit waivers from 50% to 90%, keyed on the sum of SSC and HSC GPA',
+        'Special waivers and credit transfer for polytechnic Diploma-in-Engineering holders',
+        '50%-100% inclusion support for female, ethnic-minority and disabled students',
+      ];
 
   return (
     <div className="py-12 px-4 sm:px-6 max-w-6xl mx-auto space-y-12">
       {/* Header */}
-      <div className="text-center space-y-2 max-w-2xl mx-auto">
-        <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${
-          theme === 'dark'
-            ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20'
-            : 'bg-emerald-100 text-emerald-800 border border-emerald-300'
-        }`}>
-          <Calculator className="w-3.5 h-3.5 text-emerald-600" />
-          <span>{isBn ? 'ফি ও স্কলারশিপ মূল্যায়ন' : 'Financial Aid & Scholarship Calculator'}</span>
+      <div className="text-center space-y-3 max-w-3xl mx-auto">
+        <div
+          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${
+            theme === 'dark'
+              ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20'
+              : 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+          }`}
+        >
+          <Percent className="w-3.5 h-3.5 text-emerald-600" />
+          <span>{isBn ? 'স্কলারশিপ, ছাড় ও ফি' : 'Scholarships, Waivers & Fees'}</span>
         </div>
-        <h1 className={`font-heading text-3xl sm:text-4xl font-extrabold tracking-tight ${
-          theme === 'dark' ? 'text-white' : 'text-[#0b192c]'
-        }`}>
-          {isBn ? 'ইন্টারেক্টিভ ফি ও স্কলারশিপ ক্যালকুলেটর' : 'Calculate Your Exact Tuition & Waiver'}
+        <h1
+          className={`font-heading text-3xl sm:text-4xl font-extrabold tracking-tight ${
+            theme === 'dark' ? 'text-white' : 'text-[#0b192c]'
+          }`}
+        >
+          {isBn ? 'প্রকাশিত টিউশন ফি ও ছাড়ের তালিকা' : 'Published Tuition Fees & Waiver Bands'}
         </h1>
         <p className={`text-xs sm:text-sm ${theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}`}>
           {isBn
-            ? 'আপনার এসএসসি ও এইচএসসি পরীক্ষার জিপিএ এবং প্রযোজ্য কোটা নির্বাচন করে আপনার প্রকৃত টিউশন ফি ও সেমিস্টার কিস্তির হিসাব করুন।'
-            : 'Select your degree and test scores to view your personalized scholarship discount and semester installments.'}
+            ? 'ভর্তি অফিসের প্রকাশিত ফি কাঠামো ও জিপিএভিত্তিক ছাড়ের তালিকা। চূড়ান্ত হিসাব ক্যাম্পাসে নিশ্চিত করুন।'
+            : 'The fee structure and GPA-wise waiver bands exactly as the BIST admission office publishes them. Confirm final figures with the campus admission office.'}
         </p>
       </div>
 
-      {/* Calculator Interactive Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Left Inputs */}
-        <div className={`lg:col-span-7 p-6 sm:p-8 rounded-3xl border space-y-5 ${
-          theme === 'dark'
-            ? 'glass-panel-dark border-emerald-500/30'
-            : 'bg-white/95 border-emerald-100 shadow-[0_8px_30px_rgb(5,150,105,0.06)]'
-        }`}>
-          <h2 className={`font-heading font-bold text-lg border-b pb-3 flex items-center gap-2 ${
-            theme === 'dark' ? 'text-white border-white/10' : 'text-[#0b192c] border-emerald-100'
-          }`}>
-            <Sparkles className="w-4 h-4 text-emerald-600" />
-            <span>{isBn ? 'আপনার বিবরণী দিন' : 'Enter Your Credentials'}</span>
-          </h2>
-
-          <div className="space-y-4 text-xs">
-            <div className="space-y-1.5">
-              <label className={`font-medium ${theme === 'dark' ? 'text-slate-300' : 'text-slate-700'}`}>
-                {isBn ? 'আকাঙ্ক্ষিত প্রোগ্রাম' : 'Target Program'}
-              </label>
-              <select
-                value={selectedProgram}
-                onChange={(e) => setSelectedProgram(e.target.value)}
-                className={`w-full p-3 rounded-xl border font-medium focus:outline-none transition-colors ${
-                  theme === 'dark'
-                    ? 'bg-black/50 border-white/10 text-white focus:border-emerald-500'
-                    : 'bg-slate-50 border-emerald-200 text-slate-800 focus:border-emerald-500'
-                }`}
-              >
-                {PROGRAMS.map((prog) => (
-                  <option key={prog.id} value={prog.id} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
-                    {prog.shortTitle} - {isBn ? prog.title.bn : prog.title.en} (Total: ৳{prog.totalFee.toLocaleString()})
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-1.5">
-                <label className={`font-medium ${theme === 'dark' ? 'text-slate-300' : 'text-slate-700'}`}>
-                  SSC / Equivalent GPA (Out of 5.0)
-                </label>
-                <input
-                  type="number"
-                  step="0.01"
-                  min="2.00"
-                  max="5.00"
-                  value={sscGpa}
-                  onChange={(e) => setSscGpa(e.target.value)}
-                  className={`w-full p-3 rounded-xl border font-mono focus:outline-none transition-colors ${
-                    theme === 'dark'
-                      ? 'bg-black/50 border-white/10 text-white focus:border-emerald-500'
-                      : 'bg-slate-50 border-emerald-200 text-slate-800 focus:border-emerald-500'
-                  }`}
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <label className={`font-medium ${theme === 'dark' ? 'text-slate-300' : 'text-slate-700'}`}>
-                  HSC / Diploma GPA (Out of 5.0)
-                </label>
-                <input
-                  type="number"
-                  step="0.01"
-                  min="2.00"
-                  max="5.00"
-                  value={hscGpa}
-                  onChange={(e) => setHscGpa(e.target.value)}
-                  className={`w-full p-3 rounded-xl border font-mono focus:outline-none transition-colors ${
-                    theme === 'dark'
-                      ? 'bg-black/50 border-white/10 text-white focus:border-emerald-500'
-                      : 'bg-slate-50 border-emerald-200 text-slate-800 focus:border-emerald-500'
-                  }`}
-                />
-              </div>
-            </div>
-
-            <div className="space-y-1.5">
-              <label className={`font-medium ${theme === 'dark' ? 'text-slate-300' : 'text-slate-700'}`}>
-                Quota / Scheme Category
-              </label>
-              <select
-                value={quota}
-                onChange={(e) => setQuota(e.target.value)}
-                className={`w-full p-3 rounded-xl border focus:outline-none transition-colors ${
-                  theme === 'dark'
-                    ? 'bg-black/50 border-white/10 text-white focus:border-emerald-500'
-                    : 'bg-slate-50 border-emerald-200 text-slate-800 focus:border-emerald-500'
-                }`}
-              >
-                <option value="merit">General Scholastic Merit (Based on GPA)</option>
-                <option value="full100">100% Scholarship Scheme for 100 Students (Conditions Apply)</option>
-                <option value="diploma">Polytechnic Diploma-in-Engineering Passed Student</option>
-                <option value="female">Female Student Tech Education Special Quota</option>
-                <option value="disabled">Physically Challenged Special Support Quota</option>
-                <option value="tribal">Ethnic Minority / Tribal Community Quota</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        {/* Right Output Card */}
-        <div className={`lg:col-span-5 rounded-3xl p-6 sm:p-8 border shadow-2xl space-y-6 ${
-          theme === 'dark'
-            ? 'bg-gradient-to-br from-emerald-950/80 via-[#0b192c] to-slate-950 border-emerald-500/40 glow-green text-white'
-            : 'bg-gradient-to-br from-emerald-50 via-white to-yellow-50 border-emerald-200 shadow-[0_12px_40px_rgba(5,150,105,0.1)] text-slate-900'
-        }`}>
-          <div className="space-y-1">
-            <span className="text-[10px] font-mono uppercase tracking-widest text-emerald-600 font-bold block">
-              Estimated Fee Breakdown
-            </span>
-            <h3 className="font-heading font-extrabold text-xl">
-              {currentProg.shortTitle} · {currentProg.degree}
-            </h3>
-            <span className="text-xs text-amber-700 dark:text-amber-300 font-bold block">
-              {waiverResult.label}
-            </span>
-          </div>
-
-          {/* Waiver metric */}
-          <div className={`p-4 rounded-2xl border flex items-center justify-between ${
-            theme === 'dark' ? 'bg-white/[0.04] border-white/10' : 'bg-white/90 border-emerald-200 shadow-sm'
-          }`}>
-            <div>
-              <span className="text-xs text-slate-500 block font-medium">
-                {isBn ? 'প্রযোজ্য ছাড়' : 'Applicable waiver'}
+      {/* Support schemes */}
+      <div
+        className={`p-6 sm:p-8 rounded-3xl border space-y-5 ${
+          theme === 'dark' ? 'glass-panel-dark' : 'bg-white/95 border-emerald-100 shadow-[0_8px_30px_rgb(5,150,105,0.06)]'
+        }`}
+      >
+        <h2
+          className={`font-heading font-bold text-xl flex items-center gap-2 ${
+            theme === 'dark' ? 'text-white' : 'text-[#0b192c]'
+          }`}
+        >
+          <Award className="w-5 h-5 text-amber-500" />
+          <span>{isBn ? 'প্রযোজ্য স্কলারশিপ ও কোটা' : 'Available Scholarships & Quotas'}</span>
+        </h2>
+        <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {schemes.map((scheme) => (
+            <li key={scheme} className="flex items-start gap-2">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+              <span className={`text-xs leading-relaxed ${theme === 'dark' ? 'text-slate-300' : 'text-slate-600'}`}>
+                {scheme}
               </span>
-              <span className="font-heading font-extrabold text-3xl sm:text-4xl text-emerald-600 font-mono">
-                {waiverResult.percentage}% OFF
-              </span>
-            </div>
-            <div className="text-right">
-              <span className="text-[11px] text-slate-500 block">{isBn ? 'মোট সাশ্রয়' : 'Total savings'}</span>
-              <span className="font-mono text-emerald-700 dark:text-emerald-300 font-bold text-sm">
-                ৳{waiverResult.savings.toLocaleString()}
-              </span>
-            </div>
-          </div>
-
-          {/* Published fee components */}
-          <div className={`space-y-2.5 text-xs font-mono border-t pt-4 ${
-            theme === 'dark' ? 'border-white/10 text-slate-300' : 'border-emerald-200 text-slate-700'
-          }`}>
-            <div className="flex justify-between">
-              <span className="text-slate-500">{isBn ? 'ভর্তি ফি (একবার):' : 'Admission fee (one-off):'}</span>
-              <span>৳{currentProg.admissionFee.toLocaleString()}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-slate-500">{isBn ? 'সেমিস্টার ফি:' : 'Semester fee:'}</span>
-              <span>৳{currentProg.semesterFee.toLocaleString()}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-slate-500">{isBn ? 'মাসিক টিউশন:' : 'Monthly tuition:'}</span>
-              <span>৳{waiverResult.monthlyTuition.toLocaleString()}</span>
-            </div>
-            <div className="flex justify-between text-emerald-600 font-bold">
-              <span>{isBn ? 'ছাড়:' : 'Waiver:'}</span>
-              <span>- ৳{waiverResult.savings.toLocaleString()}</span>
-            </div>
-            <div className={`flex justify-between text-sm font-bold border-t pt-2 font-heading ${
-              theme === 'dark' ? 'border-white/10 text-white' : 'border-emerald-200 text-slate-950'
-            }`}>
-              <span>{isBn ? 'মোট কোর্স ফি:' : 'Total course fee:'}</span>
-              <span className="text-emerald-700 dark:text-emerald-400">৳{waiverResult.totalCost.toLocaleString()}</span>
-            </div>
-            <p className="text-[10px] font-sans text-slate-500 pt-2 leading-relaxed">
-              {isBn
-                ? 'ছাড় এসএসসি ও এইচএসসি জিপিএর যোগফল অনুযায়ী প্রকাশিত ফি তালিকার ভিত্তিতে দেখানো হয়েছে। চূড়ান্ত হিসাব ভর্তি অফিসে নিশ্চিত করুন — হটলাইন ০১৯১৩-৫৫৫১১১।'
-                : 'The waiver follows the officially published fee table and is keyed on the sum of your SSC and HSC GPA. Confirm final dues with the admission office — helpline 01913-555111.'}
-            </p>
-          </div>
-
-          <button
-            onClick={() => navigateTo('apply-online')}
-            className="w-full py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 via-emerald-400 to-yellow-400 hover:from-emerald-600 hover:to-yellow-500 text-slate-950 font-heading font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer shadow-lg transition-all"
-          >
-            <span>{isBn ? 'এই স্কলারশিপে আবেদন করুন' : 'Claim This Scholarship & Apply'}</span>
-            <ArrowRight className="w-4 h-4" />
-          </button>
+            </li>
+          ))}
+        </ul>
+        <div className={`flex items-start gap-2 pt-3 border-t text-[11px] ${
+          theme === 'dark' ? 'border-white/10 text-slate-400' : 'border-emerald-100 text-slate-500'
+        }`}
+        >
+          <HelpCircle className="w-3.5 h-3.5 shrink-0 mt-0.5 text-emerald-600" />
+          <span>
+            {isBn
+              ? `ছাড়ের যোগ্যতা নির্ধারণ ও চূড়ান্ত হিসাব ভর্তি অফিসে নিশ্চিত করুন — হটলাইন ${UNIVERSITY_INFO.contact.admissionPhone}।`
+              : `Eligibility is assessed and confirmed by the admission office — helpline ${UNIVERSITY_INFO.contact.admissionPhone}.`}
+          </span>
         </div>
       </div>
 
       {/* Official Tuition Fee Structure Table */}
-      <div className={`p-6 sm:p-8 rounded-3xl border space-y-6 ${
-        theme === 'dark' ? 'glass-panel-dark' : 'bg-white/95 border-emerald-100 shadow-[0_8px_30px_rgb(5,150,105,0.06)]'
-      }`}>
+      <div
+        className={`p-6 sm:p-8 rounded-3xl border space-y-6 ${
+          theme === 'dark' ? 'glass-panel-dark' : 'bg-white/95 border-emerald-100 shadow-[0_8px_30px_rgb(5,150,105,0.06)]'
+        }`}
+      >
         <div className="space-y-1">
-          <h3 className={`font-heading font-bold text-xl ${
-            theme === 'dark' ? 'text-white' : 'text-[#0b192c]'
-          }`}>
+          <h3 className={`font-heading font-bold text-xl ${theme === 'dark' ? 'text-white' : 'text-[#0b192c]'}`}>
             {isBn ? 'জাতীয় বিশ্ববিদ্যালয় অনুমোদিত নিয়মিত ফি কাঠামো' : 'Official Tuition Fee Structure'}
           </h3>
           <p className={`text-xs ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>
@@ -312,22 +122,24 @@ export const ScholarshipsFeesPage: React.FC = () => {
 
         <div className="overflow-x-auto">
           <table className="w-full text-xs text-left">
-            <thead className={`uppercase font-mono text-[10px] border-b ${
-              theme === 'dark' ? 'bg-black/40 text-slate-400 border-white/10' : 'bg-emerald-50 text-emerald-900 border-emerald-200'
-            }`}>
+            <thead
+              className={`uppercase font-mono text-[10px] border-b ${
+                theme === 'dark' ? 'bg-black/40 text-slate-400 border-white/10' : 'bg-emerald-50 text-emerald-900 border-emerald-200'
+              }`}
+            >
               <tr>
                 <th className="py-3 px-4">Program Title</th>
                 <th className="py-3 px-4">Affiliation</th>
                 <th className="py-3 px-4 text-center">Duration</th>
                 <th className="py-3 px-4 text-center">Credits</th>
-                <th className="py-3 px-4 text-right">Per Semester Fee</th>
-                <th className="py-3 px-4 text-right">Total Course Fee</th>
-                <th className="py-3 px-4 text-center">Action</th>
+                <th className="py-3 px-4 text-right">{isBn ? 'সেমিস্টার ফি' : 'Per Semester Fee'}</th>
+                <th className="py-3 px-4 text-right">{isBn ? 'মোট কোর্স ফি' : 'Total Course Fee'}</th>
+                <th className="py-3 px-4 text-center">{isBn ? 'আবেদন' : 'Action'}</th>
               </tr>
             </thead>
-            <tbody className={`divide-y ${
-              theme === 'dark' ? 'divide-white/5 text-slate-300' : 'divide-emerald-100 text-slate-700'
-            }`}>
+            <tbody
+              className={`divide-y ${theme === 'dark' ? 'divide-white/5 text-slate-300' : 'divide-emerald-100 text-slate-700'}`}
+            >
               {PROGRAMS.map((prog) => (
                 <tr key={prog.id} className="hover:bg-emerald-50/40 transition-colors">
                   <td className="py-3 px-4">
@@ -348,7 +160,7 @@ export const ScholarshipsFeesPage: React.FC = () => {
                       onClick={() => navigateTo('apply-online')}
                       className="px-3 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold text-[11px] cursor-pointer"
                     >
-                      Apply
+                      {isBn ? 'আবেদন' : 'Apply'}
                     </button>
                   </td>
                 </tr>
@@ -358,53 +170,75 @@ export const ScholarshipsFeesPage: React.FC = () => {
         </div>
       </div>
 
-      {/* GPA-wise waiver bands for the selected programme */}
-      <div className={`p-6 sm:p-8 rounded-3xl border space-y-6 ${
-        theme === 'dark' ? 'glass-panel-dark' : 'bg-white/95 border-emerald-100 shadow-[0_8px_30px_rgb(5,150,105,0.06)]'
-      }`}>
-        <div className="space-y-1">
+      {/* GPA-wise waiver bands, one published table per programme */}
+      <div className="space-y-6">
+        <div className="space-y-1 text-center max-w-2xl mx-auto">
           <h3 className={`font-heading font-bold text-xl ${theme === 'dark' ? 'text-white' : 'text-[#0b192c]'}`}>
-            {isBn ? 'জিপিএ অনুযায়ী ছাড়ের তালিকা' : 'GPA-wise waiver table'} · {currentProg.shortTitle}
+            {isBn ? 'জিপিএ অনুযায়ী ছাড়ের তালিকা' : 'GPA-wise waiver tables'}
           </h3>
           <p className={`text-xs ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>
             {isBn
-              ? 'এসএসসি ও এইচএসসি জিপিএর যোগফলের ভিত্তিতে ভর্তি অফিসের প্রকাশিত তালিকা।'
-              : 'As published by the BIST admission office; bands are keyed on the sum of your SSC and HSC GPA.'}
+              ? 'এসএসসি ও এইচএসসি জিপিএর যোগফলের ভিত্তিতে ভর্তি অফিসের প্রকাশিত তালিকা, প্রোগ্রাম অনুযায়ী।'
+              : 'As published by the BIST admission office; every band is keyed on the sum of the SSC and HSC GPA.'}
           </p>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-xs text-left">
-            <thead className={`uppercase font-mono text-[10px] border-b ${
-              theme === 'dark' ? 'bg-black/40 text-slate-400 border-white/10' : 'bg-emerald-50 text-emerald-900 border-emerald-200'
-            }`}>
-              <tr>
-                <th className="py-3 px-4">{isBn ? 'জিপিএ ব্যান্ড (এসএসসি + এইচএসসি)' : 'GPA band (SSC + HSC)'}</th>
-                <th className="py-3 px-4 text-center">{isBn ? 'ছাড়' : 'Waiver'}</th>
-                <th className="py-3 px-4 text-right">{isBn ? 'মাসিক টিউশন' : 'Monthly tuition'}</th>
-                <th className="py-3 px-4 text-right">{isBn ? 'মোট কোর্স ফি' : 'Total course fee'}</th>
-              </tr>
-            </thead>
-            <tbody className={`divide-y ${theme === 'dark' ? 'divide-white/5 text-slate-300' : 'divide-emerald-100 text-slate-700'}`}>
-              {currentProg.waiverTiers.map((tier) => (
-                <tr key={tier.band.en} className="hover:bg-emerald-50/40 transition-colors">
-                  <td className="py-2.5 px-4 font-mono">{isBn ? tier.band.bn : tier.band.en}</td>
-                  <td className="py-2.5 px-4 text-center font-bold text-emerald-700 dark:text-emerald-400">
-                    {tier.waiverPercent}%
-                  </td>
-                  <td className="py-2.5 px-4 text-right font-mono">৳{tier.monthlyTuition.toLocaleString()}</td>
-                  <td className="py-2.5 px-4 text-right font-mono font-bold">৳{tier.totalCost.toLocaleString()}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {PROGRAMS.map((prog) => (
+            <div
+              key={prog.id}
+              className={`p-5 rounded-2xl border space-y-4 ${
+                theme === 'dark' ? 'glass-panel-dark' : 'bg-white/95 border-emerald-100 shadow-[0_8px_30px_rgb(5,150,105,0.06)]'
+              }`}
+            >
+              <div className="flex items-baseline justify-between gap-3">
+                <h4 className={`font-heading font-bold text-base ${theme === 'dark' ? 'text-white' : 'text-[#0b192c]'}`}>
+                  {prog.shortTitle} · {prog.degree}
+                </h4>
+                <span className="font-mono text-[11px] text-emerald-600 font-semibold">
+                  ৳{prog.totalFee.toLocaleString()}
+                </span>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-[11px] text-left">
+                  <thead
+                    className={`uppercase font-mono text-[10px] border-b ${
+                      theme === 'dark' ? 'text-slate-400 border-white/10' : 'text-emerald-900 border-emerald-200'
+                    }`}
+                  >
+                    <tr>
+                      <th className="py-2 pr-3">{isBn ? 'জিপিএ ব্যান্ড (এসএসসি + এইচএসসি)' : 'GPA band (SSC + HSC)'}</th>
+                      <th className="py-2 px-2 text-center">{isBn ? 'ছাড়' : 'Waiver'}</th>
+                      <th className="py-2 px-2 text-right">{isBn ? 'মাসিক টিউশন' : 'Monthly tuition'}</th>
+                      <th className="py-2 pl-2 text-right">{isBn ? 'মোট কোর্স ফি' : 'Total fee'}</th>
+                    </tr>
+                  </thead>
+                  <tbody className={`divide-y ${theme === 'dark' ? 'divide-white/5 text-slate-300' : 'divide-emerald-100 text-slate-700'}`}>
+                    {prog.waiverTiers.map((tier) => (
+                      <tr key={tier.band.en}>
+                        <td className="py-2 pr-3 font-mono">{isBn ? tier.band.bn : tier.band.en}</td>
+                        <td className="py-2 px-2 text-center font-bold text-emerald-700 dark:text-emerald-400">
+                          {tier.waiverPercent}%
+                        </td>
+                        <td className="py-2 px-2 text-right font-mono">৳{tier.monthlyTuition.toLocaleString()}</td>
+                        <td className="py-2 pl-2 text-right font-mono font-bold">৳{tier.totalCost.toLocaleString()}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
       {/* Executive and MBA fee tables published by the admission office */}
-      <div className={`p-6 sm:p-8 rounded-3xl border space-y-6 ${
-        theme === 'dark' ? 'glass-panel-dark' : 'bg-white/95 border-emerald-100 shadow-[0_8px_30px_rgb(5,150,105,0.06)]'
-      }`}>
+      <div
+        className={`p-6 sm:p-8 rounded-3xl border space-y-6 ${
+          theme === 'dark' ? 'glass-panel-dark' : 'bg-white/95 border-emerald-100 shadow-[0_8px_30px_rgb(5,150,105,0.06)]'
+        }`}
+      >
         <div className="space-y-1">
           <h3 className={`font-heading font-bold text-xl ${theme === 'dark' ? 'text-white' : 'text-[#0b192c]'}`}>
             {isBn ? 'এক্সিকিউটিভ ব্যাচ, এমবিএ ও অন্যান্য ফি' : 'Executive batch, MBA & other fee tables'}
@@ -445,9 +279,31 @@ export const ScholarshipsFeesPage: React.FC = () => {
 
         <p className={`text-[11px] ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>
           {isBn
-            ? 'সকল ফি ভর্তি অফিসের প্রকাশিত তালিকা অনুযায়ী। বিস্তারিত জানতে হটলাইন ০১৯১৩-৫৫১১১১ নম্বরে যোগাযোগ করুন।'
-            : 'All figures are taken from the fee tables published by the BIST admission office. For details, call the helpline on 01913-555111.'}
+            ? `সকল ফি ভর্তি অফিসের প্রকাশিত তালিকা অনুযায়ী। বিস্তারিত জানতে হটলাইন ${UNIVERSITY_INFO.contact.admissionPhone} নম্বরে যোগাযোগ করুন।`
+            : `All figures are taken from the fee tables published by the BIST admission office. For details, call the helpline on ${UNIVERSITY_INFO.contact.admissionPhone}.`}
         </p>
+      </div>
+
+      {/* CTA */}
+      <div className="flex flex-wrap items-center justify-center gap-4">
+        <button
+          onClick={() => navigateTo('apply-online')}
+          className="px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-500 via-emerald-400 to-yellow-400 hover:from-emerald-600 hover:to-yellow-500 text-slate-950 font-heading font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-lg transition-all cursor-pointer"
+        >
+          <span>{isBn ? 'অনলাইনে আবেদন করুন' : 'Apply Online'}</span>
+          <ArrowRight className="w-4 h-4" />
+        </button>
+        <button
+          onClick={() => navigateTo('honours-programs')}
+          className={`px-5 py-3 rounded-xl font-heading font-semibold text-xs sm:text-sm flex items-center gap-2 transition-all cursor-pointer ${
+            theme === 'dark'
+              ? 'text-emerald-700 dark:text-emerald-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10'
+              : 'text-emerald-800 hover:text-emerald-950 bg-white hover:bg-emerald-50 border border-emerald-300 shadow-sm'
+          }`}
+        >
+          <Layers className="w-4 h-4 text-emerald-600" />
+          <span>{isBn ? 'সকল অনার্স প্রোগ্রাম' : 'All Honours Programs'}</span>
+        </button>
       </div>
     </div>
   );

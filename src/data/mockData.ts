@@ -76,9 +76,17 @@ export {
 } from './documentRequestData';
 
 export {
-  BOARD_OF_TRUSTEES,
-  BOARD_ALSO_PUBLISHED,
-  BOARD_ROLE_NOTE,
-  BOARD_PENDING_NOTE,
-  BOARD_SOURCE_PAGE,
-} from './governanceData';
+  HONOURS_COURSES,
+  PGD_COURSES,
+  SHORT_COURSES,
+  NSDA_COURSES,
+  ALL_COURSES,
+  findCourse,
+  coursesAtLevel,
+} from './coursesData';
+
+export { AFFILIATION_BODIES, findAffiliation } from './affiliationData';
+
+export { COLLABORATION_PROJECTS } from './collaborationData';
+
+export { ANNOUNCEMENT_POSTS, ANNOUNCEMENTS_DATA_VERSION } from './announcementData';

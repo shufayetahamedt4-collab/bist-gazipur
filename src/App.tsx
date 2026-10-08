@@ -42,14 +42,26 @@ import { StudentLifePage } from './components/pages/StudentLifePage';
 import { IqacPage } from './components/pages/IqacPage';
 import { GrievancePage } from './components/pages/GrievancePage';
 import { DocumentEnquiryPage } from './components/pages/DocumentEnquiryPage';
-import { BoardOfTrusteesPage } from './components/pages/BoardOfTrusteesPage';
-import { TrusteeProfilePage } from './components/pages/TrusteeProfilePage';
 import { PersonProfilePage } from './components/pages/PersonProfilePage';
+import { PrincipalMessagePage } from './components/pages/PrincipalMessagePage';
+import { DigitalItPage } from './components/pages/DigitalItPage';
+import { HonoursProgramsPage } from './components/pages/HonoursProgramsPage';
+import { PgdCoursesPage } from './components/pages/PgdCoursesPage';
+import { ShortCoursesPage } from './components/pages/ShortCoursesPage';
+import { CourseDetailPage } from './components/pages/CourseDetailPage';
+import { AffiliationPage } from './components/pages/AffiliationPage';
+import { PopupAdminPage } from './components/pages/PopupAdminPage';
+import { AnnouncementPopup } from './components/features/AnnouncementPopup';
 import { ProgramExplorer } from './components/sections/ProgramExplorer';
 import { AdmissionHighlight } from './components/sections/AdmissionHighlight';
+import { useScrollReveal } from './hooks/useScrollReveal';
 
 const MainContent: React.FC = () => {
   const { currentPage, theme } = useApp();
+
+  // Reveal headings, text and card groups as they scroll into view. Runs on
+  // every page change and is a no-op for visitors who ask for reduced motion.
+  useScrollReveal(currentPage);
 
   const renderPage = () => {
     switch (currentPage) {
@@ -76,8 +88,23 @@ const MainContent: React.FC = () => {
         return <AlumniPage />;
       case 'scholarships':
       case 'fees':
-      case 'calculator':
         return <ScholarshipsFeesPage />;
+      case 'honours-programs':
+        return <HonoursProgramsPage />;
+      case 'pgd':
+        return <PgdCoursesPage />;
+      case 'short-courses':
+        return <ShortCoursesPage />;
+      case 'course-detail':
+        return <CourseDetailPage />;
+      case 'affiliation-detail':
+        return <AffiliationPage />;
+      case 'principal-message':
+        return <PrincipalMessagePage />;
+      case 'digital-it':
+        return <DigitalItPage />;
+      case 'admin-popups':
+        return <PopupAdminPage />;
       case 'contact':
         return <ContactPage />;
       case 'about':
@@ -124,10 +151,6 @@ const MainContent: React.FC = () => {
         return <GrievancePage />;
       case 'document-enquiry':
         return <DocumentEnquiryPage />;
-      case 'board-of-trustees':
-        return <BoardOfTrusteesPage />;
-      case 'trustee-detail':
-        return <TrusteeProfilePage />;
       case 'person-detail':
         return <PersonProfilePage />;
       case 'privacy':
@@ -149,6 +172,7 @@ const MainContent: React.FC = () => {
       <main className="flex-1">{renderPage()}</main>
       <Footer />
       <FloatingActions />
+      <AnnouncementPopup />
       <AiChatbot />
       <ProgramFinderQuiz />
       <CommandPalette />

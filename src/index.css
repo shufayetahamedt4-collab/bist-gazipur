@@ -380,3 +380,113 @@ html {
   background: #10b981;
 }
 
+/* ------------------------------------------------------------------
+   Scroll reveal
+
+   Applied by src/hooks/useScrollReveal.ts to headings, text and card
+   groups. Only opacity and transform animate, so nothing reflows. The
+   hook never tags an element that is already on screen, which is why the
+   initial state is safe to hide: it only ever applies below the fold.
+   ------------------------------------------------------------------ */
+.reveal-init,
+.reveal-init-left,
+.reveal-init-right {
+  opacity: 0;
+  transition:
+    opacity 0.62s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.62s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-init {
+  transform: translateY(16px);
+}
+
+/* Side entrances are deliberately short: the parent containers carry enough
+   padding that a 16px travel cannot create a horizontal scrollbar. */
+.reveal-init-left {
+  transform: translateX(-16px);
+}
+
+.reveal-init-right {
+  transform: translateX(16px);
+}
+
+.reveal-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Announcement popup entrance */
+@keyframes popupSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-popup-in {
+  animation: popupSlideIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* The announcement card folds away on its own and leaves a small launcher.
+   Duration must stay in step with EXIT_MS in AnnouncementPopup.tsx. */
+@keyframes popupSlideOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(12px) scale(0.97);
+  }
+}
+
+.popup-leave {
+  animation: popupSlideOut 0.26s ease-in both;
+  pointer-events: none;
+}
+
+/* Thin progress bar counting down to the auto-fold. The duration and play
+   state arrive as inline CSS variables so pausing on hover is free. */
+@keyframes popupCountdown {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+.popup-countdown {
+  width: 0;
+  animation: popupCountdown var(--popup-countdown-ms, 11000ms) linear forwards;
+  animation-play-state: var(--popup-countdown-play, running);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-init,
+  .reveal-init-left,
+  .reveal-init-right {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .animate-popup-in {
+    animation: none;
+  }
+
+  .popup-leave {
+    animation: none;
+  }
+
+  .popup-countdown {
+    animation: none;
+  }
+}
+

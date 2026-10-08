@@ -1,5 +1,15 @@
 import React from 'react';
-import { Building2, Award, Target, Compass, Users, ShieldCheck, CheckCircle2, ArrowRight } from 'lucide-react';
+import {
+  Building2,
+  Award,
+  Target,
+  Compass,
+  MonitorSmartphone,
+  GraduationCap,
+  ShieldCheck,
+  CheckCircle2,
+  ArrowRight,
+} from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import {
   UNIVERSITY_INFO,
@@ -114,34 +124,49 @@ export const AboutPage: React.FC = () => {
           </h2>
           <p className="text-xs text-slate-500 dark:text-slate-400">
             {isBn
-              ? 'জাতীয় বিশ্ববিদ্যালয়ের নীতিমালা অনুযায়ী ট্রাস্টি বোর্ড ও একাডেমিক কাউন্সিলের দিকনির্দেশনায় পরিচালিত।'
-              : 'Operating under the governance of the Board of Trustees, Chairman, and Academic Advisory Council.'}
+              ? 'জাতীয় বিশ্ববিদ্যালয়ের নীতিমালা অনুযায়ী অধ্যক্ষের কার্যালয় ও একাডেমিক কাউন্সিলের দিকনির্দেশনায় পরিচালিত।'
+              : 'Operating under the Office of the Principal and the Academic Advisory Council, in line with National University regulations.'}
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <button
-            onClick={() => navigateTo('board-of-trustees')}
-            className="text-left p-6 rounded-2xl glass-panel space-y-3 border border-transparent hover:border-cyan-400 transition-colors"
+            onClick={() => navigateTo('principal-message')}
+            className="text-left p-6 rounded-2xl glass-panel space-y-3 border border-transparent hover:border-cyan-400 transition-colors cursor-pointer"
           >
-            <Users className="w-6 h-6 text-cyan-600 dark:text-cyan-400" />
-            <h3 className="font-heading font-bold text-base text-slate-900 dark:text-white">Board of Trustees</h3>
+            <GraduationCap className="w-6 h-6 text-cyan-600 dark:text-cyan-400" />
+            <h3 className="font-heading font-bold text-base text-slate-900 dark:text-white">
+              {isBn ? 'অধ্যক্ষের বাণী' : "Principal's Message"}
+            </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-              Provides strategic oversight, fiscal governance, campus infrastructure expansion, and ensures non-profit academic focus.
+              {isBn
+                ? 'প্রতিষ্ঠাতা অধ্যক্ষের বাণী — দক্ষ মানবসম্পদ গড়ে তোলার অঙ্গীকার।'
+                : 'Read the message from the founder Principal on the institute\'s commitment to skilled manpower.'}
             </p>
             <span className="inline-flex items-center gap-1.5 text-xs font-bold text-cyan-700 dark:text-cyan-400">
-              {isBn ? 'সদস্যবৃন্দ দেখুন' : 'View members'}
+              {isBn ? 'বাণী পড়ুন' : 'Read the message'}
               <ArrowRight className="w-3.5 h-3.5" />
             </span>
           </button>
 
-          <div className="p-6 rounded-2xl glass-panel space-y-3">
-            <Award className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
-            <h3 className="font-heading font-bold text-base text-slate-900 dark:text-white">Office of the Chairman</h3>
+          <button
+            onClick={() => navigateTo('digital-it')}
+            className="text-left p-6 rounded-2xl glass-panel space-y-3 border border-transparent hover:border-cyan-400 transition-colors cursor-pointer"
+          >
+            <MonitorSmartphone className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
+            <h3 className="font-heading font-bold text-base text-slate-900 dark:text-white">
+              {isBn ? 'ডিজিটাল ও আইটি ডেভেলপমেন্ট' : 'Digital & IT Development'}
+            </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-              Ensures holistic institutional alignment with national higher education benchmarks and international industrial accreditation.
+              {isBn
+                ? 'ইআরপি, অনলাইন ভর্তি, নোটিশ ও আইটি প্রশিক্ষণ পরিচালনাকারী ইউনিট।'
+                : 'The unit behind the ERP, online admission, digital notices and IT skills training.'}
             </p>
-          </div>
+            <span className="inline-flex items-center gap-1.5 text-xs font-bold text-cyan-700 dark:text-cyan-400">
+              {isBn ? 'ইউনিট সম্পর্কে জানুন' : 'About the unit'}
+              <ArrowRight className="w-3.5 h-3.5" />
+            </span>
+          </button>
 
           <div className="p-6 rounded-2xl glass-panel space-y-3">
             <ShieldCheck className="w-6 h-6 text-amber-600 dark:text-amber-400" />

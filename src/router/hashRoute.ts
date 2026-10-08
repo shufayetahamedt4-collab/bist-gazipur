@@ -11,9 +11,11 @@
  *   #/about, #/library, …       → the PageId verbatim
  *   #/programs                  → the programme explorer
  *   #/programs/:deptId          → department-detail
+ *   #/courses/:courseId         → course-detail (PGD, short and NSDA courses)
+ *   #/affiliated/:bodyId        → affiliation-detail (nu | bteb | nsda)
  *   #/notices/:id               → notices, with that circular selected
- *   #/trustees/:slug            → trustee-detail (a Board of Trustees profile)
- *   #/people/:slug              → person-detail (profile rendered in Phase 2)
+ *   #/people/:slug              → person-detail (unified faculty/officer profile)
+ *   #/admin/popups              → admin-popups (announcement popup editor)
  */
 
 import { PageId } from '../types';
@@ -21,8 +23,9 @@ import { PageId } from '../types';
 export interface RouteState {
   page: PageId;
   deptId?: string;
+  courseId?: string;
+  affiliationId?: string;
   personSlug?: string;
-  trusteeSlug?: string;
   noticeId?: string;
 }
 
@@ -31,14 +34,20 @@ export interface RouteState {
  * exhaustively (rather than derived) so that adding a PageId without deciding
  * its URL is a visible omission here.
  *
- * `department-detail` is deliberately absent: it is only reachable as
- * `#/programs/:deptId`, never as a bare segment.
+ * `department-detail`, `course-detail`, `affiliation-detail` and `admin-popups`
+ * are deliberately absent: each is only reachable through its own multi-segment
+ * route, never as a bare segment.
  */
 const FLAT_PAGES: PageId[] = [
   'home',
   'about',
+  'principal-message',
+  'digital-it',
   'departments',
   'programs',
+  'honours-programs',
+  'pgd',
+  'short-courses',
   'admissions',
   'apply-online',
   'result',
@@ -52,7 +61,6 @@ const FLAT_PAGES: PageId[] = [
   'news',
   'scholarships',
   'fees',
-  'calculator',
   'facilities',
   'projects',
   'faq',
@@ -69,7 +77,6 @@ const FLAT_PAGES: PageId[] = [
   'iqac',
   'grievance',
   'document-enquiry',
-  'board-of-trustees',
   'person-detail',
 ];
 
@@ -80,15 +87,20 @@ export const routeToHash = (route: RouteState): string => {
       return '#/';
     case 'department-detail':
       return route.deptId ? `#/programs/${encodeURIComponent(route.deptId)}` : '#/programs';
+    case 'course-detail':
+      // Without a course there is nothing to show, so fall back to the explorer.
+      return route.courseId ? `#/courses/${encodeURIComponent(route.courseId)}` : '#/honours-programs';
+    case 'affiliation-detail':
+      return route.affiliationId
+        ? `#/affiliated/${encodeURIComponent(route.affiliationId)}`
+        : '#/honours-programs';
     case 'person-detail':
       // Without a slug there is nothing to show, so fall back to the directory.
       return route.personSlug ? `#/people/${encodeURIComponent(route.personSlug)}` : '#/faculty';
-    case 'trustee-detail':
-      return route.trusteeSlug
-        ? `#/trustees/${encodeURIComponent(route.trusteeSlug)}`
-        : '#/board-of-trustees';
     case 'notices':
       return route.noticeId ? `#/notices/${encodeURIComponent(route.noticeId)}` : '#/notices';
+    case 'admin-popups':
+      return '#/admin/popups';
     default:
       return `#/${route.page}`;
   }
@@ -116,12 +128,20 @@ export const parseHash = (hash: string): RouteState | null => {
       : { page: 'programs' };
   }
 
+  if (first === 'courses') {
+    return second ? { page: 'course-detail', courseId: decodeURIComponent(second) } : null;
+  }
+
+  if (first === 'affiliated') {
+    return second ? { page: 'affiliation-detail', affiliationId: decodeURIComponent(second) } : null;
+  }
+
   if (first === 'people') {
     return second ? { page: 'person-detail', personSlug: decodeURIComponent(second) } : null;
   }
 
-  if (first === 'trustees') {
-    return second ? { page: 'trustee-detail', trusteeSlug: decodeURIComponent(second) } : null;
+  if (first === 'admin' && second === 'popups') {
+    return { page: 'admin-popups' };
   }
 
   if (first === 'notices' && second) {

@@ -21,7 +21,6 @@ export type PageId =
   | 'news'
   | 'scholarships'
   | 'fees'
-  | 'calculator'
   | 'facilities'
   | 'projects'
   | 'faq'
@@ -38,11 +37,24 @@ export type PageId =
   | 'iqac'
   | 'grievance'
   | 'document-enquiry'
-  | 'board-of-trustees'
-  /** A single trustee's detailed profile, reached via `#/trustees/:slug`. */
-  | 'trustee-detail'
   /** Unified faculty/officer profile, reached via `#/people/:slug`. */
-  | 'person-detail';
+  | 'person-detail'
+  /** About → the Principal's message, listed after Mission, Vision & Strategy. */
+  | 'principal-message'
+  /** About → Digital & IT Development. */
+  | 'digital-it'
+  /** Academics → the four-year Honours degrees under National University. */
+  | 'honours-programs'
+  /** Academics → Post Graduate Diploma programmes. */
+  | 'pgd'
+  /** Academics → the short skill courses run by the institute. */
+  | 'short-courses'
+  /** One affiliated or accrediting body, reached via `#/affiliated/:id`. */
+  | 'affiliation-detail'
+  /** One course outside the Honours degrees, reached via `#/courses/:courseId`. */
+  | 'course-detail'
+  /** Password-gated editor for the announcement popup, reached via `#/admin/popups`. */
+  | 'admin-popups';
 
 export interface LocalizedString {
   en: string;
@@ -284,58 +296,6 @@ export interface GrievanceChannel {
 }
 
 /**
- * A member of the Board of Trustees, mirrored from the section published on
- * https://bist.edu.bd/about-us and https://bist.edu.bd/page/history.
- *
- * The live site names each member, their role and, for the Principal, the
- * designation "Member Secretary". No photographs are published for the board, so
- * the UI falls back to an initials avatar rather than inventing a portrait.
- */
-export interface BoardMember {
-  id: string;
-  /** URL segment used by the `#/trustees/:slug` route. */
-  slug: string;
-  /** Name exactly as the live site prints it. */
-  name: string;
-  role: LocalizedString;
-  order: number;
-  /** Local mirrored portrait, when the official page publishes one. */
-  photo?: string;
-  /** Published contact details; omitted rather than blanked when absent. */
-  email?: string;
-  phone?: string;
-  /**
-   * The "Profile" list on the trustee's page, grouped under the role heading the
-   * official site prints (e.g. "Founder & Chairman") with the organisations it
-   * lists beneath that heading.
-   */
-  positions?: BoardPositionGroup[];
-  /** The "Education" table, reproduced in the order the official page prints it. */
-  education?: BoardEducationEntry[];
-  /** True when the official page shows no certifications yet ("Comming soon!"). */
-  certificationPending?: boolean;
-  /** The official page this profile is mirrored from. */
-  sourceUrl?: string;
-}
-
-export interface BoardPositionGroup {
-  /** Heading exactly as printed, e.g. "Founder & Chairman". */
-  role: string;
-  organisations: string[];
-}
-
-export interface BoardEducationEntry {
-  /** e.g. "M.B.A (Apparel Merchandising)". */
-  degree: string;
-  /** e.g. "MBA in AM, Certificate Examination, 2017". */
-  examination: string;
-  /** e.g. "CGPA- 3.61 out of 4.00." — omitted when the page states none. */
-  result?: string;
-  /** Awarding body, e.g. "National University." */
-  institution?: string;
-}
-
-/**
  * A class of document an outside party (alumni, employer, university, guardian)
  * can request from the institution.
  *
@@ -411,4 +371,116 @@ export interface ApplicationFormData {
   submissionDate: string;
   referenceNumber: string;
   status: 'pending' | 'verified' | 'admitted';
+}
+
+/* ------------------------------------------------------------------ *
+ * Courses, affiliations, collaborations and site announcements
+ * ------------------------------------------------------------------ */
+
+/**
+ * Where a course sits in the academic ladder the Academics menu exposes.
+ *
+ * `honours` — the four-year B.Sc. (Hons.)/BBA degrees under National University.
+ * `pgd`     — Post Graduate Diploma programmes.
+ * `short`   — non-degree skill courses run by the institute's own centre.
+ */
+export type CourseLevel = 'honours' | 'pgd' | 'short';
+
+/** The statutory bodies BIST is affiliated with or accredited by. */
+export type AffiliationId = 'nu' | 'bteb' | 'nsda';
+
+/**
+ * One course offered outside the four-year Honours curriculum.
+ *
+ * Every number here is either published by the institution or deliberately
+ * absent — `source: 'placeholder'` marks an entry whose published details are
+ * still being collected, so the UI never dresses up an invented figure.
+ */
+export interface CourseOffer {
+  id: string;
+  code: string;
+  shortTitle: string;
+  title: LocalizedString;
+  level: CourseLevel;
+  affiliation: 'National University' | 'BTEB' | 'NSDA';
+  /** Omitted for a course whose published duration has not been collected yet. */
+  duration?: LocalizedString;
+  credits?: number;
+  seats?: number;
+  /** Published total cost, in BDT. Omitted when the institution publishes none. */
+  totalFee?: number;
+  /** Number of classes, as printed on the short-course page. */
+  classCount?: number;
+  summary: LocalizedString;
+  highlights: LocalizedString[];
+  /** Structured outline for the detail page, when one is published. */
+  curriculum?: { title: LocalizedString; items: LocalizedString[] }[];
+  eligibility?: LocalizedString;
+  /** Set when this course is one of the `PROGRAMS` entries, so cards can deep-link. */
+  honoursProgramId?: string;
+  /** NSDA course level 1–4, for skills assessed under the RTO. */
+  nsdaLevel?: number;
+  image?: string;
+  /** `live` mirrors a published page; `placeholder` needs confirming. */
+  source: 'live' | 'placeholder';
+}
+
+/** An affiliated or accrediting body, and how a visitor verifies BIST under it. */
+export interface AffiliationBody {
+  id: AffiliationId;
+  shortName: string;
+  name: LocalizedString;
+  /** Registration/college code printed on official documents. */
+  code: string;
+  codeLabel: LocalizedString;
+  description: LocalizedString;
+  /** What the affiliation covers for BIST. */
+  scope: LocalizedString[];
+  /** What the visitor should look up on the authority's own site. */
+  verification: LocalizedString;
+}
+
+/** A development-partner project BIST takes part in (ASSETS, CICIP, …). */
+export interface CollaborationProject {
+  id: string;
+  /** Short code the institution uses, e.g. `ASSETS`. */
+  name: string;
+  fullName: LocalizedString;
+  /** The development partner backing the project. */
+  partner: string;
+  /** What that partner's role in the project is. */
+  partnerRole: LocalizedString;
+  summary: LocalizedString;
+  /** What BIST itself delivers inside the project. */
+  bistRole: LocalizedString;
+  focusAreas: LocalizedString[];
+  theme: LocalizedString;
+  period?: LocalizedString;
+  /** Placeholder artwork path until the partner supplies a logo. */
+  logoPlaceholder?: string;
+  accent: 'emerald' | 'cyan' | 'amber' | 'indigo';
+}
+
+/**
+ * One card in the bottom-right announcement popup.
+ *
+ * Admins create, reorder, schedule and switch these off; visitors see the active
+ * ones inside their date window, once per browser session.
+ */
+export interface AnnouncementPost {
+  id: string;
+  image?: string;
+  title: LocalizedString;
+  description: LocalizedString;
+  /** Internal hash route (`#/pgd`) or an absolute `https://` URL. */
+  link?: string;
+  linkLabel?: LocalizedString;
+  active: boolean;
+  /** Ascending display order; ties fall back to the stored array order. */
+  order: number;
+  /** ISO `yyyy-mm-dd` bounds. Empty means unbounded on that side. */
+  startDate?: string;
+  endDate?: string;
+  /** Sister-concern posts advertise another concern's courses. */
+  category: 'announcement' | 'sister-concern';
 }

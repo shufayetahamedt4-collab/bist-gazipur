@@ -180,8 +180,8 @@ export const Footer: React.FC = () => {
                 </button>
               </li>
               <li>
-                <button onClick={() => navigateTo('calculator')} className="hover:text-emerald-400 transition-colors text-slate-300">
-                  {isBn ? 'স্কলারশিপ ও ফি ক্যালকুলেটর' : 'Fee & Scholarship Calculator'}
+                <button onClick={() => navigateTo('honours-programs')} className="hover:text-emerald-400 transition-colors text-slate-300">
+                  {isBn ? 'অনার্স (গ্র্যাজুয়েট) প্রোগ্রাম' : 'Honours (Graduate) Programs'}
                 </button>
               </li>
               <li>

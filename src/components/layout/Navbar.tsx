@@ -27,9 +27,15 @@ import {
   Users,
   ShieldAlert,
   ShieldCheck,
+  Quote,
+  MonitorSmartphone,
+  Landmark,
+  ExternalLink,
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
-import { UNIVERSITY_INFO, PROGRAMS } from '../../data/mockData';
+import { AffiliationId, PageId } from '../../types';
+import { UNIVERSITY_INFO } from '../../data/mockData';
+import { DIPLOMA_SITE_URL, DIPLOMA_ENTRY_LABEL } from '../../config/siteLinks';
 
 export const Navbar: React.FC = () => {
   const {
@@ -38,6 +44,7 @@ export const Navbar: React.FC = () => {
     theme,
     toggleTheme,
     navigateTo,
+    navigateToAffiliation,
     currentPage,
     setIsCommandPaletteOpen,
     setIsClientNotesOpen,
@@ -75,6 +82,54 @@ export const Navbar: React.FC = () => {
   }, []);
 
   const isBn = language === 'bn';
+
+  /**
+   * Mobile drawer entries, grouped the way the desktop menu is. `affiliation`
+   * routes through the affiliation page and `href` leaves the app entirely.
+   */
+  const mobileNav: {
+    label: string;
+    page: PageId;
+    group: string;
+    affiliation?: AffiliationId;
+    href?: string;
+  }[] = [
+    { label: isBn ? 'হোম' : 'Home', page: 'home', group: '' },
+    { label: isBn ? 'পরিচিতি ও ইতিহাস' : 'About BIST', page: 'about', group: '' },
+    { label: isBn ? 'অধ্যক্ষের বাণী' : "Principal's Message", page: 'principal-message', group: isBn ? 'পরিচিতি' : 'About' },
+    { label: isBn ? 'ডিজিটাল ও আইটি ডেভেলপমেন্ট' : 'Digital & IT Development', page: 'digital-it', group: isBn ? 'পরিচিতি' : 'About' },
+    { label: isBn ? 'অনার্স (গ্র‍্যাজুয়েট) প্রোগ্রাম' : 'Honours (Graduate) Programs', page: 'honours-programs', group: isBn ? 'একাডেমিক' : 'Academics' },
+    { label: isBn ? 'পোস্ট গ্র‍্যাজুয়েট ডিপ্লোমা (PGD)' : 'Post Graduate Diploma (PGD)', page: 'pgd', group: isBn ? 'একাডেমিক' : 'Academics' },
+    { label: isBn ? 'শর্ট কোর্স ও দক্ষতা প্রশিক্ষণ' : 'Short Courses', page: 'short-courses', group: isBn ? 'একাডেমিক' : 'Academics' },
+    { label: isBn ? 'সকল প্রোগ্রামসমূহ' : 'All Academic Programs', page: 'programs', group: isBn ? 'একাডেমিক' : 'Academics' },
+    { label: isBn ? 'একাডেমিক ক্যালেন্ডার' : 'Academic Calendar', page: 'academic-calendar', group: isBn ? 'একাডেমিক' : 'Academics' },
+    { label: isBn ? 'ক্লাস ও পরীক্ষার রুটিন' : 'Class & Exam Routines', page: 'academic-routines', group: isBn ? 'একাডেমিক' : 'Academics' },
+    { label: isBn ? 'একাডেমিক রেগুলেশন' : 'Academic Regulations', page: 'academic-regulations', group: isBn ? 'একাডেমিক' : 'Academics' },
+    { label: isBn ? 'ডাউনলোড সেন্টার' : 'Downloads Centre', page: 'downloads', group: isBn ? 'একাডেমিক' : 'Academics' },
+    { label: isBn ? 'লাইব্রেরি ও ই-লাইব্রেরি' : 'Library & e-Library', page: 'library', group: isBn ? 'একাডেমিক' : 'Academics' },
+    { label: isBn ? 'শিক্ষার্থী জীবন ও ক্লাব' : 'Student Life & Clubs', page: 'student-life', group: isBn ? 'একাডেমিক' : 'Academics' },
+    { label: isBn ? 'অভিযোগ ও অ্যান্টি-হ্যারাসমেন্ট' : 'Grievance & Anti-Harassment', page: 'grievance', group: isBn ? 'একাডেমিক' : 'Academics' },
+    { label: isBn ? 'আইকিউএসি ও স্বীকৃতি' : 'IQAC & Accreditation', page: 'iqac', group: isBn ? 'একাডেমিক' : 'Academics' },
+    { label: isBn ? 'জাতীয় বিশ্ববিদ্যালয় (NU)' : 'National University (NU)', page: 'affiliation-detail', group: isBn ? 'অধিভুক্তি' : 'Affiliated By', affiliation: 'nu' },
+    { label: isBn ? 'কারিগরি শিক্ষা বোর্ড (BTEB)' : 'BTEB', page: 'affiliation-detail', group: isBn ? 'অধিভুক্তি' : 'Affiliated By', affiliation: 'bteb' },
+    { label: isBn ? 'জাতীয় দক্ষতা উন্নয়ন কর্তৃপক্ষ (NSDA)' : 'NSDA', page: 'affiliation-detail', group: isBn ? 'অধিভুক্তি' : 'Affiliated By', affiliation: 'nsda' },
+    { label: isBn ? `${DIPLOMA_ENTRY_LABEL.bn} — আলাদা পোর্টাল` : `${DIPLOMA_ENTRY_LABEL.en} — separate portal`, page: 'honours-programs', group: isBn ? 'অধিভুক্তি' : 'Affiliated By', href: DIPLOMA_SITE_URL },
+    { label: isBn ? 'ভর্তি নির্দেশিকা' : 'Admission Guidelines', page: 'admissions', group: isBn ? 'ভর্তি' : 'Admissions' },
+    { label: isBn ? 'স্কলারশিপ ও ফি কাঠামো' : 'Scholarships & Fees', page: 'scholarships', group: isBn ? 'ভর্তি' : 'Admissions' },
+    { label: isBn ? 'টিউশন ফি তালিকা' : 'Tuition Fee Structure', page: 'fees', group: isBn ? 'ভর্তি' : 'Admissions' },
+    { label: isBn ? 'নোটিশ বোর্ড' : 'Notice Board', page: 'notices', group: '' },
+    { label: isBn ? 'ডকুমেন্টের জন্য অনুরোধ' : 'Request a Document', page: 'document-enquiry', group: '' },
+    { label: isBn ? 'অ্যাক্টিভিটি ফিড' : 'Activity Feed', page: 'activity', group: '' },
+    { label: isBn ? 'শিক্ষকমন্ডলী' : 'Faculty Directory', page: 'faculty', group: '' },
+    { label: isBn ? 'কর্মকর্তাবৃন্দ' : 'Administrative Officers', page: 'officers', group: '' },
+    { label: isBn ? 'ক্যাম্পাস গ্যালারি' : 'Photo Gallery', page: 'gallery', group: '' },
+    { label: isBn ? 'প্রকল্প (SEIP / NSDA)' : 'Government Projects', page: 'projects', group: '' },
+    { label: isBn ? 'ক্যাম্পাস সুযোগ-সুবিধা' : 'Campus Facilities', page: 'facilities', group: '' },
+    { label: isBn ? 'ইভেন্টস ও সেমিনার' : 'Events & Seminars', page: 'events', group: '' },
+    { label: isBn ? 'সংবাদ ও মিডিয়া' : 'Latest News', page: 'news', group: '' },
+    { label: isBn ? 'সাধারণ জিজ্ঞাসা (FAQ)' : 'Frequently Asked Questions', page: 'faq', group: '' },
+    { label: isBn ? 'যোগাযোগ ও অবস্থান' : 'Contact & Location', page: 'contact', group: '' },
+  ];
 
   return (
     <header ref={headerRef} className="sticky top-0 z-50 w-full transition-all duration-300">
@@ -280,23 +335,33 @@ export const Navbar: React.FC = () => {
                     </button>
                     <button
                       onClick={() => {
+                        navigateTo('principal-message');
+                        setActiveDropdown(null);
+                      }}
+                      className="w-full text-left px-3 py-2 rounded-lg text-sm hover:bg-emerald-50 hover:text-emerald-800 transition-colors flex items-center gap-2"
+                    >
+                      <Quote className="w-4 h-4 text-emerald-600" />
+                      <span>{isBn ? 'অধ্যক্ষের বাণী' : "Principal's Message"}</span>
+                    </button>
+                    <button
+                      onClick={() => {
                         navigateTo('about');
                         setActiveDropdown(null);
                       }}
                       className="w-full text-left px-3 py-2 rounded-lg text-sm hover:bg-emerald-50 hover:text-emerald-800 transition-colors flex items-center gap-2"
                     >
                       <UserCheck className="w-4 h-4 text-emerald-600" />
-                      <span>{isBn ? 'গভর্নিং বডি ও ট্রাস্টি' : 'Governing Bodies'}</span>
+                      <span>{isBn ? 'গভর্নিং বডি ও একাডেমিক পরিষদ' : 'Governing Bodies'}</span>
                     </button>
                     <button
                       onClick={() => {
-                        navigateTo('board-of-trustees');
+                        navigateTo('digital-it');
                         setActiveDropdown(null);
                       }}
                       className="w-full text-left px-3 py-2 rounded-lg text-sm hover:bg-emerald-50 hover:text-emerald-800 transition-colors flex items-center gap-2"
                     >
-                      <Users className="w-4 h-4 text-amber-500" />
-                      <span>{isBn ? 'বোর্ড অফ ট্রাস্টিজ' : 'Board of Trustees'}</span>
+                      <MonitorSmartphone className="w-4 h-4 text-cyan-600" />
+                      <span>{isBn ? 'ডিজিটাল ও আইটি ডেভেলপমেন্ট' : 'Digital & IT Development'}</span>
                     </button>
                     <button
                       onClick={() => {
@@ -366,16 +431,6 @@ export const Navbar: React.FC = () => {
                     </button>
                     <button
                       onClick={() => {
-                        navigateTo('calculator');
-                        setActiveDropdown(null);
-                      }}
-                      className="w-full text-left px-3 py-2 rounded-lg text-sm hover:bg-emerald-50 hover:text-emerald-800 transition-colors flex items-center gap-2"
-                    >
-                      <Sparkles className="w-4 h-4 text-emerald-600" />
-                      <span>{isBn ? 'ফি ক্যালকুলেটর' : 'Fee Calculator'}</span>
-                    </button>
-                    <button
-                      onClick={() => {
                         navigateTo('fees');
                         setActiveDropdown(null);
                       }}
@@ -402,6 +457,7 @@ export const Navbar: React.FC = () => {
                   [
                     'academic-calendar', 'academic-routines', 'academic-regulations', 'downloads',
                     'programs', 'department-detail', 'library', 'student-life', 'grievance', 'iqac',
+                    'honours-programs', 'pgd', 'short-courses', 'course-detail', 'affiliation-detail',
                   ].includes(currentPage)
                     ? theme === 'dark' ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-950/40' : 'text-emerald-700 bg-emerald-50 font-bold'
                     : theme === 'dark' ? 'hover:text-emerald-700 dark:hover:text-emerald-300 hover:bg-white/5' : 'hover:text-emerald-700 hover:bg-emerald-50/80'
@@ -412,35 +468,48 @@ export const Navbar: React.FC = () => {
               </button>
 
               {activeDropdown === 'academics' && (
-                <div className="absolute top-full left-0 w-[36rem] pt-2 animate-fadeIn z-50">
-                  <div className={`p-3 rounded-xl shadow-2xl grid grid-cols-2 gap-3 ${
+                <div className="absolute top-full left-0 w-[52rem] pt-2 animate-fadeIn z-50">
+                  <div className={`p-3 rounded-xl shadow-2xl grid grid-cols-3 gap-3 ${
                     theme === 'dark' ? 'glass-panel bg-slate-900/90' : 'glass-panel bg-white/95 border-emerald-100 text-slate-700'
                   }`}>
-                    {/* Column 1 — Programmes */}
+                    {/* Column 1 — Programmes, in the order the institution lists them:
+                        Honours, then Post Graduate Diploma, then short courses, then the
+                        separate BTEB diploma portal. */}
                     <div className="space-y-0.5">
                       <div className="text-[11px] font-semibold tracking-wider text-emerald-600 uppercase px-2 pb-1">
                         {isBn ? 'প্রোগ্রামসমূহ' : 'Programmes'}
                       </div>
-                      {PROGRAMS.map((prog) => (
+                      {[
+                        { label: isBn ? 'অনার্স (গ্র্যাজুয়েট) প্রোগ্রাম' : 'Honours (Graduate) Programs', page: 'honours-programs', icon: GraduationCap },
+                        { label: isBn ? 'পোস্ট গ্র্যাজুয়েট ডিপ্লোমা' : 'Post Graduate Diploma (PGD)', page: 'pgd', icon: Award },
+                        { label: isBn ? 'শর্ট কোর্স ও দক্ষতা প্রশিক্ষণ' : 'Short Courses', page: 'short-courses', icon: Sparkles },
+                      ].map((item) => (
                         <button
-                          key={prog.id}
+                          key={item.page}
                           onClick={() => {
-                            navigateTo('department-detail', prog.id);
+                            navigateTo(item.page as any);
                             setActiveDropdown(null);
                           }}
-                          className="w-full text-left px-2 py-1.5 rounded-lg text-xs hover:bg-emerald-50 hover:text-emerald-800 transition-colors flex items-center justify-between group"
+                          className="w-full text-left px-2 py-1.5 rounded-lg text-xs hover:bg-emerald-50 hover:text-emerald-800 transition-colors flex items-center gap-2"
                         >
-                          <div className="flex items-center gap-2">
-                            <span className="font-mono text-[11px] font-bold text-emerald-600 w-10">
-                              {prog.shortTitle}
-                            </span>
-                            <span className="line-clamp-1">
-                              {isBn ? prog.title.bn : prog.title.en}
-                            </span>
-                          </div>
-                          <ArrowRight className="w-3 h-3 text-emerald-500 opacity-0 group-hover:opacity-100 transition-all" />
+                          <item.icon className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                          <span className="line-clamp-1">{item.label}</span>
                         </button>
                       ))}
+
+                      {/* The diploma portal is a separate site: external link, new tab. */}
+                      <a
+                        href={DIPLOMA_SITE_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => setActiveDropdown(null)}
+                        className="w-full text-left px-2 py-1.5 rounded-lg text-xs hover:bg-emerald-50 hover:text-emerald-800 transition-colors flex items-center gap-2"
+                      >
+                        <Layers className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                        <span className="line-clamp-1">{isBn ? DIPLOMA_ENTRY_LABEL.bn : DIPLOMA_ENTRY_LABEL.en}</span>
+                        <ExternalLink className="w-3 h-3 text-slate-400 shrink-0" />
+                      </a>
+
                       <button
                         onClick={() => {
                           navigateTo('programs');
@@ -448,12 +517,37 @@ export const Navbar: React.FC = () => {
                         }}
                         className="w-full text-left px-2 py-1.5 mt-1 rounded-lg text-xs text-amber-600 hover:text-amber-700 font-semibold flex items-center justify-between border-t border-emerald-100 pt-2"
                       >
-                        <span>{isBn ? 'সকল প্রোগ্রাম ও ডিপ্লোমা' : 'All Programmes & Diploma'}</span>
+                        <span>{isBn ? 'সকল প্রোগ্রাম' : 'All Programmes'}</span>
                         <ArrowRight className="w-3.5 h-3.5" />
                       </button>
                     </div>
 
-                    {/* Column 2 — Academic resources + Campus Life */}
+                    {/* Column 2 — Affiliated By: NU, BTEB and NSDA, with the code and
+                        verification link on each page. */}
+                    <div className="space-y-0.5 border-l border-emerald-100 pl-3">
+                      <div className="text-[11px] font-semibold tracking-wider text-emerald-600 uppercase px-2 pb-1">
+                        {isBn ? 'অধিভুক্তি' : 'Affiliated By'}
+                      </div>
+                      {[
+                        { id: 'nu', label: isBn ? 'জাতীয় বিশ্ববিদ্যালয়' : 'National University (NU)' },
+                        { id: 'bteb', label: isBn ? 'কারিগরি শিক্ষা বোর্ড' : 'BTEB' },
+                        { id: 'nsda', label: isBn ? 'জাতীয় দক্ষতা উন্নয়ন কর্তৃপক্ষ' : 'NSDA' },
+                      ].map((item) => (
+                        <button
+                          key={item.id}
+                          onClick={() => {
+                            navigateToAffiliation(item.id);
+                            setActiveDropdown(null);
+                          }}
+                          className="w-full text-left px-2 py-1.5 rounded-lg text-xs hover:bg-emerald-50 hover:text-emerald-800 transition-colors flex items-center gap-2"
+                        >
+                          <Landmark className="w-3.5 h-3.5 text-indigo-500 shrink-0" />
+                          <span className="line-clamp-1">{item.label}</span>
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Column 3 — Academic resources + Campus Life */}
                     <div className="space-y-3 border-l border-emerald-100 pl-3">
                       <div className="space-y-0.5">
                         <div className="text-[11px] font-semibold tracking-wider text-emerald-600 uppercase px-2 pb-1">
@@ -483,6 +577,8 @@ export const Navbar: React.FC = () => {
                         <div className="text-[11px] font-semibold tracking-wider text-emerald-600 uppercase px-2 pb-1">
                           {isBn ? 'ক্যাম্পাস জীবন' : 'Campus Life'}
                         </div>
+                        {/* Kept in the same column as the resources above so the mega
+                            menu stays three columns wide. */}
                         {[
                           { label: isBn ? 'লাইব্রেরি ও ই-লাইব্রেরি' : 'Library & e-Library', page: 'library', icon: BookOpen },
                           { label: isBn ? 'শিক্ষার্থী জীবন ও ক্লাব' : 'Student Life & Clubs', page: 'student-life', icon: Users },
@@ -695,50 +791,40 @@ export const Navbar: React.FC = () => {
             </div>
 
             <div className="space-y-1">
-              {[
-                { label: isBn ? 'হোম' : 'Home', page: 'home', group: '' },
-                { label: isBn ? 'পরিচিতি ও ইতিহাস' : 'About BIST', page: 'about', group: '' },
-                { label: isBn ? 'বোর্ড অফ ট্রাস্টিজ' : 'Board of Trustees', page: 'board-of-trustees', group: '' },
-                { label: isBn ? 'সকল প্রোগ্রামসমূহ' : 'Academic Programs', page: 'programs', group: '' },
-                { label: isBn ? 'ভর্তি নির্দেশিকা' : 'Admission Guidelines', page: 'admissions', group: '' },
-                { label: isBn ? 'স্কলারশিপ ও ফি ক্যালকুলেটর' : 'Scholarships & Calculator', page: 'calculator', group: '' },
-                { label: isBn ? 'অ্যাক্টিভিটি ফিড' : 'Activity Feed', page: 'activity', group: '' },
-                { label: isBn ? 'নোটিশ বোর্ড' : 'Notice Board', page: 'notices', group: '' },
-                { label: isBn ? 'ডকুমেন্টের জন্য অনুরোধ' : 'Request a Document', page: 'document-enquiry', group: '' },
-                { label: isBn ? 'শিক্ষকমণ্ডলী' : 'Faculty Directory', page: 'faculty', group: '' },
-                { label: isBn ? 'কর্মকর্তাবৃন্দ' : 'Administrative Officers', page: 'officers', group: '' },
-                { label: isBn ? 'একাডেমিক ক্যালেন্ডার' : 'Academic Calendar', page: 'academic-calendar', group: (isBn ? 'একাডেমিক' : 'Academics') },
-                { label: isBn ? 'ক্লাস ও পরীক্ষার রুটিন' : 'Class & Exam Routines', page: 'academic-routines', group: (isBn ? 'একাডেমিক' : 'Academics') },
-                { label: isBn ? 'একাডেমিক রেগুলেশন' : 'Academic Regulations', page: 'academic-regulations', group: (isBn ? 'একাডেমিক' : 'Academics') },
-                { label: isBn ? 'ডাউনলোড সেন্টার' : 'Downloads Centre', page: 'downloads', group: (isBn ? 'একাডেমিক' : 'Academics') },
-                { label: isBn ? 'লাইব্রেরি ও ই-লাইব্রেরি' : 'Library & e-Library', page: 'library', group: (isBn ? 'একাডেমিক' : 'Academics') },
-                { label: isBn ? 'শিক্ষার্থী জীবন ও ক্লাব' : 'Student Life & Clubs', page: 'student-life', group: (isBn ? 'একাডেমিক' : 'Academics') },
-                { label: isBn ? 'অভিযোগ ও অ্যান্টি-হ্যারাসমেন্ট' : 'Grievance & Anti-Harassment', page: 'grievance', group: (isBn ? 'একাডেমিক' : 'Academics') },
-                { label: isBn ? 'আইকিউএসি ও স্বীকৃতি' : 'IQAC & Accreditation', page: 'iqac', group: (isBn ? 'একাডেমিক' : 'Academics') },
-                { label: isBn ? 'ক্যাম্পাস গ্যালারি' : 'Photo Gallery', page: 'gallery', group: '' },
-                { label: isBn ? 'প্রকল্প (SEIP / NSDA)' : 'Government Projects', page: 'projects', group: '' },
-                { label: isBn ? 'ক্যাম্পাস সুযোগ-সুবিধা' : 'Campus Facilities', page: 'facilities', group: '' },
-                { label: isBn ? 'ইভেন্টস ও সেমিনার' : 'Events & Seminars', page: 'events', group: '' },
-                { label: isBn ? 'সংবাদ ও মিডিয়া' : 'Latest News', page: 'news', group: '' },
-                { label: isBn ? 'সাধারণ জিজ্ঞাসা (FAQ)' : 'Frequently Asked Questions', page: 'faq', group: '' },
-                { label: isBn ? 'যোগাযোগ ও অবস্থান' : 'Contact & Location', page: 'contact', group: '' }
-              ].map((item, idx, arr) => (
+              {mobileNav.map((item, idx, arr) => (
                 <React.Fragment key={item.page}>
                   {item.group && arr[idx - 1]?.group !== item.group && (
                     <div className="pt-3 pb-0.5 px-3 text-[11px] font-bold uppercase tracking-wider text-emerald-600">
                       {item.group}
                     </div>
                   )}
-                  <button
-                    onClick={() => {
-                      navigateTo(item.page as any);
-                      setMobileMenuOpen(false);
-                    }}
-                    className="w-full text-left py-3 px-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-800 transition-colors font-medium flex items-center justify-between min-h-[44px]"
-                  >
-                    <span>{item.label}</span>
-                    <ArrowRight className="w-4 h-4 text-emerald-600" />
-                  </button>
+                  {item.href ? (
+                    <a
+                      href={item.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="w-full text-left py-3 px-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-800 transition-colors font-medium flex items-center justify-between min-h-[44px]"
+                    >
+                      <span>{item.label}</span>
+                      <ExternalLink className="w-4 h-4 text-emerald-600" />
+                    </a>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        if (item.affiliation) {
+                          navigateToAffiliation(item.affiliation);
+                        } else {
+                          navigateTo(item.page);
+                        }
+                        setMobileMenuOpen(false);
+                      }}
+                      className="w-full text-left py-3 px-3 rounded-lg hover:bg-emerald-50 hover:text-emerald-800 transition-colors font-medium flex items-center justify-between min-h-[44px]"
+                    >
+                      <span>{item.label}</span>
+                      <ArrowRight className="w-4 h-4 text-emerald-600" />
+                    </button>
+                  )}
                 </React.Fragment>
               ))}
             </div>
